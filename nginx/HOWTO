@@ -1,0 +1,6 @@
+Tested with nginx 1.0.2
+
+Add the following param to your configure:
+ --add-module=/some/path/dClass/src
+
+Currently does not support getting device fields.

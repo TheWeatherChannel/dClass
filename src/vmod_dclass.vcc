@@ -1,0 +1,11 @@
+Module dclass
+Init init_function
+Function VOID init_dclass(PRIV_VCL,STRING)
+Function VOID init_dclass_p(PRIV_VCL,STRING,INT)
+Function STRING classify(PRIV_VCL,STRING)
+Function STRING classify_p(PRIV_VCL,STRING,INT)
+Function STRING get_field(PRIV_VCL,STRING)
+Function STRING get_field_p(PRIV_VCL,STRING,INT)
+Function INT get_ifield(PRIV_VCL,STRING)
+Function INT get_ifield_p(PRIV_VCL,STRING,INT)
+

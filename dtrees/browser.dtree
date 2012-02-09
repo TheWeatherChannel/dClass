@@ -1,0 +1,228 @@
+# Browser and OS detection
+
+#$regex
+#$dups
+#!unknown
+
+# blackberry
+"blackberry.....?/4";blackberry4;S;;browser=BlackBerry,version=4000,os=BlackBerry
+"blackberry.....?/5";blackberry5;S;;browser=BlackBerry,version=5000,os=BlackBerry
+"blackberry";blackberry;B;;
+"applewebkit";bbwebkit;B;blackberry;
+"version/6";blackberry6;C;bbwebkit;browser=Webkit,version=6000,os=BlackBerry
+"version/7";blackberry7;C;bbwebkit;browser=WebKit,version=7000,os=BlackBerry
+"version/8";blackberry8;C;bbwebkit;browser=WebKit,version=8000,os=BlackBerry
+"blackberry";blackberry;W;;browser=,version=0,os=BlackBerry
+
+#ios
+"iphone";ios;B;;
+"ipad";ios;B;;
+"ipod";ios;B;;
+"applewebkit";applewebkit;B;ios;
+"version/3";iossafari3;C;applewebkit;browser=Safari,version=3000,os=iOS
+"version/4";iossafari4;C;applewebkit;browser=Safari,version=4000,os=iOS
+"version/4.0.5";iossafari405;C;applewebkit;browser=Safari,version=4050,os=iOS
+"version/5";iossafari5;C;applewebkit;browser=Safari,version=5000,os=iOS
+"version/6";iossafari6;C;applewebkit;browser=Safari,version=6000,os=iOS
+"version/7";iossafari7;C;applewebkit;browser=Safari,version=7000,os=iOS
+"iphone";iphone;W;;browser=,version=0,os=iOS
+"ipad";ipad;W;;browser=,version=0,os=iOS
+"ipod";ipod;W;;browser=,version=0,os=iOS
+
+# android (versioned by OS)
+"android 1.5";android15;B;;
+"android 1.6";android16;B;;
+"android 2.1";android21;B;;
+"android 2.2";android22;B;;
+"android 2.3";android23;B;;
+"android 3.1";android31;B;;
+"android 3.2";android32;B;;
+"android 4.0";android40;B;;
+"android 4.1";android41;B;;
+"android 4.2";android42;B;;
+"android 5";android50;B;;
+"android 6";android60;B;;
+"android";android0;B;;
+"applewebkit";webkit15;C;android15;browser=WebKit,version=1500,os=Android
+"applewebkit";webkit16;C;android16;browser=WebKit,version=1600,os=Android
+"applewebkit";webkit21;C;android21;browser=WebKit,version=2100,os=Android
+"applewebkit";webkit22;C;android22;browser=WebKit,version=2200,os=Android
+"applewebkit";webkit23;C;android23;browser=WebKit,version=2300,os=Android
+"applewebkit";webkit31;C;android31;browser=WebKit,version=3100,os=Android
+"applewebkit";webkit32;C;android32;browser=WebKit,version=3200,os=Android
+"applewebkit";webkit40;C;android40;browser=WebKit,version=4000,os=Android
+"applewebkit";webkit41;C;android41;browser=WebKit,version=4100,os=Android
+"applewebkit";webkit42;C;android42;browser=WebKit,version=4200,os=Android
+"applewebkit";webkit50;C;android50;browser=WebKit,version=5000,os=Android
+"applewebkit";webkit60;C;android60;browser=WebKit,version=6000,os=Android
+"applewebkit";android;C;android0;browser=WebKit,version=0,os=Android
+
+# windows phone
+"iemobile/7";iemobile70;S;;browser="IE Mobile",version=7000,os="Windows Phone"
+"iemobile/8";iemobile80;S;;browser="IE Mobile",version=8000,os="Windows Phone"
+"iemobile/9";iemobile90;S;;browser="IE Mobile",version=9000,os="Windows Phone"
+"windows phone";winphone;W;;browser="IE Mobile",version=0,os="Windows Phone"
+"iemobile";iemobile;W;;browser="IE Mobile",version=0,os="Windows Phone"
+"windows ce; iemobile 6";windowsce6;S;;browser="IE Mobile",version=6000,os="Windows CE"
+"windows ce; iemobile 7";windowsce7;S;;browser="IE Mobile",version=7000,os="Windows CE"
+"windows ce; iemobile 8";windowsce8;S;;browser="IE Mobile",version=8000,os="Windows CE"
+"windows ce; iemobile 9";windowsce9;S;;browser="IE Mobile",version=9000,os="Windows CE"
+"windows ce";windowsce;W;;browser="IE Mobile",version=0,os="Windows CE"
+
+# symbian
+"symbianos/9.1";symbianos91;S;;browser=WebKit,version=9100,os=SymbianOS
+"symbianos/9.2";symbianos92;S;;browser=WebKit,version=9200,os=SymbianOS
+"symbianos/9.3";symbianos93;S;;browser=WebKit,version=9300,os=SymbianOS
+"symbianos/9.4";symbianos94;S;;browser=WebKit,version=9400,os=SymbianOS
+"symbian";symbian;W;;browser=,version=0,os=SymbianOS
+"symbianos";symbianos;W;;browser=,version=0,os=SymbianOS
+
+# webos
+"webos/1.3";webos;S;;browser=WebKit,version=1300,os=webOS
+"webos/1.4";webos;S;;browser=WebKit,version=1400,os=webOS
+"webos/2";webos;S;;browser=WebKit,version=2000,os=webOS
+"webos";webos;S;;browser=,version=0,os=webOS
+
+# desktop os
+"windows";windows;B;;
+"macintosh";macintosh;B;;
+"x11";x11;B;;
+
+# MSIE
+"msie 6";msie6;W;;browser="Internet Explorer",version=6000,os=Windows
+"msie 7";msie7;W;;browser="Internet Explorer",version=7000,os=Windows
+"msie 8";msie8;W;;browser="Internet Explorer",version=8000,os=Windows
+"msie 9";msie9;W;;browser="Internet Explorer",version=9000,os=Windows
+"msie 10";msie10;W;;browser="Internet Explorer",version=10000,os=Windows
+"msie 11";msie10;W;;browser="Internet Explorer",version=11000,os=Windows
+"msie";msie;N;;browser="Internet Explorer",version=0,os=Windows
+
+#chrome
+"chrome/10";chrome10l;C;x11;browser=Chrome,version=10000,os=Linux
+"chrome/10";chrome10w;C;windows;browser=Chrome,version=10000,os=Windows
+"chrome/10";chrome10m;C;macintosh;browser=Chrome,version=10000,os=Macintosh
+"chrome/11";chrome11l;C;x11;browser=Chrome,version=11000,os=Linux
+"chrome/11";chrome11w;C;windows;browser=Chrome,version=11000,os=Windows
+"chrome/11";chrome11m;C;macintosh;browser=Chrome,version=11000,os=Macintosh
+"chrome/12";chrome12l;C;x11;browser=Chrome,version=12000,os=Linux
+"chrome/12";chrome12w;C;windows;browser=Chrome,version=12000,os=Windows
+"chrome/12";chrome12m;C;macintosh;browser=Chrome,version=12000,os=Macintosh
+"chrome/13";chrome13l;C;x11;browser=Chrome,version=13000,os=Linux
+"chrome/13";chrome13w;C;windows;browser=Chrome,version=13000,os=Windows
+"chrome/13";chrome13m;C;macintosh;browser=Chrome,version=13000,os=Macintosh
+"chrome/14";chrome14l;C;x11;browser=Chrome,version=14000,os=Linux
+"chrome/14";chrome14w;C;windows;browser=Chrome,version=14000,os=Windows
+"chrome/14";chrome14m;C;macintosh;browser=Chrome,version=14000,os=Macintosh
+"chrome/15";chrome15l;C;x11;browser=Chrome,version=15000,os=Linux
+"chrome/15";chrome15w;C;windows;browser=Chrome,version=15000,os=Windows
+"chrome/15";chrome15m;C;macintosh;browser=Chrome,version=15000,os=Macintosh
+"chrome/16";chrome16l;C;x11;browser=Chrome,version=16000,os=Linux
+"chrome/16";chrome16w;C;windows;browser=Chrome,version=16000,os=Windows
+"chrome/16";chrome16m;C;macintosh;browser=Chrome,version=16000,os=Macintosh
+"chrome/17";chrome17l;C;x11;browser=Chrome,version=17000,os=Linux
+"chrome/17";chrome17w;C;windows;browser=Chrome,version=17000,os=Windows
+"chrome/17";chrome17m;C;macintosh;browser=Chrome,version=17000,os=Macintosh
+"chrome/18";chrome18l;C;x11;browser=Chrome,version=18000,os=Linux
+"chrome/18";chrome18w;C;windows;browser=Chrome,version=18000,os=Windows
+"chrome/18";chrome18m;C;macintosh;browser=Chrome,version=18000,os=Macintosh
+"chrome/19";chrome19l;C;x11;browser=Chrome,version=19000,os=Linux
+"chrome/19";chrome19w;C;windows;browser=Chrome,version=19000,os=Windows
+"chrome/19";chrome19m;C;macintosh;browser=Chrome,version=19000,os=Macintosh
+"chrome/20";chrome20l;C;x11;browser=Chrome,version=20000,os=Linux
+"chrome/20";chrome20w;C;windows;browser=Chrome,version=20000,os=Windows
+"chrome/20";chrome20m;C;macintosh;browser=Chrome,version=20000,os=Macintosh
+"chrome";chrome;W;;browser=Chrome,version=0,os=
+
+# firefox
+"firefox/1";firefox1l;C;x11;browser=Firefox,version=1000,os=Linux
+"firefox/1";firefox1w;C;windows;browser=Firefox,version=1000,os=Windows
+"firefox/1";firefox1m;C;macintosh;browser=Firefox,version=1000,os=Macintosh
+"firefox/2";firefox2l;C;x11;browser=Firefox,version=2000,os=Linux
+"firefox/2";firefox2w;C;windows;browser=Firefox,version=2000,os=Windows
+"firefox/2";firefox2m;C;macintosh;browser=Firefox,version=2000,os=Macintosh
+"firefox/3";firefox3l;C;x11;browser=Firefox,version=3000,os=Linux
+"firefox/3";firefox3w;C;windows;browser=Firefox,version=3000,os=Windows
+"firefox/3";firefox3m;C;macintosh;browser=Firefox,version=3000,os=Macintosh
+"firefox/4";firefox4l;C;x11;browser=Firefox,version=4000,os=Linux
+"firefox/4";firefox4w;C;windows;browser=Firefox,version=4000,os=Windows
+"firefox/4";firefox4m;C;macintosh;browser=Firefox,version=4000,os=Macintosh
+"firefox/5";firefox5l;C;x11;browser=Firefox,version=5000,os=Linux
+"firefox/5";firefox5w;C;windows;browser=Firefox,version=5000,os=Windows
+"firefox/5";firefox5m;C;macintosh;browser=Firefox,version=5000,os=Macintosh
+"firefox/6";firefox6l;C;x11;browser=Firefox,version=6000,os=Linux
+"firefox/6";firefox6w;C;windows;browser=Firefox,version=6000,os=Windows
+"firefox/6";firefox6m;C;macintosh;browser=Firefox,version=6000,os=Macintosh
+"firefox/7";firefox7l;C;x11;browser=Firefox,version=7000,os=Linux
+"firefox/7";firefox7w;C;windows;browser=Firefox,version=7000,os=Windows
+"firefox/7";firefox7m;C;macintosh;browser=Firefox,version=7000,os=Macintosh
+"firefox/7";firefox7a;C;android0;browser="Firefox Mobile",version=7000,os=Android
+"firefox/8";firefox8l;C;x11;browser=Firefox,version=8000,os=Linux
+"firefox/8";firefox8w;C;windows;browser=Firefox,version=8000,os=Windows
+"firefox/8";firefox8m;C;macintosh;browser=Firefox,version=8000,os=Macintosh
+"firefox/8";firefox8a;C;android0;browser="Firefox Mobile",version=8000,os=Android
+"firefox/9";firefox9l;C;x11;browser=Firefox,version=9000,os=Linux
+"firefox/9";firefox9w;C;windows;browser=Firefox,version=9000,os=Windows
+"firefox/9";firefox9m;C;macintosh;browser=Firefox,version=9000,os=Macintosh
+"firefox/9";firefox9a;C;android0;browser="Firefox Mobile",version=9000,os=Android
+"firefox/10";firefox10l;C;x11;browser=Firefox,version=10000,os=Linux
+"firefox/10";firefox10w;C;windows;browser=Firefox,version=10000,os=Windows
+"firefox/10";firefox10m;C;macintosh;browser=Firefox,version=10000,os=Macintosh
+"firefox/10";firefox10a;C;android0;browser="Firefox Mobile",version=10000,os=Android
+"firefox/11";firefox11l;C;x11;browser=Firefox,version=11000,os=Linux
+"firefox/11";firefox11w;C;windows;browser=Firefox,version=11000,os=Windows
+"firefox/11";firefox11m;C;macintosh;browser=Firefox,version=11000,os=Macintosh
+"firefox/11";firefox11a;C;android0;browser="Firefox Mobile",version=11000,os=Android
+"firefox/12";firefox12l;C;x11;browser=Firefox,version=12000,os=Linux
+"firefox/12";firefox12w;C;windows;browser=Firefox,version=12000,os=Windows
+"firefox/12";firefox12m;C;macintosh;browser=Firefox,version=12000,os=Macintosh
+"firefox/12";firefox12a;C;android0;browser="Firefox Mobile",version=12000,os=Android
+"firefox/13";firefox12u;C;x11;browser=Firefox,version=13000,os=Linux
+"firefox/13";firefox13w;C;windows;browser=Firefox,version=13000,os=Windows
+"firefox/13";firefox13m;C;macintosh;browser=Firefox,version=13000,os=Macintosh
+"firefox/13";firefox13a;C;android0;browser="Firefox Mobile",version=13000,os=Android
+"firefox/14";firefox14l;C;x11;browser=Firefox,version=14000,os=Linux
+"firefox/14";firefox14w;C;windows;browser=Firefox,version=14000,os=Windows
+"firefox/14";firefox14m;C;macintosh;browser=Firefox,version=14000,os=Macintosh
+"firefox/14";firefox14a;C;android0;browser="Firefox Mobile",version=14000,os=Android
+"firefox/15";firefox15l;C;x11;browser=Firefox,version=15000,os=Linux
+"firefox/15";firefox15w;C;windows;browser=Firefox,version=15000,os=Windows
+"firefox/15";firefox15m;C;macintosh;browser=Firefox,version=15000,os=Macintosh
+"firefox/15";firefox15a;C;android0;browser="Firefox Mobile",version=15000,os=Android
+"firefox/16";firefox16l;C;x11;browser=Firefox,version=16000,os=Linux
+"firefox/16";firefox16w;C;windows;browser=Firefox,version=16000,os=Windows
+"firefox/16";firefox16m;C;macintosh;browser=Firefox,version=16000,os=Macintosh
+"firefox/16";firefox16a;C;android0;browser="Firefox Mobile",version=16000,os=Android
+"firefox";firefox;W;;browser=Firefox,version=0,os=
+
+# opera
+"opera mini/3";operamini3;S;;browser="Opera Mini",version=3000,os=
+"opera mini/4";operamini4;S;;browser="Opera Mini",version=4000,os=
+"opera mini/5";operamini5;S;;browser="Opera Mini",version=5000,os=
+"opera mini/6";operamini6;S;;browser="Opera Mini",version=6000,os=
+"opera mini/7";operamini7;S;;browser="Opera Mini",version=7000,os=
+"opera mini";operamini;W;;browser="Opera Mini",version=0,os=
+"opera tablet";operatablet;W;;browser="Opera Tablet",version=0,os=
+"opera tablet";operatablet;B;;
+"version/11";operatablet11;C;operatablet;browser="Opera Tablet",version=11,os=
+"opera mobi";operamobile;W;;browser="Opera Mobile",version=0,os=
+"opera mobi";operamobile;B;;
+"version/10";operamobile10;C;operamobile;browser="Opera Mobile",version=10,os=
+"version/11";operamobile11;C;operamobile;browser="Opera Mobile",version=11,os=
+"opera8";opera8;W;;browser=Opera,version=8000,os=
+"opera9";opera9;W;;browser=Opera,version=9000,os=
+"opera10";opera10;W;;browser=Opera,version=10000,os=
+"opera11";opera11;W;;browser=Opera,version=11000,os=
+"opera";opera;N;;browser=Opera,version=0,os=
+
+# safari
+"applewebkit";safari;N;;browser=WebKit,version=0,os=
+"applewebkit";safariw;B;windows;
+"applewebkit";safarim;B;macintosh;
+"version/4";safari4w;C;safariw;browser=Safari,version=4000,os=Windows
+"version/4";safari4m;C;safarim;browser=Safari,version=4000,os=Macintosh
+"version/5";safari5w;C;safariw;browser=Safari,version=5000,os=Windows
+"version/5";safari5m;C;safarim;browser=Safari,version=5000,os=Macintosh
+"version/6";safari6w;C;safariw;browser=Safari,version=6000,os=Windows
+"version/6";safari6m;C;safarim;browser=Safari,version=6000,os=Macintosh
+"version/7";safari7w;C;safari;browser=Safari,version=7000,os=Windows
+"version/7";safari7m;C;safari;browser=Safari,version=7000,os=Macintosh

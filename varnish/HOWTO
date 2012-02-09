@@ -1,0 +1,22 @@
+Tested with varnish 3.0.1
+
+run: make varnish
+copy libvmod_dclass.so to the varnish installation vmod directory:
+(lib/varnish/vmods)
+
+Available functions:
+
+Function VOID init_dclass(STRING)
+  -inits a dclass index, STRING is path to OpenDDR or dtree file
+
+Function STRING classify(STRING)
+  -classifies a string
+
+Function STRING get_field(STRING)
+  -gets a field, must classify first
+
+Function INT get_ifield(STRING)
+  -gets a field as an INT, must classify first
+
+Appending _p to the function name allows you to specify which index to use.
+Default is 0.
