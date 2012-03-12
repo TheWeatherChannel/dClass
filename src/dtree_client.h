@@ -72,8 +72,8 @@ typedef unsigned int packed_ptr;
 #define DTREE_DT_MAX_SLABS      1024
 #define DTREE_DT_SLAB_SIZE      1024
 
-#define DTREE_DT_GETPP(H,PP)    ((dtree_dt_node*)PP)
-#define DTREE_DT_GENPP(P,H,L)   ((packed_ptr)P);
+#define DTREE_DT_GETPP(H,PP)    ((dtree_dt_node*)(PP))
+#define DTREE_DT_GENPP(P,H,L)   ((packed_ptr)(P))
 
 #endif /*DTREE_DT_PACKED*/
 
@@ -162,8 +162,7 @@ typedef struct
     
     dtree_dt_node         *head;
     
-    void                  *slabs[DTREE_DT_MAX_SLABS];
-    
+    dtree_dt_node         *slabs[DTREE_DT_MAX_SLABS];
     char                  *dc_slabs[DTREE_M_MAX_SLABS];
     char                  *dc_cache[DTREE_M_LOOKUP_CACHE];
 }

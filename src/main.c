@@ -193,5 +193,7 @@ int main(int argc,char **args)
         }
     }
     
+    dclass_free(&di);
+    
     return 0;
 }

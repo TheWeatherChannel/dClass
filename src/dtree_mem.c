@@ -42,7 +42,10 @@ packed_ptr dtree_alloc_node(dtree_dt_index *h)
         p=calloc(DTREE_DT_SLAB_SIZE,sizeof(dtree_dt_node));
         
         if(!p)
+        {
+            dtree_printd(DTREE_PRINT_INITDTREE,"NMALLOC: ERROR: calloc memory allocation failure: %d\n",DTREE_DT_SLAB_SIZE);
             return (packed_ptr)0;
+        }
         
         h->size+=DTREE_DT_SLAB_SIZE*sizeof(dtree_dt_node);
         h->slabs[h->slab_count]=p;
@@ -206,8 +209,11 @@ void dtree_free(dtree_dt_index *h)
     for(i=0;i<h->slab_count;i++)
         free(h->slabs[i]);
     
-    for(i=0;i<h->dc_slab_count;i++)
-        free(h->dc_slabs[i]);
+    for(i=0;i<DTREE_M_MAX_SLABS;i++)
+    {
+        if(h->dc_slabs[i])
+            free(h->dc_slabs[i]);
+    }
     
     dtree_init_index(h);
 }

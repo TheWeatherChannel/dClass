@@ -238,14 +238,7 @@ static ngx_int_t ngx_http_dclass_class_variable(ngx_http_request_t *r, ngx_http_
         return NGX_OK;
     }
     
-    kvd=(dclass_keyvalue*)dclass_classify(cf->head,(char*)hfield);
-    
-    if(!kvd)
-    {
-        v->data=(u_char*)"null";
-        v->len=4;
-        return NGX_OK;
-    }
+    kvd=dclass_classify(cf->head,(char*)hfield);
     
     v->data=(u_char*)kvd->id;
     v->len=ngx_strlen(kvd->id);

@@ -123,9 +123,12 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
         while(t<p)
         {
             *p=*t;
+            
             dtree_printd(DTREE_PRINT_INITDTREE,"ADD: set: '%c' *t: '%c' t: '%s'\n",n->data,*t,p);
+            
             if(dtree_add_node(h,n,p,data,flags,param)<0)
                 return -1;
+            
             t++;
         }
         

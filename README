@@ -20,7 +20,7 @@ To integrate with the dClass API:
   -populate the index using a dtree file or OpenDDR resource file:
     dclass_load_file(&dci,"/path/to/file.dtree");
     -OR-
-    openddr_load_resources(&dci,/path/to/openddr/resources");
+    openddr_load_resources(&dci,"/path/to/openddr/resources");
 
   -classify a string against the index and get the resulting kv data:
     dclass_keyvalue *kv=dclass_classify(&dci,"this is a string");

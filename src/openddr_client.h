@@ -40,7 +40,8 @@
                                 "displayWidth",            \
                                 "device_os",               \
                                 "ajax_support_javascript", \
-                                "is_tablet"                \
+                                "is_tablet",               \
+                                "is_wireless_device"       \
                               }
 
 

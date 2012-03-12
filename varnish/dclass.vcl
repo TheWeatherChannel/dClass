@@ -7,8 +7,8 @@ backend default {
 
 sub vcl_init {
 	# load openddr
-	dclass.init_dclass("/some/path/OpenDDR/1.0.0.3/resources");
-	#dclass.init_dclass_p("/some/path/OpenDDR/1.0.0.3/resources",0);
+	dclass.init_dclass("/some/path/OpenDDR/1.0.0.4/resources");
+	#dclass.init_dclass_p("/some/path/OpenDDR/1.0.0.4/resources",0);
 
 	# load browser dtree
 	dclass.init_dclass_p("/some/path/dClass/dtrees/browser.dtree",1);
@@ -40,6 +40,8 @@ OpenDDR id:       "} + req.http.dclass_openddr + {"
 OpenDDR device:   "} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"
 OpenDDR display:  "} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_ifield("displayHeight") + {"
 OpenDDR js:       "} + dclass.get_field("ajax_support_javascript") + {"
+OpenDDR wireless: "} + dclass.get_field("is_wireless_device") + {"
+OpenDDR tablet:   "} + dclass.get_field("is_tablet") + {"
 
 browser id:       "} + req.http.dclass_browser + {"
 browser name:     "} + dclass.get_field_p("browser",1) + {"

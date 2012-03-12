@@ -24,6 +24,9 @@ typedef struct
 {
     char *key;
     char *value;
+    
+    size_t key_len;
+    size_t val_len;
 } dtree_kv_pair;
 
 typedef struct
@@ -32,9 +35,15 @@ typedef struct
     char *id;
     char *cparam;
     char *type;
+    
+    size_t id_len;
+    size_t cparam_len;
+    
     int count;
     int legacy;
+    
     flag_f flag;
+    
     dtree_kv_pair p[DTREE_DATA_MKEYS];
 } dtree_file_entry;
 
@@ -162,10 +171,11 @@ int dclass_load_file(dclass_index *di,const char *path)
         {
             for(i=0;i<fe.count;i++)
             {
-                s=dtree_alloc_string(h,fe.p[i].key,strlen(fe.p[i].key));
+                s=dtree_alloc_string(h,fe.p[i].key,fe.p[i].key_len);
                 if(!i || DTREE_DC_DISTANCE(h,s)<DTREE_DC_DISTANCE(h,(char*)fe.id))
                 {
                     fe.id=s;
+                    fe.id_len=fe.p[i].key_len;
                     fe.type=fe.p[i].value;
                 }
 
@@ -191,10 +201,10 @@ int dclass_load_file(dclass_index *di,const char *path)
             fe.flag=DTREE_DT_FLAG_NONE;
 
         dtree_printd(DTREE_PRINT_INITDTREE,
-                "LOAD: line dump: pattern: '%s' id: '%s' type: '%s' flag: %ud cparam: '%s' legacy: %d\nKVS",
-                fe.pattern,fe.id,fe.type,fe.flag,fe.cparam,fe.legacy);
+                "LOAD: line dump: pattern: '%s' id: '%s':%zu type: '%s' flag: %ud cparam: '%s':%zu legacy: %d\nKVS",
+                fe.pattern,fe.id,fe.id_len,fe.type,fe.flag,fe.cparam,fe.cparam_len,fe.legacy);
         for(i=0;i<fe.count;i++)
-            dtree_printd(DTREE_PRINT_INITDTREE,",'%s'='%s'",fe.p[i].key,fe.p[i].value);
+            dtree_printd(DTREE_PRINT_INITDTREE,",'%s':%zu='%s':%zu",fe.p[i].key,fe.p[i].key_len,fe.p[i].value,fe.p[i].val_len);
         dtree_printd(DTREE_PRINT_INITDTREE,"\n");
         
         //look for this entry
@@ -208,7 +218,7 @@ int dclass_load_file(dclass_index *di,const char *path)
                 goto lerror;
             
             //populate kvd
-            kvd->id=dtree_alloc_string(h,fe.id,strlen(fe.id));
+            kvd->id=dtree_alloc_string(h,fe.id,fe.id_len);
             
             if(dtree_add_entry(&ids,kvd->id,kvd,0,NULL)<0)
                 goto lerror;
@@ -257,7 +267,7 @@ int dclass_load_file(dclass_index *di,const char *path)
                 keys_size=fe.count;
                 
                 for(i=0;i<fe.count;i++)
-                    keys[i]=dtree_alloc_string(h,fe.p[i].key,strlen(fe.p[i].key));
+                    keys[i]=dtree_alloc_string(h,fe.p[i].key,fe.p[i].key_len);
             }
 
             kvd->keys=(const char**)keys;
@@ -272,7 +282,7 @@ int dclass_load_file(dclass_index *di,const char *path)
             for(i=0;i<kvd->size;i++)
             {
                 if(fe.p[i].value)
-                    kvd->values[i]=dtree_alloc_string(h,fe.p[i].value,strlen(fe.p[i].value));
+                    kvd->values[i]=dtree_alloc_string(h,fe.p[i].value,fe.p[i].val_len);
             }
         }
         
@@ -294,7 +304,7 @@ int dclass_load_file(dclass_index *di,const char *path)
                     goto lerror;
 
                 //populate kvd
-                cparam->id=dtree_alloc_string(h,fe.cparam,strlen(fe.cparam));
+                cparam->id=dtree_alloc_string(h,fe.cparam,fe.cparam_len);
             
                 if(dtree_add_entry(&ids,cparam->id,cparam,0,NULL)<0)
                     goto lerror;
@@ -363,6 +373,8 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
     char *p;
     char *t;
     char *key;
+    size_t klen;
+    size_t len;
     
     for(p=buf;*p;p++)
     {
@@ -389,6 +401,11 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
         sep=*p;
         *p='\0';
         
+        len=p-t;
+        
+        if(!*(p-1))
+            len--;
+        
         if(!count)
             fe->pattern=t;
         else if(count==1 && sep=='=')
@@ -396,29 +413,41 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
             fe->legacy=1;
             count=4;
             key=t;
+            klen=len;
             continue;
         }
         else if(count==1)
+        {
             fe->id=t;
+            fe->id_len=len;
+        }
         else if(count==2)
             fe->type=t;
         else if(count==3)
+        {
             fe->cparam=t;
+            fe->cparam_len=len;
+        }
         else if(count>=4)
         {
             if(!key)
             {
                 key=t;
+                klen=len;
+                
                 if(sep==',')
                 {
                     t=NULL;
+                    len=0;
                 }
                 else
                     continue;
             }
             
             fe->p[fe->count].key=key;
+            fe->p[fe->count].key_len=klen;
             fe->p[fe->count].value=t;
+            fe->p[fe->count].val_len=len;
             
             fe->count++;
             

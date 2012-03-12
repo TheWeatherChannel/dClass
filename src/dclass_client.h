@@ -23,7 +23,7 @@
 #include "dtree_client.h"
 
 
-#define DCLASS_VERSION    "2.0.0"
+#define DCLASS_VERSION    "2.0.1"
 
 
 //key value struct, dtree payload
@@ -39,7 +39,7 @@ typedef struct
 dclass_keyvalue;
 
 
-//key value struct, dtree payload
+//dclass index
 typedef struct
 {
     dtree_dt_index        dti;

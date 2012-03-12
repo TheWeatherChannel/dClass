@@ -378,7 +378,7 @@ static char *openddr_get_value(const char *buf,const char *attr,dtree_dt_index *
 }
 
 //strcasestr
-const char *_alt_strcasestr(const char *haystack,const char *needle)
+static const char *_alt_strcasestr(const char *haystack,const char *needle)
 {
     const char *p;
     const char *startn=0;
