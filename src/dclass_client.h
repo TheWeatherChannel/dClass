@@ -23,7 +23,7 @@
 #include "dtree_client.h"
 
 
-#define DCLASS_VERSION    "2.0.1"
+#define DCLASS_VERSION    "dClass 2.0.2"
 
 
 //key value struct, dtree payload
@@ -63,6 +63,8 @@ const char *dclass_get_kvalue(const dclass_keyvalue*,const char*);
 void dclass_free(dclass_index*);
 
 const char *dclass_get_id(void*);
+
+const char *dclass_get_version();
 
 
 #endif	/* _WX_DCLASS_H_INCLUDED_ */

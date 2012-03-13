@@ -444,6 +444,9 @@ static char *openddr_get_str(const char *buf,const char *attr,dtree_dt_index *h,
         
         i=e-s;
         
+        if(i>=DTREE_DATA_BUFLEN)
+            i=DTREE_DATA_BUFLEN-1;
+        
         if(h)
         {
             ret=dtree_alloc_string(h,s,i);
@@ -451,7 +454,7 @@ static char *openddr_get_str(const char *buf,const char *attr,dtree_dt_index *h,
         }
         
         if(retbuf)
-        {
+        {   
             ret=strncpy(retbuf,s,i);
             retbuf[i]='\0';
         }
@@ -515,10 +518,15 @@ static void openddr_convert_bb(char *pattern)
     if(*orig==' ')
         orig++;
     
+    if(strlen(orig)>8)
+        return;
+    
     strcat(new,orig);
     
     strcat(new,".?");
     
-    strcpy(pattern,new);
+    strncpy(pattern,new,DTREE_DATA_BUFLEN-1);
+    
+    pattern[DTREE_DATA_BUFLEN-1]='\0';
 }
 #endif

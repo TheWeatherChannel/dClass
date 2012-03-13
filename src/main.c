@@ -66,7 +66,7 @@ int main(int argc,char **args)
             parameter=args[i];
     }
     
-    printf("dClass - Device classification (version %s)\n",DCLASS_VERSION);
+    printf("dClass - Device classification (version %s)\n",dclass_get_version());
 
     printf("Loading %s: '%s'\n",openddr?"openddr":"dtree",loadFile);
     

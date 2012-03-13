@@ -372,8 +372,8 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
     char sep;
     char *p;
     char *t;
-    char *key;
-    size_t klen;
+    char *key=NULL;
+    size_t klen=0;
     size_t len;
     
     for(p=buf;*p;p++)
@@ -405,6 +405,9 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
         
         if(!*(p-1))
             len--;
+        
+        if(len>=DTREE_DATA_BUFLEN)
+            len=DTREE_DATA_BUFLEN-1;
         
         if(!count)
             fe->pattern=t;

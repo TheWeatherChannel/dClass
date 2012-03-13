@@ -205,6 +205,12 @@ const char *dclass_get_id(void *payload)
     return kvd->id;
 }
 
+//version
+const char *dclass_get_version()
+{
+    return DCLASS_VERSION;
+}
+
 //init
 void dclass_init_index(dclass_index *di)
 {
