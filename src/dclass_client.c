@@ -23,6 +23,7 @@ char **dclass_get_value_pos(dclass_keyvalue*,char*);
 static const dclass_keyvalue *dclass_get_kverror(const dclass_index*);
 static char *dclass_error_string(const dtree_dt_index*);
 
+extern int dtree_hash_char(char);
 extern char *dtree_node_path(const dtree_dt_index*,const dtree_dt_node*,char*);
 
 
@@ -53,7 +54,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     {
         valid=0;
         
-        if((*p>='a' && *p<='z') || (*p>='A' && *p<='Z') || (*p>='0' && *p<='9'))
+        if(dtree_hash_char(*p)<DTREE_HASH_SEP)
         {
             //new token found
             if(!on)

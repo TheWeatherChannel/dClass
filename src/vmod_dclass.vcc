@@ -8,4 +8,5 @@ Function STRING get_field(PRIV_VCL,STRING)
 Function STRING get_field_p(PRIV_VCL,STRING,INT)
 Function INT get_ifield(PRIV_VCL,STRING)
 Function INT get_ifield_p(PRIV_VCL,STRING,INT)
+Function STRING get_version()
 

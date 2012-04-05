@@ -93,8 +93,27 @@ int dclass_load_file(dclass_index *di,const char *path)
     }
     
     //traverse the loadfile
-    while((p=fgets(buf,sizeof(buf),f)))
+    while((buf[sizeof(buf)-2]='\n') && (p=fgets(buf,sizeof(buf),f)))
     {
+        lines++;
+        
+        //overflow
+        if(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2])
+        {
+            dtree_printd(DTREE_PRINT_INITDTREE,"LOAD: overflow detected on line %d\n",lines);
+            
+            do
+            {
+                buf[sizeof(buf)-2]='\n';
+                
+                if(!fgets(buf,sizeof(buf),f))
+                    break;
+            }
+            while(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2]);
+            
+            continue;
+        }
+        
         if(*buf=='#')
         {
             switch(*++p)
@@ -149,11 +168,9 @@ int dclass_load_file(dclass_index *di,const char *path)
                         dtree_printd(DTREE_PRINT_INITDTREE,"INIT FORCE: dups\n");
                     }
                     break;
-            }
+            }          
             continue;
         }
-        
-        lines++;
         
         memset(&fe,0,sizeof(fe));
         
@@ -187,16 +204,21 @@ int dclass_load_file(dclass_index *di,const char *path)
                 h->sflags |= DTREE_S_FLAG_PARTIAL;
         }
         
-        if(*fe.type=='S')
-            fe.flag=DTREE_DT_FLAG_STRONG;
-        else if(*fe.type=='W')
-            fe.flag=DTREE_DT_FLAG_WEAK;
-        else if(*fe.type=='P')
-            fe.flag=DTREE_DT_FLAG_BPART;
-        else if(*fe.type=='B')
-            fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
-        else if(*fe.type=='C')
-            fe.flag=DTREE_DT_FLAG_CHAIN;
+        if(fe.type)
+        {
+            if(*fe.type=='S')
+                fe.flag=DTREE_DT_FLAG_STRONG;
+            else if(*fe.type=='W')
+                fe.flag=DTREE_DT_FLAG_WEAK;
+            else if(*fe.type=='P')
+                fe.flag=DTREE_DT_FLAG_BPART;
+            else if(*fe.type=='B')
+                fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
+            else if(*fe.type=='C')
+                fe.flag=DTREE_DT_FLAG_CHAIN;
+            else
+                fe.flag=DTREE_DT_FLAG_NONE;
+        }
         else
             fe.flag=DTREE_DT_FLAG_NONE;
 
@@ -408,7 +430,7 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
         
         if(len>=DTREE_DATA_BUFLEN)
             len=DTREE_DATA_BUFLEN-1;
-        
+
         if(!count)
             fe->pattern=t;
         else if(count==1 && sep=='=')

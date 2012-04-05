@@ -1,5 +1,14 @@
+2.0.4
+ -Updated OpenDDR (1.0.0.5)
+
+2.0.3
+ -File overflow checks
+
 2.0.2
  -Tighter bound checking
+
+2.0.1
+ -Updated OpenDDR (1.0.0.4)
 
 2.0.0
  -OpenDDR support

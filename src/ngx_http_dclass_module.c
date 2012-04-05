@@ -188,7 +188,7 @@ static ngx_int_t ngx_http_dclass_class_variable(ngx_http_request_t *r, ngx_http_
     ngx_list_part_t *part;
     ngx_table_elt_t *header;
     ngx_uint_t i;
-    dclass_keyvalue *kvd;
+    const dclass_keyvalue *kvd;
     
     cf = ngx_http_get_module_loc_conf(r, ngx_http_dclass_module);
     

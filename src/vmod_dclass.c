@@ -239,3 +239,8 @@ void vmod_free_dtc(void *data)
     
     free(data);
 }
+
+const char *vmod_get_version(struct sess *sp)
+{
+    return dclass_get_version();
+}

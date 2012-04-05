@@ -39,7 +39,7 @@
 #define DTREE_PRINT_INITDTREE   (1 << 2)
 
 //what messages to print, DEBUG_LOGGING needs to be enabled
-#define DTREE_PRINT_ENABLED     (DTREE_PRINT_GENERIC)
+#define DTREE_PRINT_ENABLED     (DTREE_PRINT_GENERIC|DTREE_PRINT_CLASSIFY|DTREE_PRINT_INITDTREE)
 
 
 //if enabled, this packs system pointers into 16/32 bits
@@ -103,8 +103,9 @@ typedef unsigned int packed_ptr;
 #define DTREE_DATA_MKEYS        30
 #define DTREE_DC_DISTANCE(H,S)  ((int)((S)-((char*)(H)->dc_slabs[0])))
 
+#define DTREE_HASH_PCHARS       ""
+#define DTREE_HASH_SEP          (36+sizeof(DTREE_HASH_PCHARS)-1)
 #define DTREE_HASH_SCHARS       " -_/\\()"
-#define DTREE_HASH_SEP          36
 #define DTREE_HASH_NCOUNT       (DTREE_HASH_SEP+sizeof(DTREE_HASH_SCHARS))
 #define DTREE_HASH_ANY          (DTREE_HASH_NCOUNT-1)
 #define DTREE_PATTERN_ANY       '.'

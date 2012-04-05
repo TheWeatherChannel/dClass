@@ -7,8 +7,8 @@ backend default {
 
 sub vcl_init {
 	# load openddr
-	dclass.init_dclass("/some/path/OpenDDR/1.0.0.4/resources");
-	#dclass.init_dclass_p("/some/path/OpenDDR/1.0.0.4/resources",0);
+	dclass.init_dclass("/some/path/OpenDDR/1.0.0.5/resources");
+	#dclass.init_dclass_p("/some/path/OpenDDR/1.0.0.5/resources",0);
 
 	# load browser dtree
 	dclass.init_dclass_p("/some/path/dClass/dtrees/browser.dtree",1);
@@ -35,6 +35,8 @@ sub vcl_error {
 <h1>UADIAG</h1>
 <pre>
 User-Agent:       "} + req.http.User-Agent + {"
+
+dClass version:   "} + dclass.get_version() + {"
 
 OpenDDR id:       "} + req.http.dclass_openddr + {"
 OpenDDR device:   "} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"

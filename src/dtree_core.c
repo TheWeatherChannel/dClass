@@ -22,7 +22,7 @@
 static int dtree_add_node(dtree_dt_index*,dtree_dt_node*,char*,void*,flag_f,void*);
 static int dtree_set_payload(dtree_dt_index*,dtree_dt_node*,void*,flag_f,void*);
 static const dtree_dt_node *dtree_search_node(const dtree_dt_index*,const dtree_dt_node*,const char*);
-static inline int dtree_hash_char(char);
+int dtree_hash_char(char);
 
 extern packed_ptr dtree_alloc_node(dtree_dt_index*);
 extern inline int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
@@ -241,7 +241,7 @@ static int dtree_set_payload(dtree_dt_index *h,dtree_dt_node *n,void *data,flag_
 }
 
 //hashes a character, on error 0 is returned
-static inline int dtree_hash_char(char c)
+int dtree_hash_char(char c)
 {
     unsigned int i;
     
@@ -252,6 +252,13 @@ static inline int dtree_hash_char(char c)
         return c-'A'+10;
     else if(c<='9' && c>='0')
         return c-'0';
+    
+    //configurable
+    for(i=0;i<sizeof(DTREE_HASH_PCHARS);i++)
+    {
+        if(c==DTREE_HASH_PCHARS[i])
+            return 36+i;
+    }
     
     //configurable
     for(i=0;i<sizeof(DTREE_HASH_SCHARS);i++)

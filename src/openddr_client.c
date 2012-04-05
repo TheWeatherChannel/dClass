@@ -150,15 +150,32 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
 {
     int i;
     int ret=0;
-    char buf[2048];
+    char buf[1048];
     char temp[DTREE_DATA_BUFLEN];
     dclass_keyvalue *kvd=NULL;
     
     if(!f)
         return 0;
     
-    while(fgets(buf,sizeof(buf),f))
+    while((buf[sizeof(buf)-2]='\n') && fgets(buf,sizeof(buf),f))
     {
+        //overflow
+        if(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2])
+        {
+            dtree_printd(DTREE_PRINT_INITDTREE,"OPENDDR LOAD: overflow detected\n");
+            
+            do
+            {
+                buf[sizeof(buf)-2]='\n';
+                
+                if(!fgets(buf,sizeof(buf),f))
+                    break;
+            }
+            while(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2]);
+            
+            continue;
+        }
+        
         if(strstr(buf,"<device "))
         {
             openddr_get_attr(buf,"id",NULL,NULL,temp);
@@ -219,7 +236,7 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
 static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,flag_f *flags)
 {
     int ret=0;
-    char buf[2048];
+    char buf[1048];
     char pattern[DTREE_DATA_BUFLEN];
     char id[DTREE_DATA_BUFLEN];
     dclass_keyvalue *der=NULL;
@@ -232,8 +249,25 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,fl
     if(!f)
         return 0;
     
-    while(fgets(buf,sizeof(buf),f))
+    while((buf[sizeof(buf)-2]='\n') && fgets(buf,sizeof(buf),f))
     {
+        //overflow
+        if(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2])
+        {
+            dtree_printd(DTREE_PRINT_INITDTREE,"OPENDDR LOAD: overflow detected\n");
+            
+            do
+            {
+                buf[sizeof(buf)-2]='\n';
+                
+                if(!fgets(buf,sizeof(buf),f))
+                    break;
+            }
+            while(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2]);
+            
+            continue;
+        }
+        
         if(strstr(buf,"<device "))
         {
             openddr_get_attr(buf,"id",NULL,NULL,id);
