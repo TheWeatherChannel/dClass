@@ -22,7 +22,7 @@
 static int dtree_add_node(dtree_dt_index*,dtree_dt_node*,char*,void*,flag_f,void*);
 static int dtree_set_payload(dtree_dt_index*,dtree_dt_node*,void*,flag_f,void*);
 static const dtree_dt_node *dtree_search_node(const dtree_dt_index*,const dtree_dt_node*,const char*);
-int dtree_hash_char(char);
+unsigned int dtree_hash_char(char);
 
 extern packed_ptr dtree_alloc_node(dtree_dt_index*);
 extern inline int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
@@ -241,9 +241,9 @@ static int dtree_set_payload(dtree_dt_index *h,dtree_dt_node *n,void *data,flag_
 }
 
 //hashes a character, on error 0 is returned
-int dtree_hash_char(char c)
+unsigned int dtree_hash_char(char c)
 {
-    unsigned int i;
+    unsigned int i,m;
     
     //alphanumeric
     if(c<='z' && c>='a')
@@ -254,14 +254,16 @@ int dtree_hash_char(char c)
         return c-'0';
     
     //configurable
-    for(i=0;i<sizeof(DTREE_HASH_PCHARS);i++)
+    m=sizeof(DTREE_HASH_PCHARS)-1;
+    for(i=0;i<m;i++)
     {
         if(c==DTREE_HASH_PCHARS[i])
             return 36+i;
     }
     
     //configurable
-    for(i=0;i<sizeof(DTREE_HASH_SCHARS);i++)
+    m=sizeof(DTREE_HASH_SCHARS)-1;
+    for(i=0;i<m;i++)
     {
         if(c==DTREE_HASH_SCHARS[i])
             return DTREE_HASH_SEP+i;
@@ -305,7 +307,7 @@ void *dtree_get(const dtree_dt_index *h,const char *str,flag_f filter)
 //gets the flag for a token
 const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,flag_f sflags)
 {
-    int hash;
+    unsigned int hash;
     char n;
     const char *p;
     packed_ptr pp;
@@ -374,7 +376,7 @@ const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,flag_f
 //searches for a token with regex
 static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtree_dt_node *n,const char *t)
 {
-    int hash;
+    unsigned int hash;
     flag_f rf,nf;
     packed_ptr pp;
     const dtree_dt_node *rflag;
