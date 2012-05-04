@@ -23,8 +23,8 @@ The following variables are supported:
     $dclass_inputDevices
     $dclass_displayHeight
     $dclass_displayWidth
-    $device_os
-    $ajax_support_javascript
+    $dclass_device_os
+    $dclass_ajax_support_javascript
     $dclass_is_tablet
     $dclass_is_wireless_device
   Browser
@@ -32,5 +32,5 @@ The following variables are supported:
     $dclass_version
     $dclass_os
 
-Using the following variable allows the lookup to be cached:
+The following variable allows the lookup to be cached between variable uses:
     $dclass_ptr

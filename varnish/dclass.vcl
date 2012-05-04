@@ -7,8 +7,8 @@ backend default {
 
 sub vcl_init {
 	# load openddr
-	dclass.init_dclass("/some/path/OpenDDR/1.0.0.5/resources");
-	#dclass.init_dclass_p("/some/path/OpenDDR/1.0.0.5/resources",0);
+	dclass.init_dclass("/some/path/OpenDDR/1.0.0.0/resources");
+	#dclass.init_dclass_p("/some/path/OpenDDR/1.0.0.0/resources",0);
 
 	# load browser dtree
 	dclass.init_dclass_p("/some/path/dClass/dtrees/browser.dtree",1);

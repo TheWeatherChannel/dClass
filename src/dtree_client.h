@@ -103,8 +103,8 @@ typedef unsigned int packed_ptr;
 #define DTREE_DATA_MKEYS        30
 #define DTREE_DC_DISTANCE(H,S)  ((int)((S)-((char*)(H)->dc_slabs[0])))
 
-#define DTREE_HASH_PCHARS       ""
-#define DTREE_HASH_SEP          (36+sizeof(DTREE_HASH_PCHARS)-1)
+#define DTREE_HASH_TCHARS       ""
+#define DTREE_HASH_SEP          (36+sizeof(DTREE_HASH_TCHARS)-1)
 #define DTREE_HASH_SCHARS       " -_/\\()"
 #define DTREE_HASH_NCOUNT       (DTREE_HASH_SEP+sizeof(DTREE_HASH_SCHARS))
 #define DTREE_HASH_ANY          (DTREE_HASH_NCOUNT-1)

@@ -254,10 +254,10 @@ unsigned int dtree_hash_char(char c)
         return c-'0';
     
     //configurable
-    m=sizeof(DTREE_HASH_PCHARS)-1;
+    m=sizeof(DTREE_HASH_TCHARS)-1;
     for(i=0;i<m;i++)
     {
-        if(c==DTREE_HASH_PCHARS[i])
+        if(c==DTREE_HASH_TCHARS[i])
             return 36+i;
     }
     
