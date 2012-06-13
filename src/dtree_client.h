@@ -112,6 +112,9 @@ typedef unsigned int packed_ptr;
 #define DTREE_PATTERN_OPTIONAL  '?'
 #define DTREE_PATTERN_SET_S     '['
 #define DTREE_PATTERN_SET_E     ']'
+#define DTREE_PATTERN_GROUP_S   '('
+#define DTREE_PATTERN_GROUP_E   ')'
+#define DTREE_PATTERN_ESCAPE    '\\'
 
 
 //flags
@@ -162,6 +165,8 @@ typedef struct
     size_t                dc_count;
     
     dtree_dt_node         *head;
+    
+    char                  *comment;
     
     dtree_dt_node         *slabs[DTREE_DT_MAX_SLABS];
     char                  *dc_slabs[DTREE_M_MAX_SLABS];

@@ -21,8 +21,8 @@
     <device id="desktopDevice" parentId="generic-">
       <property name="vendor" value="desktop"/>
       <property name="model" value="browser"/>
-      <property name="displayHeight" value="600"/>
-      <property name="displayWidth" value="800"/>
+      <property name="displayHeight" value="900"/>
+      <property name="displayWidth" value="1600"/>
       <property name="is_wireless_device" value="false"/>
       <property name="ajax_support_javascript" value="true"/>
       <property name="ajax_support_getelementbyid" value="true"/>

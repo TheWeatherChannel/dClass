@@ -43,7 +43,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     const dtree_dt_node *fbnode;
     const dtree_dt_node *fnode;
     const dtree_dt_index *h=&di->dti;
-    const void *cnodes[DTREE_S_MAX_CHAIN]={NULL};
+    dclass_cnode cnodes[DTREE_S_MAX_CHAIN]={{0,NULL}};
     
     if(!str || !h->head)
         return dclass_get_kverror(di);
@@ -104,10 +104,10 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                         if(fnode->flags & DTREE_DT_FLAG_CHAIN && fnode->cparam)
                         {   
                             dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() looking for pchain %p\n",fnode->cparam);
-                            for(i=0;i<DTREE_S_MAX_CHAIN && cnodes[i];i++)
+                            for(i=0;i<DTREE_S_MAX_CHAIN && cnodes[i].cn;i++)
                             {
                                 //chain hit
-                                if(cnodes[i]==fnode->cparam)
+                                if(cnodes[i].cn==fnode->cparam)
                                 {
                                     if(fnode->flags & DTREE_DT_FLAG_BCHAIN)
                                         bcvalid=1;
@@ -121,9 +121,9 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                         {
                             for(i=0;i<DTREE_S_MAX_CHAIN;i++)
                             {
-                                if(!cnodes[i])
+                                if(!cnodes[i].cn)
                                 {
-                                    cnodes[i]=fnode->payload;
+                                    cnodes[i].cn=fnode->payload;
                                     dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain added: %p('%d')\n",fnode->payload,i);
                                     break;
                                 }

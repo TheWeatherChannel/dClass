@@ -23,7 +23,7 @@
 #include "dtree_client.h"
 
 
-#define DCLASS_VERSION    "dClass 2.0.5"
+#define DCLASS_VERSION    "dClass 2.0.6_"
 
 
 //key value struct, dtree payload
@@ -47,6 +47,16 @@ typedef struct
     dclass_keyvalue       error;
 }
 dclass_index;
+
+
+//cnode
+typedef struct
+{
+    unsigned int         pos;
+    
+    const void           *cn;
+}
+dclass_cnode;
 
 
 #include "openddr_client.h"
