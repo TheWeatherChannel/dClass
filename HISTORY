@@ -1,3 +1,7 @@
+2.0.7
+ -Updated OpenDDR (1.0.0.8)
+ -Fixed possible infinite loop
+
 2.0.6
  -Updated OpenDDR (1.0.0.7)
  -Scoping out several feature enhancements for 2.1

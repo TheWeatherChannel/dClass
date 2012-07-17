@@ -58,7 +58,7 @@ int dtree_add_entry(dtree_dt_index *h,const char *key,void *data,flag_f flags,vo
         
         h->head=DTREE_DT_GETPP(h,pp);
         h->head->curr=pp;
-        h->head->data='^';
+        h->head->data=0;
     }
     
     if(!flags)
@@ -79,7 +79,7 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
         return 0;
     
     dtree_printd(DTREE_PRINT_INITDTREE,"ADD: tree: '%c' level: %d *t: '%c' p(%p) pp(%p)\n",
-             n->data,dtree_node_depth(h,n),*t?*t:'#',n,n->curr);
+             n->data?n->data:'^',dtree_node_depth(h,n),*t?*t:'#',n,n->curr);
     
     //EOT trailing wildcard
     if(!*t && n->prev)
@@ -94,7 +94,7 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
         if(!pp)
             return 0;
         
-        dtree_printd(DTREE_PRINT_INITDTREE,"ADD: optional: '%c' *t: '%c'\n",next->data,*(t+1));
+        dtree_printd(DTREE_PRINT_INITDTREE,"ADD: optional: '%c' *t: '%c'\n",next->data?next->data:'^',*(t+1));
         
         if(dtree_add_node(h,next,t+1,data,flags,param)<0)
             return -1;
@@ -124,7 +124,7 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
         {
             *p=*t;
             
-            dtree_printd(DTREE_PRINT_INITDTREE,"ADD: set: '%c' *t: '%c' t: '%s'\n",n->data,*t,p);
+            dtree_printd(DTREE_PRINT_INITDTREE,"ADD: set: '%c' *t: '%c' t: '%s'\n",n->data?n->data:'^',*t,p);
             
             if(dtree_add_node(h,n,p,data,flags,param)<0)
                 return -1;
@@ -191,7 +191,7 @@ static int dtree_set_payload(dtree_dt_index *h,dtree_dt_node *n,void *data,flag_
         return 0;
     
     dtree_printd(DTREE_PRINT_INITDTREE,"ADD: EOT: '%c' level: %d p(%p) pp(%p) param(%p)\n",
-             n->data,dtree_node_depth(h,n),n,n->curr,param);
+             n->data?n->data:'^',dtree_node_depth(h,n),n,n->curr,param);
     
     if(n->flags && (h->sflags & DTREE_S_FLAG_DUPS))
     {
@@ -381,7 +381,7 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
     packed_ptr pp;
     const dtree_dt_node *rflag;
     
-    if(!n)
+    if(!n || !n->curr)
         return NULL;
     
     //bad match

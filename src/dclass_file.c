@@ -425,7 +425,7 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
         
         len=p-t;
         
-        if(!*(p-1))
+        if(!*(p-1) && len)
             len--;
         
         if(len>=DTREE_DATA_BUFLEN)

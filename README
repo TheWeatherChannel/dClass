@@ -46,11 +46,22 @@ Chris McClellen (cmcclellen@weather.com)
 OpenDDR (http://openddr.org/)
 
 
+ROADMAP
+
+
+Enhancements for 2.1
+
+  -Expanded regex support
+  -Directional and distance based pattern chaining
+  -Configurable levels of weak pattern hierarchy
+  -Index comments for managing large amounts of indexes
+
+
 NOTES
 
 
-The goal of this project is to quickly and accurately classify internet browser
-user-agent strings. This project was built ground up to do so.
+The goal of this project is to quickly and accurately match text against a
+large number of flexable patterns.
 
 Please reference test.dtree in the dtrees subdirectory for detailed pattern
 notes.
