@@ -36,17 +36,16 @@ vmod_dclass_container;
 typedef struct
 {
     dclass_index heads[VMOD_DTREE_SIZE];
+    
+    vmod_dclass_container *vmod_dc_list;
+    int vmod_dc_list_size;
+    pthread_mutex_t vmod_dc_list_mutex;
 }
 vmod_dtree_container;
 
 
-vmod_dclass_container *vmod_dc_list;
-int vmod_dc_list_size;
-pthread_mutex_t vmod_dc_list_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-
 void vmod_free_dtc(void*);
-static vmod_dclass_container *dcc_get(struct sess*);
+static vmod_dclass_container *dcc_get(struct sess*,vmod_dtree_container*);
 
 
 //inits a dtc, stores it in PRIV_VCL, inits dc_list
@@ -59,25 +58,27 @@ int init_function(struct vmod_priv *priv, const struct VCL_conf *conf)
     
     AN(dtc);
     
+    pthread_mutex_init(&dtc->vmod_dc_list_mutex,NULL);
+    
     for(i=0;i<VMOD_DTREE_SIZE;i++)
         dclass_init_index(&dtc->heads[i]);
+
+    dtc->vmod_dc_list_size=256;
+    
+    dtc->vmod_dc_list=malloc(dtc->vmod_dc_list_size*sizeof(vmod_dclass_container));
+    
+    AN(dtc->vmod_dc_list);
+    
+    for (i=0;i<dtc->vmod_dc_list_size;i++)
+    {
+        for(j=0;j<VMOD_DTREE_SIZE;j++)
+            dtc->vmod_dc_list[i].kvd[j]=NULL;
+        
+        dtc->vmod_dc_list[i].xid=0;
+    }
     
     priv->priv=dtc;
     priv->free=vmod_free_dtc;
-
-    vmod_dc_list_size=256;
-    
-    vmod_dc_list=malloc(vmod_dc_list_size*sizeof(vmod_dclass_container));
-    
-    AN(vmod_dc_list);
-    
-    for (i=0;i<vmod_dc_list_size;i++)
-    {
-        for(j=0;j<VMOD_DTREE_SIZE;j++)
-            vmod_dc_list[i].kvd[j]=NULL;
-        
-        vmod_dc_list[i].xid=0;
-    }
     
     return 0;
 }
@@ -123,7 +124,7 @@ const char *vmod_classify_p(struct sess *sp,struct vmod_priv *priv,const char *s
     
     dtc=(vmod_dtree_container*)priv->priv;
     
-    dcc=dcc_get(sp);
+    dcc=dcc_get(sp,dtc);
     
     kvd=(dclass_keyvalue*)dclass_classify(&dtc->heads[p],str);
     
@@ -150,7 +151,7 @@ const char *vmod_get_field_p(struct sess *sp,struct vmod_priv *priv,const char *
     
     dtc=(vmod_dtree_container*)priv->priv;
     
-    dcc=dcc_get(sp);
+    dcc=dcc_get(sp,dtc);
     
     if(dcc->kvd[p])
         return dclass_get_kvalue(dcc->kvd[p],key);
@@ -174,7 +175,7 @@ int vmod_get_ifield_p(struct sess *sp,struct vmod_priv *priv,const char *key,int
     
     dtc=(vmod_dtree_container*)priv->priv;
     
-    dcc=dcc_get(sp);
+    dcc=dcc_get(sp,dtc);
     
     if(dcc->kvd[p])
     {
@@ -190,31 +191,31 @@ int vmod_get_ifield_p(struct sess *sp,struct vmod_priv *priv,const char *key,int
 }
 
 //gets a dc from the dc_list
-static vmod_dclass_container *dcc_get(struct sess *sp)
+static vmod_dclass_container *dcc_get(struct sess *sp,vmod_dtree_container *dtc)
 {
     int ns,j;
     vmod_dclass_container *dcc;
     
-    AZ(pthread_mutex_lock(&vmod_dc_list_mutex));
+    AZ(pthread_mutex_lock(&dtc->vmod_dc_list_mutex));
 
-    while (vmod_dc_list_size<=sp->id)
+    while (dtc->vmod_dc_list_size<=sp->id)
     {
-            ns=vmod_dc_list_size*2;
+            ns=dtc->vmod_dc_list_size*2;
 
-            vmod_dc_list=realloc(vmod_dc_list,ns*sizeof(vmod_dclass_container));
+            dtc->vmod_dc_list=realloc(dtc->vmod_dc_list,ns*sizeof(vmod_dclass_container));
             
-            AN(vmod_dc_list);
+            AN(dtc->vmod_dc_list);
             
-            for (;vmod_dc_list_size<ns;vmod_dc_list_size++)
+            for (;dtc->vmod_dc_list_size<ns;dtc->vmod_dc_list_size++)
             {
                 for(j=0;j<VMOD_DTREE_SIZE;j++)
-                    vmod_dc_list[vmod_dc_list_size].kvd[j]=NULL;
+                    dtc->vmod_dc_list[dtc->vmod_dc_list_size].kvd[j]=NULL;
                 
-                vmod_dc_list[vmod_dc_list_size].xid=0;
+                dtc->vmod_dc_list[dtc->vmod_dc_list_size].xid=0;
             }
     }
     
-    dcc=&vmod_dc_list[sp->id];
+    dcc=&dtc->vmod_dc_list[sp->id];
     
     if (dcc->xid!=sp->xid)
     {
@@ -222,7 +223,7 @@ static vmod_dclass_container *dcc_get(struct sess *sp)
         dcc->xid=sp->xid;
     }
     
-    AZ(pthread_mutex_unlock(&vmod_dc_list_mutex));
+    AZ(pthread_mutex_unlock(&dtc->vmod_dc_list_mutex));
     
     return dcc;
 }
@@ -236,6 +237,8 @@ void vmod_free_dtc(void *data)
     
     for(i=0;i<VMOD_DTREE_SIZE;i++)
         dclass_free(&dtc->heads[i]);
+    
+    free(dtc->vmod_dc_list);
     
     free(data);
 }

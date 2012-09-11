@@ -404,8 +404,10 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
     pp=n->nodes[hash];
     rflag=DTREE_DT_GETPP(h,pp);
     
-    if(rflag)
+    if(pp)
         rflag=dtree_search_node(h,rflag,t);
+    else
+        rflag=NULL;
     
     //wildcard
     if(!rflag)
@@ -415,8 +417,10 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
         pp=n->nodes[hash];
         rflag=DTREE_DT_GETPP(h,pp);
         
-        if(rflag)
+        if(pp)
             rflag=dtree_search_node(h,rflag,t);
+        else
+            rflag=NULL;
         
         hash=dtree_hash_char(*t);
     }

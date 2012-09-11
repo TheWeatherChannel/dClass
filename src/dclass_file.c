@@ -539,7 +539,7 @@ static long dclass_write_tree(const dtree_dt_index *h,const dtree_dt_node *n,cha
     packed_ptr pp;
     const dtree_dt_node *dupn;
     
-    if(!n || depth>(DTREE_DATA_BUFLEN-1))
+    if(!n || !n->curr || depth>(DTREE_DATA_BUFLEN-1))
         return 0;
     
     path[depth]=n->data;

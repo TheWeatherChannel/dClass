@@ -131,6 +131,36 @@
 "chrome/20";chrome20l;C;x11;browser=Chrome,version=20000,os=Linux
 "chrome/20";chrome20w;C;windows;browser=Chrome,version=20000,os=Windows
 "chrome/20";chrome20m;C;macintosh;browser=Chrome,version=20000,os=Macintosh
+"chrome/21";chrome21l;C;x11;browser=Chrome,version=21000,os=Linux
+"chrome/21";chrome21w;C;windows;browser=Chrome,version=21000,os=Windows
+"chrome/21";chrome21m;C;macintosh;browser=Chrome,version=21000,os=Macintosh
+"chrome/22";chrome22l;C;x11;browser=Chrome,version=22000,os=Linux
+"chrome/22";chrome22w;C;windows;browser=Chrome,version=22000,os=Windows
+"chrome/22";chrome22m;C;macintosh;browser=Chrome,version=22000,os=Macintosh
+"chrome/23";chrome23l;C;x11;browser=Chrome,version=23000,os=Linux
+"chrome/23";chrome23w;C;windows;browser=Chrome,version=23000,os=Windows
+"chrome/23";chrome23m;C;macintosh;browser=Chrome,version=23000,os=Macintosh
+"chrome/24";chrome24l;C;x11;browser=Chrome,version=24000,os=Linux
+"chrome/24";chrome24w;C;windows;browser=Chrome,version=24000,os=Windows
+"chrome/24";chrome24m;C;macintosh;browser=Chrome,version=24000,os=Macintosh
+"chrome/25";chrome25l;C;x11;browser=Chrome,version=25000,os=Linux
+"chrome/25";chrome25w;C;windows;browser=Chrome,version=25000,os=Windows
+"chrome/25";chrome25m;C;macintosh;browser=Chrome,version=25000,os=Macintosh
+"chrome/26";chrome26l;C;x11;browser=Chrome,version=26000,os=Linux
+"chrome/26";chrome26w;C;windows;browser=Chrome,version=26000,os=Windows
+"chrome/26";chrome26m;C;macintosh;browser=Chrome,version=26000,os=Macintosh
+"chrome/27";chrome27l;C;x11;browser=Chrome,version=27000,os=Linux
+"chrome/27";chrome27w;C;windows;browser=Chrome,version=27000,os=Windows
+"chrome/27";chrome27m;C;macintosh;browser=Chrome,version=27000,os=Macintosh
+"chrome/28";chrome28l;C;x11;browser=Chrome,version=28000,os=Linux
+"chrome/28";chrome28w;C;windows;browser=Chrome,version=28000,os=Windows
+"chrome/28";chrome28m;C;macintosh;browser=Chrome,version=28000,os=Macintosh
+"chrome/29";chrome29l;C;x11;browser=Chrome,version=29000,os=Linux
+"chrome/29";chrome29w;C;windows;browser=Chrome,version=29000,os=Windows
+"chrome/29";chrome29m;C;macintosh;browser=Chrome,version=29000,os=Macintosh
+"chrome";chromexl;C;x11;browser=Chrome,version=0,os=Linux
+"chrome";chromexw;C;windows;browser=Chrome,version=0,os=Windows
+"chrome";chromexm;C;macintosh;browser=Chrome,version=0,os=Macintosh
 "chrome";chrome;W;;browser=Chrome,version=0,os=
 
 # firefox
@@ -192,6 +222,10 @@
 "firefox/16";firefox16w;C;windows;browser=Firefox,version=16000,os=Windows
 "firefox/16";firefox16m;C;macintosh;browser=Firefox,version=16000,os=Macintosh
 "firefox/16";firefox16a;C;android0;browser="Firefox Mobile",version=16000,os=Android
+"firefox";firefoxxl;C;x11;browser=Firefox,version=0,os=Linux
+"firefox";firefoxxw;C;windows;browser=Firefox,version=0,os=Windows
+"firefox";firefoxxm;C;macintosh;browser=Firefox,version=0,os=Macintosh
+"firefox";firefoxxa;C;android0;browser="Firefox Mobile",version=0,os=Android
 "firefox";firefox;W;;browser=Firefox,version=0,os=
 
 # opera

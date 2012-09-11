@@ -36,6 +36,8 @@ int main(int argc,char **args)
     dtree_dt_index *h=&di.dti;
     const dclass_keyvalue *kvd;
     
+    printf("dClass - Device classification (version %s)\n",dclass_get_version());
+    
     for(i=1;i<argc;i++)
     {
         //-l [dtree file]
@@ -65,8 +67,6 @@ int main(int argc,char **args)
         else
             parameter=args[i];
     }
-    
-    printf("dClass - Device classification (version %s)\n",dclass_get_version());
 
     printf("Loading %s: '%s'\n",openddr?"openddr":"dtree",loadFile);
     

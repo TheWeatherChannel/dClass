@@ -43,10 +43,12 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     const dtree_dt_node *fbnode;
     const dtree_dt_node *fnode;
     const dtree_dt_index *h=&di->dti;
-    dclass_cnode cnodes[DTREE_S_MAX_CHAIN]={{0,NULL}};
+    dclass_cnode cnodes[DTREE_S_MAX_CHAIN];
     
     if(!str || !h->head)
         return dclass_get_kverror(di);
+    
+    memset(cnodes,0,sizeof(cnodes));
     
     dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() UA: '%s'\n",str);
     
