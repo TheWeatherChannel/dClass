@@ -12,3 +12,11 @@ rat vat sat nat
 rat vat nat
 rat nat
 nat
+test3 test4
+test4 test3
+test2 test1
+test1 test2
+test5 test6
+test6 test5
+test7 test9 test8
+test7 test8 test9

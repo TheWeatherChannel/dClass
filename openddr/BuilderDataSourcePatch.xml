@@ -42,6 +42,15 @@
           <value>Googlebot</value>
           <value>bingbot</value>
           <value>Baiduspider</value>
+          <value>msnbot</value>
+          <value>YandexBot</value>
+          <value>proximic</value>
+          <value>YoudaoBot</value>
+          <value>Genieo</value>
+          <value>heritrix</value>
+          <value>facebookexternalhit</value>
+          <value>Sosospider</value>
+          <value>CrystalSemanticsBot</value>
         </list>
       </device>
     </builder>
@@ -72,6 +81,8 @@
       <device id="genericTouchPhone">
         <list>
           <value>android</value>
+          <value>blackberry</value>
+          <value>bb10</value>
         </list>
       </device>
       <device id="desktopDevice">

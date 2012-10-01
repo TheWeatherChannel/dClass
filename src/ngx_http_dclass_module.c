@@ -427,10 +427,14 @@ static ngx_int_t ngx_http_dclass_pointer(ngx_http_request_t *r,ngx_http_variable
 //cleanup
 static void ngx_http_dclass_cleanup(void *data)
 {
+    int i;
     ngx_http_dclass_conf_t *conf;
     
     conf=(ngx_http_dclass_conf_t*)data;
     
-    if(conf->head[0])
-        dclass_free(conf->head[0]);
+    for(i=0;i<NGX_HTTP_DCLASS_INDEXES;i++)
+    {
+        if(conf->head[i])
+           dclass_free(conf->head[i]);
+    }
 }

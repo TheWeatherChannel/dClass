@@ -1,3 +1,7 @@
+2.0.9
+ -Updated bot detection
+ -Longest pattern always matches
+
 2.0.8
  -Updated OpenDDR (1.10)
  -Minor code cleanups

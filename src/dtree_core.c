@@ -391,13 +391,13 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
     t++;
     hash=dtree_hash_char(*t);
     
-    //lazy EOT
-    if((!hash && *t!='0') || hash>=DTREE_HASH_SEP)
+    //EOS
+    if(!hash && *t!='0')
     {
         //only quit if strong
         if(dtree_get_flag(h,n,DTREE_DT_FLAG_STRONG))
             return n;
-        else if(!t && !n->flags)
+        else if(!n->flags)
             return NULL;
     }
     
@@ -433,7 +433,7 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
     }
     
     //n is lazy EOT or stronger match
-    if((n->flags & DTREE_DT_FLAG_TOKEN) && ((hash==0 && *t!='0') || hash>=DTREE_HASH_SEP))
+    if((n->flags & DTREE_DT_FLAG_TOKEN) && ((!hash && *t!='0') || hash>=DTREE_HASH_SEP))
     {
         nf=dtree_get_flags(h,n);
         rf=dtree_get_flags(h,rflag);
@@ -442,12 +442,12 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
             rflag=n;
         else if((nf & DTREE_DT_FLAG_STRONG) && !(rf & DTREE_DT_FLAG_STRONG))
             rflag=n;
-        else if((rf & DTREE_DT_FLAG_STRONG));
+        else if(rf & DTREE_DT_FLAG_STRONG);
         else if((nf & DTREE_DT_FLAG_CHAIN) && !(nf & DTREE_DT_FLAG_BCHAIN) &&
                 !(rf & DTREE_DT_FLAG_CHAIN) && !(rf & DTREE_DT_FLAG_BCHAIN))
             rflag=n;
-        else if((rf & DTREE_DT_FLAG_CHAIN));
-        else if((nf & DTREE_DT_FLAG_WEAK))
+        else if(rf & DTREE_DT_FLAG_CHAIN);
+        else if((nf & DTREE_DT_FLAG_WEAK) && !(rf & DTREE_DT_FLAG_WEAK))
             rflag=n;
     }
     

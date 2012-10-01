@@ -20,7 +20,7 @@
 
 
 static long dtree_print_node(const dtree_dt_index*,const char*(*f)(void*),const dtree_dt_node*,char*,int);
-inline int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
+extern inline int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
 char *dtree_node_path(const dtree_dt_index*,const dtree_dt_node*,char*);
 void dtree_timersubn(struct timespec*,struct timespec*,struct timespec*);
 

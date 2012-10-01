@@ -69,3 +69,13 @@ bat;bat;W;;
 vat;vat;N;;
 rat;rat;N;;
 
+test3 test4;test34;S;;
+test3;test3;S;;
+test1 test2;test12;W;;
+test1;test1;W;;
+test2;test2;W;;
+test5 test6;test56;N;;
+test5;test5;N;;
+test8 test9;test89;C;test7;
+test8;test8;C;test7;
+test7;test7;B;;

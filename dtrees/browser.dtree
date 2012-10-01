@@ -8,10 +8,12 @@
 "blackberry.....?/4";blackberry4;S;;browser=BlackBerry,version=4000,os=BlackBerry
 "blackberry.....?/5";blackberry5;S;;browser=BlackBerry,version=5000,os=BlackBerry
 "blackberry";blackberry;B;;
+"bb10";blackberry;B;;
 "applewebkit";bbwebkit;B;blackberry;
 "version/6";blackberry6;C;bbwebkit;browser=Webkit,version=6000,os=BlackBerry
 "version/7";blackberry7;C;bbwebkit;browser=WebKit,version=7000,os=BlackBerry
 "version/8";blackberry8;C;bbwebkit;browser=WebKit,version=8000,os=BlackBerry
+"version/10";blackberry10;C;bbwebkit;browser=WebKit,version=10000,os=BlackBerry
 "blackberry";blackberry;W;;browser=,version=0,os=BlackBerry
 
 #ios
@@ -25,6 +27,11 @@
 "version/5";iossafari5;C;applewebkit;browser=Safari,version=5000,os=iOS
 "version/6";iossafari6;C;applewebkit;browser=Safari,version=6000,os=iOS
 "version/7";iossafari7;C;applewebkit;browser=Safari,version=7000,os=iOS
+"iphone os 3";iphoneg5;W;;browser=,version=3000,os=iOS
+"iphone os 4";iphoneg5;W;;browser=,version=4000,os=iOS
+"iphone os 5";iphoneg5;W;;browser=,version=5000,os=iOS
+"iphone os 6";iphoneg6;W;;browser=,version=6000,os=iOS
+"iphone os 7";iphoneg7;W;;browser=,version=7000,os=iOS
 "iphone";iphone;W;;browser=,version=0,os=iOS
 "ipad";ipad;W;;browser=,version=0,os=iOS
 "ipod";ipod;W;;browser=,version=0,os=iOS

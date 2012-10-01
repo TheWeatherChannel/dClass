@@ -17,7 +17,12 @@
     </statement>
   </version>
   <Devices>
-    <device id="desktopCrawler" parentId="desktopDevice"/>
+    <device id="desktopCrawler" parentId="desktopDevice">
+      <property name="is_crawler" value="true"/>
+    </device>
+    <device id="root" parentId="">
+      <property name="is_crawler" value="false"/>
+    </device>
     <device id="desktopDevice" parentId="generic-">
       <property name="vendor" value="desktop"/>
       <property name="model" value="browser"/>

@@ -181,7 +181,7 @@ int dtree_add_entry(dtree_dt_index *,const char*,void*,flag_f,void*);
 
 void *dtree_get(const dtree_dt_index*,const char*,flag_f);
 const dtree_dt_node *dtree_get_node(const dtree_dt_index*,const char*,flag_f);
-inline const dtree_dt_node *dtree_get_flag(const dtree_dt_index*,const dtree_dt_node*,flag_f);
+extern inline const dtree_dt_node *dtree_get_flag(const dtree_dt_index*,const dtree_dt_node*,flag_f);
 flag_f dtree_get_flags(const dtree_dt_index*,const dtree_dt_node*);
 
 char *dtree_alloc_string(dtree_dt_index*,const char*,int);
