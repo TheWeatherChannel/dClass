@@ -190,12 +190,10 @@ static const dclass_keyvalue *dclass_get_kverror(const dclass_index *di)
 //show first string on error
 static char *dclass_error_string(const dtree_dt_index *h)
 {
-    static char *error=DTREE_M_SERROR;
-    
     if(DTREE_M_LOOKUP_CACHE && h->dc_cache[0])
         return h->dc_cache[0];
     
-    return error;
+    return DTREE_M_SERROR;
 }
 
 //gets the id for a generic payload

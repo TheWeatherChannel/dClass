@@ -36,7 +36,7 @@ int main(int argc,char **args)
     dtree_dt_index *h=&di.dti;
     const dclass_keyvalue *kvd;
     
-    printf("dClass - Device classification (version %s)\n",dclass_get_version());
+    printf("dClass - Device classification (version %s %zubit addressing)\n",dclass_get_version(),DTREE_DT_PTR_SIZE);
     
     for(i=1;i<argc;i++)
     {

@@ -78,6 +78,9 @@ typedef unsigned int packed_ptr;
 #endif /*DTREE_DT_PACKED*/
 
 
+#define DTREE_DT_PTR_SIZE       (sizeof(packed_ptr)*8)
+
+
 //flags, constants, etc
 #define DTREE_DT_FLAG_TOKEN     (1 << 0)
 #define DTREE_DT_FLAG_STRONG    (1 << 1)

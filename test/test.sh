@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENDDR_RESOURCE=/some/path/OpenDDR/1.10/resources
+OPENDDR_RESOURCE=/some/path/OpenDDR/1.11/resources
 DCLASS_BIN=../src/dclass_client
 
 if [ ! -s "uas.txt" ]

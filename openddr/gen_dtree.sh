@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENDDR_RESOURCE_PATH=/some/path/OpenDDR/1.10/resources
+OPENDDR_RESOURCE_PATH=/some/path/OpenDDR/1.11/resources
 DCLASS_BIN=../src/dclass_client
 
 if [ ! -s "$DCLASS_BIN" ]
