@@ -19,9 +19,11 @@
   <Devices>
     <device id="desktopCrawler" parentId="desktopDevice">
       <property name="is_crawler" value="true"/>
+      <property name="is_desktop" value="false"/>
     </device>
     <device id="root" parentId="">
       <property name="is_crawler" value="false"/>
+      <property name="is_desktop" value="false"/>
     </device>
     <device id="desktopDevice" parentId="generic-">
       <property name="vendor" value="desktop"/>
@@ -29,6 +31,7 @@
       <property name="displayHeight" value="900"/>
       <property name="displayWidth" value="1600"/>
       <property name="is_wireless_device" value="false"/>
+      <property name="is_desktop" value="true"/>
       <property name="ajax_support_javascript" value="true"/>
       <property name="ajax_support_getelementbyid" value="true"/>
       <property name="ajax_support_inner_html" value="true"/>

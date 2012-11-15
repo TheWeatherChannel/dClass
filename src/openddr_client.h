@@ -42,7 +42,8 @@
                                 "ajax_support_javascript", \
                                 "is_tablet",               \
                                 "is_wireless_device",      \
-                                "is_crawler"               \
+                                "is_crawler",              \
+                                "is_desktop"               \
                               }
 
 

@@ -1,8 +1,12 @@
+2.0.11
+ -Added is_desktop flag
+ -Updated OpenDDR (1.12)
+
 2.0.10
  -Updated OpenDDR (1.11)
 
 2.0.9
- -Updated bot detection
+ -Updated bot detection (is_crawler)
  -Longest pattern always matches
 
 2.0.8
