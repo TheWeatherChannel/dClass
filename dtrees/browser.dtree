@@ -165,10 +165,33 @@
 "chrome/29";chrome29l;C;x11;browser=Chrome,version=29000,os=Linux
 "chrome/29";chrome29w;C;windows;browser=Chrome,version=29000,os=Windows
 "chrome/29";chrome29m;C;macintosh;browser=Chrome,version=29000,os=Macintosh
+"chrome/3.";chrome3xl;C;x11;browser=Chrome,version=30000,os=Linux
+"chrome/3.";chrome3xw;C;windows;browser=Chrome,version=30000,os=Windows
+"chrome/3.";chrome3xm;C;macintosh;browser=Chrome,version=30000,os=Macintosh
+"chrome/4.";chrome4xl;C;x11;browser=Chrome,version=40000,os=Linux
+"chrome/4.";chrome4xw;C;windows;browser=Chrome,version=40000,os=Windows
+"chrome/4.";chrome4xm;C;macintosh;browser=Chrome,version=40000,os=Macintosh
+"chrome/5.";chrome5xl;C;x11;browser=Chrome,version=50000,os=Linux
+"chrome/5.";chrome5xw;C;windows;browser=Chrome,version=50000,os=Windows
+"chrome/5.";chrome5xm;C;macintosh;browser=Chrome,version=50000,os=Macintosh
 "chrome";chromexl;C;x11;browser=Chrome,version=0,os=Linux
 "chrome";chromexw;C;windows;browser=Chrome,version=0,os=Windows
 "chrome";chromexm;C;macintosh;browser=Chrome,version=0,os=Macintosh
 "chrome";chrome;W;;browser=Chrome,version=0,os=
+"crios/19";chrome19i;C;ios;browser=Chrome,version=19000,os=iOS
+"crios/20";chrome20i;C;ios;browser=Chrome,version=20000,os=iOS
+"crios/21";chrome21i;C;ios;browser=Chrome,version=21000,os=iOS
+"crios/22";chrome22i;C;ios;browser=Chrome,version=22000,os=iOS
+"crios/23";chrome23i;C;ios;browser=Chrome,version=23000,os=iOS
+"crios/24";chrome24i;C;ios;browser=Chrome,version=24000,os=iOS
+"crios/25";chrome25i;C;ios;browser=Chrome,version=25000,os=iOS
+"crios/26";chrome26i;C;ios;browser=Chrome,version=26000,os=iOS
+"crios/27";chrome27i;C;ios;browser=Chrome,version=27000,os=iOS
+"crios/28";chrome28i;C;ios;browser=Chrome,version=28000,os=iOS
+"crios/29";chrome29i;C;ios;browser=Chrome,version=29000,os=iOS
+"crios/3.";chrome3xi;C;ios;browser=Chrome,version=30000,os=iOS
+"crios/4.";chrome4xi;C;ios;browser=Chrome,version=40000,os=iOS
+"crios/5.";chrome5xi;C;ios;browser=Chrome,version=50000,os=iOS
 
 # firefox
 "firefox/1";firefox1l;C;x11;browser=Firefox,version=1000,os=Linux
@@ -229,6 +252,34 @@
 "firefox/16";firefox16w;C;windows;browser=Firefox,version=16000,os=Windows
 "firefox/16";firefox16m;C;macintosh;browser=Firefox,version=16000,os=Macintosh
 "firefox/16";firefox16a;C;android0;browser="Firefox Mobile",version=16000,os=Android
+"firefox/17";firefox17l;C;x11;browser=Firefox,version=17000,os=Linux
+"firefox/17";firefox17w;C;windows;browser=Firefox,version=17000,os=Windows
+"firefox/17";firefox17m;C;macintosh;browser=Firefox,version=17000,os=Macintosh
+"firefox/17";firefox17a;C;android0;browser="Firefox Mobile",version=17000,os=Android
+"firefox/18";firefox18l;C;x11;browser=Firefox,version=18000,os=Linux
+"firefox/18";firefox18w;C;windows;browser=Firefox,version=18000,os=Windows
+"firefox/18";firefox18m;C;macintosh;browser=Firefox,version=18000,os=Macintosh
+"firefox/18";firefox18a;C;android0;browser="Firefox Mobile",version=18000,os=Android
+"firefox/19";firefox19l;C;x11;browser=Firefox,version=19000,os=Linux
+"firefox/19";firefox19w;C;windows;browser=Firefox,version=19000,os=Windows
+"firefox/19";firefox19m;C;macintosh;browser=Firefox,version=19000,os=Macintosh
+"firefox/19";firefox19a;C;android0;browser="Firefox Mobile",version=19000,os=Android
+"firefox/2.";firefox2xl;C;x11;browser=Firefox,version=20000,os=Linux
+"firefox/2.";firefox2xw;C;windows;browser=Firefox,version=20000,os=Windows
+"firefox/2.";firefox2xm;C;macintosh;browser=Firefox,version=20000,os=Macintosh
+"firefox/2.";firefox2xa;C;android0;browser="Firefox Mobile",version=20000,os=Android
+"firefox/3.";firefox3xl;C;x11;browser=Firefox,version=30000,os=Linux
+"firefox/3.";firefox3xw;C;windows;browser=Firefox,version=30000,os=Windows
+"firefox/3.";firefox3xm;C;macintosh;browser=Firefox,version=30000,os=Macintosh
+"firefox/3.";firefox3xa;C;android0;browser="Firefox Mobile",version=30000,os=Android
+"firefox/4.";firefox4xl;C;x11;browser=Firefox,version=40000,os=Linux
+"firefox/4.";firefox4xw;C;windows;browser=Firefox,version=40000,os=Windows
+"firefox/4.";firefox4xm;C;macintosh;browser=Firefox,version=40000,os=Macintosh
+"firefox/4.";firefox4xa;C;android0;browser="Firefox Mobile",version=40000,os=Android
+"firefox/5.";firefox5xl;C;x11;browser=Firefox,version=50000,os=Linux
+"firefox/5.";firefox5xw;C;windows;browser=Firefox,version=50000,os=Windows
+"firefox/5.";firefox5xm;C;macintosh;browser=Firefox,version=50000,os=Macintosh
+"firefox/5.";firefox5xa;C;android0;browser="Firefox Mobile",version=50000,os=Android
 "firefox";firefoxxl;C;x11;browser=Firefox,version=0,os=Linux
 "firefox";firefoxxw;C;windows;browser=Firefox,version=0,os=Windows
 "firefox";firefoxxm;C;macintosh;browser=Firefox,version=0,os=Macintosh
