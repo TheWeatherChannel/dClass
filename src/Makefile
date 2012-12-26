@@ -15,8 +15,9 @@ varnish:		clean libvmod_dclass.so
 dclass_client:		$(CLIENT_OBJS) main.o
 			$(CC) -o dclass_client $(CLIENT_OBJS) main.o $(LIBFLAGS)
 
+
 %.o:			%.c dtree_client.h openddr_client.h dclass_client.h
-			$(CC) $(CFLAGS) -c $< -o $@
+			$(CC) $(CFLAGS) -fPIC -c $< -o $@
 
 libvmod_dclass.so:	$(CLIENT_OBJS) vcc_if.o vmod_dclass.o
 			$(CC) -shared $(CLIENT_OBJS) vcc_if.o vmod_dclass.o -o libvmod_dclass.so
@@ -32,3 +33,6 @@ vcc_if.%:		vmod_dclass.vcc
 
 clean:
 			rm -rf *.o dclass_client vcc_if.c vcc_if.h libvmod_dclass.so out
+
+
+_objects: $(CLIENT_OBJS)
