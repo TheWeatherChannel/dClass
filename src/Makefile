@@ -8,7 +8,7 @@ PYTHON=python
 VMODPY=$(VARNISH_SRC)/lib/libvmod_std/vmod.py
 
 
-all:			dclass_client
+all:			dclass_client libdclass.so
 varnish:		CFLAGS=-O3 -Wall -fPIC
 varnish:		clean libvmod_dclass.so
 
@@ -33,6 +33,9 @@ vcc_if.%:		vmod_dclass.vcc
 
 clean:
 			rm -rf *.o dclass_client vcc_if.c vcc_if.h libvmod_dclass.so out
+
+libdclass.so: $(CLIENT_OBJS)
+	$(CC) -shared $(CLIENT_OBJS) -o libdclass.so
 
 
 _objects: $(CLIENT_OBJS)
