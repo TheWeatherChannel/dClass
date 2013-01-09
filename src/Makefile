@@ -9,11 +9,16 @@ VMODPY=$(VARNISH_SRC)/lib/libvmod_std/vmod.py
 
 
 all:			dclass_client
+lib:			CFLAGS=-O3 -Wall -fPIC
+lib:			clean libdclass.so
 varnish:		CFLAGS=-O3 -Wall -fPIC
 varnish:		clean libvmod_dclass.so
 
 dclass_client:		$(CLIENT_OBJS) main.o
 			$(CC) -o dclass_client $(CLIENT_OBJS) main.o $(LIBFLAGS)
+
+libdclass.so:		$(CLIENT_OBJS)
+			$(CC) -shared $(CLIENT_OBJS) -o libdclass.so
 
 %.o:			%.c dtree_client.h openddr_client.h dclass_client.h
 			$(CC) $(CFLAGS) -c $< -o $@
@@ -31,4 +36,4 @@ vcc_if.%:		vmod_dclass.vcc
 			$(PYTHON) $(VMODPY) vmod_dclass.vcc
 
 clean:
-			rm -rf *.o dclass_client vcc_if.c vcc_if.h libvmod_dclass.so out
+			rm -rf *.o dclass_client vcc_if.c vcc_if.h *.so out
