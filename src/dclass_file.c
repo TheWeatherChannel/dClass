@@ -55,6 +55,7 @@ static void dclass_write_node(const dtree_dt_node*,char*,FILE*);
 
 #if DTREE_PERF_WALKING
 extern void dtree_timersubn(struct timespec*,struct timespec*,struct timespec*);
+extern int dtree_gettime(struct timespec*);
 #endif
 
 
@@ -350,9 +351,9 @@ int dclass_load_file(dclass_index *di,const char *path)
             total=high=low=0;
             for(i=0;i<5;i++)
             {
-                clock_gettime(CLOCK_REALTIME,&startn);
+                dtree_gettime(&startn);
                 lret=dtree_print(h,NULL);
-                clock_gettime(CLOCK_REALTIME,&endn);
+                dtree_gettime(&endn);
                 dtree_timersubn(&endn,&startn,&diffn);
                 val=(diffn.tv_sec*1000*1000*1000)+diffn.tv_nsec;
                 if(diffn.tv_nsec==0 && diffn.tv_sec==0)

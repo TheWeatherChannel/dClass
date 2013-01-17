@@ -1,13 +1,22 @@
+#compile flags
 CC=gcc
 CFLAGS=-O3 -Wall
+LIBFLAGS=$(NEED_LIBRT)
+
+#objects
 CLIENT_OBJS=dtree_core.o openddr_client.o dclass_file.o dtree_mem.o dtree_util.o dclass_client.o
-LIBFLAGS=-lrt
+
+#os config
+NEED_LIBRT=$(shell echo 'int main() {}' | gcc -x c - -lrt -o /dev/null > /dev/null 2>&1 && echo -lrt)
+
+#varnish
 VARNISH_SRC=/some/path/varnish/varnish-3.0.1
 VCFLAGS=$(CFLAGS) -I$(VARNISH_SRC)/include -I$(VARNISH_SRC)
 PYTHON=python
 VMODPY=$(VARNISH_SRC)/lib/libvmod_std/vmod.py
 
 
+#targets
 all:			dclass_client
 lib:			CFLAGS=-O3 -Wall -fPIC
 lib:			clean libdclass.so

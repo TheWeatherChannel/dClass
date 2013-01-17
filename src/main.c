@@ -20,6 +20,7 @@
 
 
 extern void dtree_timersubn(struct timespec*,struct timespec*,struct timespec*);
+extern int dtree_gettime(struct timespec*);
 
 
 int main(int argc,char **args)
@@ -70,14 +71,14 @@ int main(int argc,char **args)
 
     printf("Loading %s: '%s'\n",openddr?"openddr":"dtree",loadFile);
     
-    clock_gettime(CLOCK_REALTIME,&startn);
+    dtree_gettime(&startn);
     
     if(openddr)
         ret=openddr_load_resources(&di,loadFile);
     else
         ret=dclass_load_file(&di,loadFile);
     
-    clock_gettime(CLOCK_REALTIME,&endn);
+    dtree_gettime(&endn);
     dtree_timersubn(&endn,&startn,&diffn);
     
     printf("load dtree tokens: %d time: %lds %ldms %ldus %ldns\n",
@@ -86,11 +87,11 @@ int main(int argc,char **args)
     printf("dtree stats: nodes: %zu slabs: %zu mem: %zu bytes strings: %zu(%zu,%zu)\n",
            h->node_count,h->slab_count,h->size,h->dc_count,h->dc_slab_count,h->dc_slab_pos);
     
-    clock_gettime(CLOCK_REALTIME,&startn);
+    dtree_gettime(&startn);
     
     count=dtree_print(h,&dclass_get_id);
     
-    clock_gettime(CLOCK_REALTIME,&endn);
+    dtree_gettime(&endn);
     dtree_timersubn(&endn,&startn,&diffn);
     
     printf("walk tree: %ld tokens %zu nodes time: %lds %ldms %ldus %ldns\n",
@@ -105,11 +106,11 @@ int main(int argc,char **args)
         printf("Wrote %d entries\n",ret);
     }
     
-    clock_gettime(CLOCK_REALTIME,&startn);
+    dtree_gettime(&startn);
     
     kvd=dclass_classify(&di,"Mozilla/5.0 (Linux; U; Android 2.2; en; HTC Aria A6380 Build/ERE27) AppleWebKit/540.13+ (KHTML, like Gecko) Version/3.1 Mobile Safari/524.15.0");
     
-    clock_gettime(CLOCK_REALTIME,&endn);
+    dtree_gettime(&endn);
     dtree_timersubn(&endn,&startn,&diffn);
     
     printf("HTC Aria UA lookup: '%s' time: %lds %ldms %ldus %ldns\n",
@@ -140,11 +141,11 @@ int main(int argc,char **args)
                 fflush(stdout);
 #endif
 
-                clock_gettime(CLOCK_REALTIME,&startn);
+                dtree_gettime(&startn);
                 
                 kvd=dclass_classify(&di,buf);
                 
-                clock_gettime(CLOCK_REALTIME,&endn);
+                dtree_gettime(&endn);
                 dtree_timersubn(&endn,&startn,&diffn);
                 
                 total.tv_sec+=diffn.tv_sec;
@@ -173,11 +174,11 @@ int main(int argc,char **args)
         {
             printf("UA: '%s'\n",parameter);
             
-            clock_gettime(CLOCK_REALTIME,&startn);
+            dtree_gettime(&startn);
             
             kvd=dclass_classify(&di,parameter);
             
-            clock_gettime(CLOCK_REALTIME,&endn);
+            dtree_gettime(&endn);
             dtree_timersubn(&endn,&startn,&diffn);
             
             printf("Param UA lookup: '%s' time: %lds %ldms %ldus %ldns\n",

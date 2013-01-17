@@ -17,7 +17,7 @@ fi
 
 CFLAG=`$DCLASS_BIN test.txt | grep "UA lookup 5: '" | wc -l`
 
-if [ "$CFLAG" != "1" ]
+if [ $CFLAG != "1" ]
 then
 	echo "ERROR: binary not compiled correctly"
 	echo "Make sure DTREE_TEST_UALOOKUP is set to 1"

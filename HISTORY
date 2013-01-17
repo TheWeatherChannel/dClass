@@ -1,3 +1,7 @@
+2.0.13
+ -Updated support for OS X
+ -Updated OpenDDR (1.14)
+
 2.0.12
  -Updated tests, browser/OS detection, and OpenDDR (1.13)
 
