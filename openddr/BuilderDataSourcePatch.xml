@@ -76,6 +76,11 @@
       <device id="genericPhone">
         <list>
           <value>LG....</value>
+          <value>NetFront</value>
+          <value>Palm...</value>
+          <value>SAMSUNG-SGH</value>
+          <value>Up.Browser</value>
+          <value>Windows CE</value>
         </list>
       </device>
       <device id="genericTouchPhone">

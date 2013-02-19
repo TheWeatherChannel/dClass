@@ -70,7 +70,7 @@ Performance is highly dependant on the conciseness of the patterns and not on
 the number of patterns. On a 2.2Ghz Intel i7, the average time spent in
 dclass_classify() using the OpenDDR pattern set and a random set of user agents
 is 800ns. Out of the box, memory usage for the OpenDDR pattern set is right at
-3mb. This value can go up or down depending on the key fields loaded from
+1mb. This value can go up or down depending on the key fields loaded from
 OpenDDR (OPENDDR_KEYS) and various index settings.
 
 All US-ASCII alphanumeric characters are pattern searchable. Non alphanumeric

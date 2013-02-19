@@ -58,6 +58,8 @@ static const char *ngx_dclass_key_array[] =                \
                                 "ajax_support_javascript", \
                                 "is_tablet",               \
                                 "is_wireless_device",      \
+                                "is_desktop",              \
+                                "is_crawler",              \
                                 "browser",                 \
                                 "version",                 \
                                 "os"                       \

@@ -27,6 +27,8 @@ The following variables are supported:
     $dclass_ajax_support_javascript
     $dclass_is_tablet
     $dclass_is_wireless_device
+    $dclass_is_desktop
+    $dclass_is_crawler
   Browser
     $dclass_browser
     $dclass_version

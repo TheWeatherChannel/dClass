@@ -7,7 +7,7 @@ LIBFLAGS=$(NEED_LIBRT)
 CLIENT_OBJS=dtree_core.o openddr_client.o dclass_file.o dtree_mem.o dtree_util.o dclass_client.o
 
 #os config
-NEED_LIBRT=$(shell echo 'int main() {}' | gcc -x c - -lrt -o /dev/null > /dev/null 2>&1 && echo -lrt)
+NEED_LIBRT=$(shell echo 'int main() {}' | $(CC) -x c - -lrt -o /dev/null > /dev/null 2>&1 && echo -lrt)
 
 #varnish
 VARNISH_SRC=/some/path/varnish/varnish-3.0.1

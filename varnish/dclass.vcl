@@ -44,6 +44,8 @@ OpenDDR display:  "} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_if
 OpenDDR js:       "} + dclass.get_field("ajax_support_javascript") + {"
 OpenDDR wireless: "} + dclass.get_field("is_wireless_device") + {"
 OpenDDR tablet:   "} + dclass.get_field("is_tablet") + {"
+OpenDDR crawler:  "} + dclass.get_field("is_crawler") + {"
+OpenDDR desktop:  "} + dclass.get_field("is_desktop") + {"
 
 browser id:       "} + req.http.dclass_browser + {"
 browser name:     "} + dclass.get_field_p("browser",1) + {"
