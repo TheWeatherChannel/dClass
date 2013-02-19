@@ -1,4 +1,4 @@
-# OpenDDR 1.15 http://www.openddr.org
+# OpenDDR 1.15 http://www.openddr.org 
 #$regex
 #$dups
 #!unknown,genericPhone,genericTouchPhone,desktopDevice,true,false

@@ -1,4 +1,4 @@
-Tested with nginx 1.0.2 and 1.0.15
+Tested with nginx 1.0.2 and 1.0.15 
 
 Add the following param to your configure:
  --add-module=/some/path/dClass/src

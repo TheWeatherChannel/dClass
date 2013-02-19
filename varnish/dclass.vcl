@@ -6,7 +6,7 @@ backend default {
 }
 
 sub vcl_init {
-	# load openddr
+	# load openddr 
 	dclass.init_dclass("/some/path/OpenDDR/1.0.0.0/resources");
 	#dclass.init_dclass_p("/some/path/OpenDDR/1.0.0.0/resources",0);
 
