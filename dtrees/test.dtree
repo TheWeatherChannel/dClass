@@ -83,3 +83,5 @@ test7;test7;B;;
 (set\.\.?test);settest;S;;period=true
 (set.?test);settest2;S;;period=false
 set\\test;settest3;S;;slash=true
+
+(group1\)?) (group(2)?) (t[e3]?st\? )?(group3);g123;;

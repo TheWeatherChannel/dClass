@@ -73,73 +73,106 @@ int dtree_add_entry(dtree_dt_index *h,const char *key,void *data,flag_f flags,vo
 static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,flag_f flags,void *param)
 {
     int hash;
-    char *p;
+    char *s;
     packed_ptr pp;
     dtree_dt_node *next;
     
     if(!n)
         return 0;
     
-    dtree_printd(DTREE_PRINT_INITDTREE,"ADD: tree: '%c' level: %d *t: '%c' p(%p) pp(%p)\n",
-             n->data?n->data:'^',dtree_node_depth(h,n),*t?*t:'#',n,n->curr);
+    dtree_printd(DTREE_PRINT_INITDTREE,"ADD: tree: '%c' level: %d t: '%s' p(%p) pp(%p)\n",
+             n->data?n->data:'^',dtree_node_depth(h,n),t,n,n->curr);
     
     //escape
     if(h->sflags & DTREE_S_FLAG_REGEX && (*t==DTREE_PATTERN_ESCAPE) && *(t-1)!=DTREE_PATTERN_ESCAPE)
         t++;
 
     //(abc)
-    if(h->sflags & DTREE_S_FLAG_REGEX && (*t==DTREE_PATTERN_GROUP_S || *t==DTREE_PATTERN_GROUP_E) &&
+    while(h->sflags & DTREE_S_FLAG_REGEX && (*t==DTREE_PATTERN_GROUP_S || *t==DTREE_PATTERN_GROUP_E) &&
             *(t-1)!=DTREE_PATTERN_ESCAPE)
+    {
+        hash=(*t==DTREE_PATTERN_GROUP_S);
+        s=t+1;
+
+        while(*s && hash)
+        {
+            if(*s==DTREE_PATTERN_GROUP_S && *(s-1)!=DTREE_PATTERN_ESCAPE)
+                hash++;
+            else if(*s==DTREE_PATTERN_GROUP_E && *(s-1)!=DTREE_PATTERN_ESCAPE)
+                hash--;
+
+            s++;
+        }
+
+        if(*t==DTREE_PATTERN_GROUP_S)
+        {
+            dtree_printd(DTREE_PRINT_INITDTREE,"ADD: group detected: '%c' - '%c'\n",*(t+1)?*(t+1):'#',*s?*s:'#');
+
+            //optional group
+            if(*s==DTREE_PATTERN_OPTIONAL && *(s-1)!=DTREE_PATTERN_ESCAPE)
+            {
+                if(dtree_add_node(h,n,s+1,data,flags,param)<0)
+                    return -1;
+            }
+        }
+
         t++;
+    }
 
     //?
     if(h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_OPTIONAL && *(t-1)!=DTREE_PATTERN_ESCAPE)
     {
-        pp=n->prev;
-        next=DTREE_DT_GETPP(h,pp);
+        //no group
+        if(*(t-1)!=DTREE_PATTERN_GROUP_E || *(t-2)==DTREE_PATTERN_ESCAPE)
+        {
+            pp=n->prev;
+            next=DTREE_DT_GETPP(h,pp);
         
-        if(!pp)
-            return 0;
+            if(!pp)
+                return 0;
         
-        dtree_printd(DTREE_PRINT_INITDTREE,"ADD: optional: '%c' *t: '%c'\n",next->data?next->data:'^',*(t+1));
+            dtree_printd(DTREE_PRINT_INITDTREE,"ADD: optional: '%c' t: '%s'\n",next->data?next->data:'^',(t+1));
         
-        if(dtree_add_node(h,next,t+1,data,flags,param)<0)
-            return -1;
-        
+            if(dtree_add_node(h,next,t+1,data,flags,param)<0)
+                return -1;
+        }
+
         t++;
+
+        return dtree_add_node(h,n,t,data,flags,param);
     }
 
-    //EOT trailing wildcard
+    //EOT
     if(!*t && n->prev)
         return dtree_set_payload(h,n,data,flags,param);
     
     //[abc]
     if(h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_SET_S && *(t-1)!=DTREE_PATTERN_ESCAPE)
     {
-        for(p=t;*p;p++)
+        for(s=t;*s;s++)
         {
-            if(*p==DTREE_PATTERN_SET_E && *(p-1)!=DTREE_PATTERN_ESCAPE)
+            if(*s==DTREE_PATTERN_SET_E && *(s-1)!=DTREE_PATTERN_ESCAPE)
                 break;
         }
         
-        if(!*p)
+        if(!*s)
             return 0;
         
         t++;
         
-        while(t<p)
+        while(t<s)
         {
-            *p=*t;
+            *s=*t;
             
-            dtree_printd(DTREE_PRINT_INITDTREE,"ADD: set: '%c' *t: '%c' t: '%s'\n",n->data?n->data:'^',*t,p);
+            dtree_printd(DTREE_PRINT_INITDTREE,"ADD: set: '%c' *t: '%c' t: '%s'\n",n->data?n->data:'^',*t,s);
             
-            if(dtree_add_node(h,n,p,data,flags,param)<0)
+            if(dtree_add_node(h,n,s,data,flags,param)<0)
                 return -1;
             
             t++;
         }
         
-        *p=DTREE_PATTERN_SET_E;
+        *s=DTREE_PATTERN_SET_E;
         
         return 1;
     }
@@ -153,12 +186,8 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
         *t|=0x20;
         
     //.
-    if(hash==DTREE_HASH_ANY || (h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_ANY &&
-            *(t-1)!=DTREE_PATTERN_ESCAPE))
-    {
-        *t=DTREE_PATTERN_ANY;
+    if(h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_ANY && *(t-1)!=DTREE_PATTERN_ESCAPE)
         hash=DTREE_HASH_ANY;
-    }
         
     pp=(packed_ptr)n->nodes[hash];
     next=DTREE_DT_GETPP(h,pp);
@@ -174,7 +203,10 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
             return -1;
         }
         
-        next->data=*t;
+        if(hash==DTREE_HASH_ANY)
+            next->data=DTREE_PATTERN_ANY;
+        else
+            next->data=*t;
         next->curr=pp;
         next->prev=n->curr;
         

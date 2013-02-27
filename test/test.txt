@@ -26,3 +26,7 @@ set1test
 set..test
 set\test
 set\\test
+group0 group1 group2 group3 group4
+group0 group1) group t3st? group3 group4
+group0 group1) group tstx group3 group4
+group0 group1) group tstxx group3 group4
