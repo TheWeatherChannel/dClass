@@ -79,3 +79,7 @@ test5;test5;N;;
 test8 test9;test89;C;test7;
 test8;test8;C;test7;
 test7;test7;B;;
+
+(set\.\.?test);settest;S;;period=true
+(set.?test);settest2;S;;period=false
+set\\test;settest3;S;;slash=true

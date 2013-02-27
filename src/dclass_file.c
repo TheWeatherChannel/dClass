@@ -53,6 +53,8 @@ static void dclass_parse_fentry(char*,dtree_file_entry*);
 static long dclass_write_tree(const dtree_dt_index*,const dtree_dt_node*,char*,int,FILE*);
 static void dclass_write_node(const dtree_dt_node*,char*,FILE*);
 
+extern unsigned int dtree_hash_char(char);
+
 
 #if DTREE_PERF_WALKING
 extern void dtree_timersubn(struct timespec*,struct timespec*,struct timespec*);
@@ -544,6 +546,24 @@ static long dclass_write_tree(const dtree_dt_index *h,const dtree_dt_node *n,cha
     if(!n || !n->curr || depth>(DTREE_DATA_BUFLEN-1))
         return 0;
     
+    switch(n->data)
+    {
+        case DTREE_PATTERN_ANY:
+            pp=n->prev;
+            dupn=DTREE_DT_GETPP(h,pp);
+            i=dtree_hash_char(n->data);
+            if(i==DTREE_HASH_ANY || (pp && dupn->nodes[i]!=n->curr))
+                break;
+        case DTREE_PATTERN_OPTIONAL:
+        case DTREE_PATTERN_SET_S:
+        case DTREE_PATTERN_SET_E:
+        case DTREE_PATTERN_GROUP_S:
+        case DTREE_PATTERN_GROUP_E:
+        case DTREE_PATTERN_ESCAPE:
+            path[depth]=DTREE_PATTERN_ESCAPE;
+            depth++;
+    }
+
     path[depth]=n->data;
     path[depth+1]='\0';
     
@@ -574,6 +594,9 @@ static long dclass_write_tree(const dtree_dt_index *h,const dtree_dt_node *n,cha
     }
     
     path[depth]='\0';
+
+    if(path[depth-1]==DTREE_PATTERN_ESCAPE)
+        path[depth-1]='\0';
     
     return tot;
 }

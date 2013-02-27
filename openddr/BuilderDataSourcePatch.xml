@@ -92,12 +92,12 @@
       </device>
       <device id="desktopDevice">
         <list>
-          <value>Mozilla/4.0 (compatible</value>
-          <value>Mozilla/5.0 (compatible; MSIE</value>
-          <value>Mozilla/5.0 (Windows</value>
-          <value>Mozilla/5.0 (Macintosh</value>
-          <value>Mozilla/5.0 (X11</value>
-          <value>Mozilla/5.0 (Ubuntu</value>
+          <value>Mozilla/4.0 \(compatible</value>
+          <value>Mozilla/5.0 \(compatible; MSIE</value>
+          <value>Mozilla/5.0 \(Windows</value>
+          <value>Mozilla/5.0 \(Macintosh</value>
+          <value>Mozilla/5.0 \(X11</value>
+          <value>Mozilla/5.0 \(Ubuntu</value>
           <value>Opera</value>
           <value>Safari</value>
           <value>Chrome</value>

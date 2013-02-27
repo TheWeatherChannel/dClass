@@ -32,20 +32,21 @@ extern inline int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
 //adds an entry to the tree
 int dtree_add_entry(dtree_dt_index *h,const char *key,void *data,flag_f flags,void *param)
 {
-    char namebuf[DTREE_DATA_BUFLEN];
+    char namebuf[DTREE_DATA_BUFLEN+1];
     packed_ptr pp;
     
     if(!key)
         return 0;
-    
+
+    *namebuf='\0';
     namebuf[sizeof(namebuf)-1]='\0';
     
-    strncpy(namebuf,key,sizeof(namebuf));
+    strncpy(namebuf+1,key,sizeof(namebuf)-1);
     
     if(namebuf[sizeof(namebuf)-1])
         return 0;
     
-    dtree_printd(DTREE_PRINT_INITDTREE,"ADD ENTRY: name '%s':%d\n",key,flags);
+    dtree_printd(DTREE_PRINT_INITDTREE,"ADD ENTRY: name '%s':%d\n",namebuf+1,flags);
     
     if(!h->head)
     {
@@ -65,7 +66,7 @@ int dtree_add_entry(dtree_dt_index *h,const char *key,void *data,flag_f flags,vo
     if(!flags)
         flags=DTREE_DT_FLAG_STRONG;
     
-    return dtree_add_node(h,h->head,namebuf,data,flags,param);
+    return dtree_add_node(h,h->head,namebuf+1,data,flags,param);
 }
 
 //adds a node to the tree
@@ -82,12 +83,17 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
     dtree_printd(DTREE_PRINT_INITDTREE,"ADD: tree: '%c' level: %d *t: '%c' p(%p) pp(%p)\n",
              n->data?n->data:'^',dtree_node_depth(h,n),*t?*t:'#',n,n->curr);
     
-    //EOT trailing wildcard
-    if(!*t && n->prev)
-        return dtree_set_payload(h,n,data,flags,param);
-        
+    //escape
+    if(h->sflags & DTREE_S_FLAG_REGEX && (*t==DTREE_PATTERN_ESCAPE) && *(t-1)!=DTREE_PATTERN_ESCAPE)
+        t++;
+
+    //(abc)
+    if(h->sflags & DTREE_S_FLAG_REGEX && (*t==DTREE_PATTERN_GROUP_S || *t==DTREE_PATTERN_GROUP_E) &&
+            *(t-1)!=DTREE_PATTERN_ESCAPE)
+        t++;
+
     //?
-    if(h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_OPTIONAL)
+    if(h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_OPTIONAL && *(t-1)!=DTREE_PATTERN_ESCAPE)
     {
         pp=n->prev;
         next=DTREE_DT_GETPP(h,pp);
@@ -101,18 +107,18 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
             return -1;
         
         t++;
-        
-        //trailing wildcard
-        if(!*t)
-            return dtree_set_payload(h,n,data,flags,param);
     }
+
+    //EOT trailing wildcard
+    if(!*t && n->prev)
+        return dtree_set_payload(h,n,data,flags,param);
     
     //[abc]
-    if(h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_SET_S)
+    if(h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_SET_S && *(t-1)!=DTREE_PATTERN_ESCAPE)
     {
         for(p=t;*p;p++)
         {
-            if(*p==DTREE_PATTERN_SET_E)
+            if(*p==DTREE_PATTERN_SET_E && *(p-1)!=DTREE_PATTERN_ESCAPE)
                 break;
         }
         
@@ -147,8 +153,12 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
         *t|=0x20;
         
     //.
-    if(hash==DTREE_HASH_ANY)
+    if(hash==DTREE_HASH_ANY || (h->sflags & DTREE_S_FLAG_REGEX && *t==DTREE_PATTERN_ANY &&
+            *(t-1)!=DTREE_PATTERN_ESCAPE))
+    {
         *t=DTREE_PATTERN_ANY;
+        hash=DTREE_HASH_ANY;
+    }
         
     pp=(packed_ptr)n->nodes[hash];
     next=DTREE_DT_GETPP(h,pp);
@@ -328,7 +338,7 @@ const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,flag_f
         //leading wildcard
         if(!lflag)
         {
-            pp=h->head->nodes[dtree_hash_char(DTREE_PATTERN_ANY)];
+            pp=h->head->nodes[DTREE_HASH_ANY];
             base=DTREE_DT_GETPP(h,pp);
             
             if(pp)
@@ -413,7 +423,7 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
     //wildcard
     if(!rflag)
     {
-        hash=dtree_hash_char(DTREE_PATTERN_ANY);
+        hash=DTREE_HASH_ANY;
         
         pp=n->nodes[hash];
         rflag=DTREE_DT_GETPP(h,pp);

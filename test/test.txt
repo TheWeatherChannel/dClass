@@ -20,3 +20,9 @@ test5 test6
 test6 test5
 test7 test9 test8
 test7 test8 test9
+settest
+set.test
+set1test
+set..test
+set\test
+set\\test

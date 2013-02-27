@@ -103,13 +103,13 @@ typedef unsigned int packed_ptr;
 #define DTREE_M_SLAB_SIZE       (1024*128)
 #define DTREE_M_SERROR          "serror"
 #define DTREE_M_LOOKUP_CACHE    6
-#define DTREE_DATA_BUFLEN       512
+#define DTREE_DATA_BUFLEN       128
 #define DTREE_DATA_MKEYS        30
 #define DTREE_DC_DISTANCE(H,S)  ((int)((S)-((char*)(H)->dc_slabs[0])))
 
 #define DTREE_HASH_TCHARS       ""
 #define DTREE_HASH_SEP          (36+sizeof(DTREE_HASH_TCHARS)-1)
-#define DTREE_HASH_SCHARS       " -_/\\()"
+#define DTREE_HASH_SCHARS       " -_/\\()."
 #define DTREE_HASH_NCOUNT       (DTREE_HASH_SEP+sizeof(DTREE_HASH_SCHARS))
 #define DTREE_HASH_ANY          (DTREE_HASH_NCOUNT-1)
 #define DTREE_PATTERN_ANY       '.'
