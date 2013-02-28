@@ -135,7 +135,7 @@ static long dtree_print_node(const dtree_dt_index *h,const char* (*f)(void*),con
     packed_ptr pp;
     const dtree_dt_node *dupn;
     
-    if(!n || depth>(DTREE_DATA_BUFLEN-1))
+    if(!n || !n->curr || depth>(DTREE_DATA_BUFLEN-1))
         return 0;
     
     path[depth]=n->data;

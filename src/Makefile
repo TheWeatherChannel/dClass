@@ -22,6 +22,8 @@ lib:			CFLAGS=-O3 -Wall -fPIC
 lib:			clean libdclass.so
 varnish:		CFLAGS=-O3 -Wall -fPIC
 varnish:		clean libvmod_dclass.so
+debug:			CFLAGS=-g -Wall
+debug:			clean dclass_client
 
 dclass_client:		$(CLIENT_OBJS) main.o
 			$(CC) -o dclass_client $(CLIENT_OBJS) main.o $(LIBFLAGS)

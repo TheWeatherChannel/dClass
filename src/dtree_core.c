@@ -313,7 +313,7 @@ unsigned int dtree_hash_char(char c)
     }
     
     //wildcard
-    if(c>' ' && c<'~')
+    if(c>=' ' && c<='~')
         return DTREE_HASH_ANY;
     
     //unsupported

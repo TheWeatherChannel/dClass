@@ -38,7 +38,8 @@ int main(int argc,char **args)
     dtree_dt_index *h=&di.dti;
     const dclass_keyvalue *kvd;
     
-    printf("dClass - Device classification (version %s %zubit addressing)\n",dclass_get_version(),DTREE_DT_PTR_SIZE);
+    printf("dClass (version %s %zubit addressing %zubytes dt_node)\n",dclass_get_version(),
+        DTREE_DT_PTR_SIZE,sizeof(dtree_dt_node));
     
     for(i=1;i<argc;i++)
     {
@@ -194,7 +195,7 @@ int main(int argc,char **args)
             }
         }
     }
-    
+
     dclass_free(&di);
     
     return 0;

@@ -35,6 +35,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     int valid;
     int bcvalid;
     int i;
+    unsigned int hash;
     char buf[DTREE_DATA_BUFLEN];
     const char *p;
     const char *token="";
@@ -56,8 +57,10 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     for(p=str;*p;p++)
     {
         valid=0;
+
+        hash=dtree_hash_char(*p);
         
-        if(dtree_hash_char(*p)<DTREE_HASH_SEP)
+        if(hash<DTREE_HASH_SEP && (hash || *p=='0'))
         {
             //new token found
             if(!on)
