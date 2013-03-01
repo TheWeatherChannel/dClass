@@ -20,12 +20,6 @@
 #include "dtree_client.h"
 
 
-#ifdef __MACH__
-#include <mach/clock.h>
-#include <mach/mach.h>
-#endif
-
-
 static long dtree_print_node(const dtree_dt_index*,const char*(*f)(void*),const dtree_dt_node*,char*,int);
 extern inline int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
 char *dtree_node_path(const dtree_dt_index*,const dtree_dt_node*,char*);
@@ -222,16 +216,9 @@ void dtree_timersubn(struct timespec *end,struct timespec *start,struct timespec
 //get timestamp
 int dtree_gettime(struct timespec *ts)
 {
-//os x
-#ifdef __MACH__    
-    clock_serv_t cclock;
-    mach_timespec_t mts;
-    host_get_clock_service(mach_host_self(),CALENDAR_CLOCK,&cclock);
-    clock_get_time(cclock,&mts);
-    mach_port_deallocate(mach_task_self(),cclock);
-    ts->tv_sec = mts.tv_sec;
-    ts->tv_nsec = mts.tv_nsec;
-    
+#ifdef _DTREE_NO_TIMESPEC || __MACH__    
+    ts->tv_sec=0;
+    ts->tv_nsec=0;
     return 0;
 #else
     return clock_gettime(CLOCK_REALTIME,ts);

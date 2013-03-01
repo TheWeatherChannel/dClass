@@ -1,19 +1,24 @@
 CC=gcc
 CFLAGS=-O3 -Wall -fPIC
-INCLUDE=-I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -I../src
+LFLAGS=
+ARCH=linux
+INCLUDE=-I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(ARCH) -I../src
 JAVAC=javac
 JAVAH=javah
 JAVA=java
-#-Wl,--kill-at
+RM=rm -rf
+CP=cp
+SEP=/
+OUT=libdclassjava.so
 
 all:			libdclassjava.so
 
 libdclassjava.so:	libdclass.a dclass_java.o dclass/dClass.class
-			$(CC) -shared -o libdclassjava.so dclass_java.o libdclass.a
+			$(CC) -shared $(LFLAGS) -o $(OUT) dclass_java.o libdclass.a
 
 libdclass.a:		
 			$(MAKE) -C ../src/ -f ../src/Makefile lib
-			cp ../src/libdclass.a .
+			$(CP) ..$(SEP)src$(SEP)libdclass.a .
 
 dclass/dClass.class:	dclass/dClass.java
 			$(JAVAC) dclass/dClass.java
@@ -25,4 +30,4 @@ dclass_java.o:		jni/dclass_java.c dclass_java.h
 			$(CC) $(INCLUDE) $(CFLAGS) -c jni/dclass_java.c -o dclass_java.o
 
 clean:
-			rm -rf *.so *.a *.o dclass_java.h dclass/dClass.class
+			$(RM) *.a *.o dclass_java.h dclass$(SEP)dClass.class $(OUT)

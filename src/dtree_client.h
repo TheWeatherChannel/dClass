@@ -197,4 +197,12 @@ long dtree_print(const dtree_dt_index*,const char*(*f)(void*));
 void dtree_printd(int,const char*,...);
 
 
+#ifdef _DTREE_NO_TIMESPEC || __MACH__
+struct timespec {
+    time_t tv_sec;
+    long tv_nsec;
+} timespec_t;
+#endif
+
+
 #endif /* _WX_DTREE_H_INCLUDED_ */

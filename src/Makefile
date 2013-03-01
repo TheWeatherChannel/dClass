@@ -2,6 +2,7 @@
 CC=gcc
 CFLAGS=-O3 -Wall
 LIBFLAGS=$(NEED_LIBRT)
+RM=rm -rf
 
 #objects
 CLIENT_OBJS=dtree_core.o openddr_client.o dclass_file.o dtree_mem.o dtree_util.o dclass_client.o
@@ -48,4 +49,4 @@ vcc_if.%:		vmod_dclass.vcc
 			$(PYTHON) $(VMODPY) vmod_dclass.vcc
 
 clean:
-			rm -rf *.o dclass_client vcc_if.c vcc_if.h *.so *.a out
+			$(RM) *.o dclass_client vcc_if.c vcc_if.h *.so *.a out
