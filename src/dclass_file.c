@@ -156,11 +156,6 @@ int dclass_load_file(dclass_index *di,const char *path)
                         h->sflags |= DTREE_S_FLAG_PARTIAL;
                         dtree_printd(DTREE_PRINT_INITDTREE,"INIT FORCE: partial\n");
                     }
-                    else if(!strncasecmp(p,"nopart",6))
-                    {
-                        h->sflags |= DTREE_S_FLAG_NOPART;
-                        dtree_printd(DTREE_PRINT_INITDTREE,"INIT FORCE: no partial\n");
-                    }
                     else if(!strncasecmp(p,"regex",5))
                     {
                         h->sflags |= DTREE_S_FLAG_REGEX;
@@ -204,8 +199,7 @@ int dclass_load_file(dclass_index *di,const char *path)
             
             fe.count=0;
             
-            if(!(h->sflags & DTREE_S_FLAG_NOPART))
-                h->sflags |= DTREE_S_FLAG_PARTIAL;
+            h->sflags |= DTREE_S_FLAG_PARTIAL;
         }
         
         if(fe.type)

@@ -93,10 +93,8 @@ typedef unsigned int packed_ptr;
 
 #define DTREE_S_FLAG_NONE       (1 << 0)
 #define DTREE_S_FLAG_PARTIAL    (1 << 1)
-#define DTREE_S_FLAG_NOPART     (1 << 2)
-#define DTREE_S_FLAG_REGEX      (1 << 3)
-#define DTREE_S_FLAG_DUPS       (1 << 4)
-#define DTREE_S_PART_TLEN       6
+#define DTREE_S_FLAG_REGEX      (1 << 2)
+#define DTREE_S_FLAG_DUPS       (1 << 3)
 #define DTREE_S_MAX_CHAIN       10
 
 #define DTREE_M_MAX_SLABS       64
@@ -197,7 +195,7 @@ long dtree_print(const dtree_dt_index*,const char*(*f)(void*));
 void dtree_printd(int,const char*,...);
 
 
-#if defined(_DTREE_NO_TIMESPEC) || defined(__MACH__)
+#ifdef _DTREE_NO_TIMESPEC
 struct timespec {
     time_t tv_sec;
     long tv_nsec;

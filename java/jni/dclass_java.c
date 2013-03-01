@@ -60,6 +60,23 @@ JNIEXPORT jlong JNICALL Java_dclass_dClass_classify(JNIEnv *env,jobject obj,jlon
     return (long)kv;
 }
 
+JNIEXPORT jlong JNICALL Java_dclass_dClass_get(JNIEnv *env,jobject obj,jlong ptr,jstring js)
+{
+    const char *s;
+    dclass_index *dci;
+    const dclass_keyvalue *kv;
+
+    dci=(dclass_index*)(long)ptr;
+
+    s=(*env)->GetStringUTFChars(env,js,NULL);
+
+    kv=dclass_get(dci,s);
+
+    (*env)->ReleaseStringUTFChars(env,js,s);
+
+    return (long)kv;
+}
+
 JNIEXPORT jint JNICALL Java_dclass_dClass_kvlength(JNIEnv *env,jobject obj,jlong jkv)
 {
     const dclass_keyvalue *kv;

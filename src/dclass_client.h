@@ -69,6 +69,7 @@ int dclass_load_file(dclass_index*,const char*);
 int dclass_write_file(const dclass_index*,const char*);
 
 const dclass_keyvalue *dclass_classify(const dclass_index*,const char*);
+const dclass_keyvalue *dclass_get(const dclass_index*,const char*);
 const char *dclass_get_kvalue(const dclass_keyvalue*,const char*);
 
 void dclass_free(dclass_index*);

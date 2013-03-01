@@ -52,7 +52,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     
     memset(cnodes,0,sizeof(cnodes));
     
-    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() UA: '%s'\n",str);
+    dtree_printd(DTREE_PRINT_CLASSIFY,"dclass_classify() UA: '%s'\n",str);
     
     for(p=str;*p;p++)
     {
@@ -150,6 +150,24 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     else if(nnode)
         return nnode->payload;
     
+    return dclass_get_kverror(di);
+}
+
+
+//gets a string
+const dclass_keyvalue *dclass_get(const dclass_index *di,const char *str)
+{
+    const dtree_dt_node *node;
+    const dtree_dt_index *h=&di->dti;
+
+    if(!str || !h->head)
+        return dclass_get_kverror(di);
+
+    node=dtree_get_node(h,str,DTREE_DT_FLAG_TOKEN);
+    
+    if(node && node->payload)
+        return node->payload;
+
     return dclass_get_kverror(di);
 }
 

@@ -16,6 +16,7 @@ public class dClass
     private native int init(String file);
     private native void free(long index);
     private native long classify(long index,String s);
+    private native long get(long index,String s);
     private native int kvlength(long kv);
     private native String kvgetid(long kv);
     private native String kvgetkey(long kv,int pos);
@@ -39,10 +40,27 @@ public class dClass
 
     public Map<String,String> classify(String s)
     {
+        return classify(s,true);
+    }
+
+    public Map<String,String> get(String s)
+    {
+        return classify(s,false);
+    }
+
+    private Map<String,String> classify(String s,boolean classify)
+    {
         Map<String,String> ret=new HashMap<String,String>();
+
         if(dclass_index!=0)
         {
-            long kv=classify(dclass_index,s);
+            long kv;
+
+            if(classify)
+                kv=classify(dclass_index,s);
+            else
+                kv=get(dclass_index,s);
+
             if(kv!=0)
             {
                 int len=kvlength(kv);
@@ -56,6 +74,7 @@ public class dClass
                 ret.put("id",id);
             }
         }
+
         return ret;
     }
 

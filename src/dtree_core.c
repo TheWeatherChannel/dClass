@@ -207,6 +207,7 @@ static int dtree_add_node(dtree_dt_index *h,dtree_dt_node *n,char *t,void *data,
             next->data=DTREE_PATTERN_ANY;
         else
             next->data=*t;
+
         next->curr=pp;
         next->prev=n->curr;
         
@@ -395,19 +396,12 @@ const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,flag_f
         //token match
         if((!hash && n!='0') || hash>=DTREE_HASH_SEP)
         {
-            //not full string
-            if(base->flags && (sflags & DTREE_S_FLAG_PARTIAL) && n)
-                return base;
-            //full token
-            else if(base->flags && !n)
+            //match is valid
+            if(base->flags && (sflags & DTREE_S_FLAG_PARTIAL || !n))
                 return base;
             else if(!n)
                 break;
         }
-        
-        //partial token match
-        if((base->flags & DTREE_DT_FLAG_TOKEN) && (sflags & DTREE_S_FLAG_PARTIAL) && (p+1-t)>=DTREE_S_PART_TLEN)
-            lflag=base;
         
         pp=base->nodes[hash];
         base=DTREE_DT_GETPP(h,pp);
@@ -466,13 +460,6 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtre
             rflag=NULL;
         
         hash=dtree_hash_char(*t);
-    }
-    
-    //partial
-    if(!rflag && (n->flags & DTREE_DT_FLAG_TOKEN) && (h->sflags & DTREE_S_FLAG_PARTIAL))
-    {
-        if(dtree_node_depth(h,n)>=DTREE_S_PART_TLEN)
-            rflag=n;
     }
     
     //n is lazy EOT or stronger match
