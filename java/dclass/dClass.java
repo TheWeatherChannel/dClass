@@ -10,7 +10,7 @@ public class dClass
 
     static
     {
-        System.loadLibrary("dclassjava");
+        dClassLoader.load("dclassjava");
     }
 
     private native int init(String file);

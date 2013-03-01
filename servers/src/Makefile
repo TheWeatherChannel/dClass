@@ -31,4 +31,4 @@ libdclass.a:
 			cp ../../src/libdclass.a .
 
 clean:
-			$(RM) *.o dclass_client vcc_if.c vcc_if.h *.so *.a out
+			$(RM) *.o vcc_if.c vcc_if.h *.so *.a
