@@ -11,9 +11,9 @@ CP=cp
 SEP=/
 OUT=libdclassjava.so
 
-all:			libdclassjava.so
+all:			$(OUT)
 
-libdclassjava.so:	libdclass.a dclass_java.o dclass/dClass.class
+$(OUT):			libdclass.a dclass_java.o dclass/dClass.class
 			$(CC) -shared $(LFLAGS) -o $(OUT) dclass_java.o libdclass.a
 
 libdclass.a:		
@@ -31,3 +31,6 @@ dclass_java.o:		jni/dclass_java.c dclass_java.h
 
 clean:
 			$(RM) *.a *.o dclass_java.h dclass$(SEP)dClass.class $(OUT)
+
+test:			all
+			$(JAVA) -cp . -Djava.library.path=. dclass.dClass "../dtrees/openddr.dtree" "Mozilla/5.0 (Linux; U; Android 2.2; en; HTC Aria A6380 Build/ERE27) AppleWebKit/540.13+ (KHTML, like Gecko) Version/3.1 Mobile Safari/524.15.0"
