@@ -216,7 +216,7 @@ void dtree_timersubn(struct timespec *end,struct timespec *start,struct timespec
 //get timestamp
 int dtree_gettime(struct timespec *ts)
 {
-#ifdef _DTREE_NO_TIMESPEC || __MACH__    
+#if defined(_DTREE_NO_TIMESPEC) || defined(__MACH__)
     ts->tv_sec=0;
     ts->tv_nsec=0;
     return 0;

@@ -197,7 +197,7 @@ long dtree_print(const dtree_dt_index*,const char*(*f)(void*));
 void dtree_printd(int,const char*,...);
 
 
-#ifdef _DTREE_NO_TIMESPEC || __MACH__
+#if defined(_DTREE_NO_TIMESPEC) || defined(__MACH__)
 struct timespec {
     time_t tv_sec;
     long tv_nsec;
