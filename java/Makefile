@@ -15,7 +15,7 @@ SEP=/
 OUTPRE=lib
 OUTEXT=so
 #OUTEXT=dylib
-OUT=$(PREOUT)dclassjava.$(OUTEXT)
+OUT=$(OUTPRE)dclassjava.$(OUTEXT)
 
 all:			$(OUT)
 
