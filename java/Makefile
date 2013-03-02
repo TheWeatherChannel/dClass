@@ -1,23 +1,27 @@
 CC=gcc
 CFLAGS=-O3 -Wall -fPIC -m$(ARCH)
-LFLAGS=
+LDFLAGS=
 OS=linux
 #OS=darwin
-INCLUDE=-I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(OS) -I../src
 ARCH=$(shell getconf LONG_BIT)
+JAVAI=$(OS)$(ARCH)
+INCLUDE=-I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(JAVAI) -I../src
 JAVAC=javac
 JAVAH=javah
 JAVA=java
 RM=rm -rf
 CP=cp
 SEP=/
-OUT=libdclassjava.so
-#OUT=libdclassjava.dylib
+OUTPRE=lib
+OUTEXT=so
+#OUTEXT=dylib
+OUT=$(PREOUT)dclassjava.$(OUTEXT)
 
 all:			$(OUT)
 
 $(OUT):			libdclass.a dclass_java.o dclass/dClass.class dclass/dClassLoader.class
-			$(CC) -shared $(LFLAGS) -o $(OUT) dclass_java.o libdclass.a
+			$(CC) -shared $(LDFLAGS) -o $(OUT) dclass_java.o libdclass.a
+			$(CP) $(OUT) lib$(SEP)$(PREOUT)dclassjava$(OS)$(ARCH).$(OUTEXT)
 
 libdclass.a:		
 			$(MAKE) -C ../src/ -f ../src/Makefile "CFLAGS=$(CFLAGS)" lib

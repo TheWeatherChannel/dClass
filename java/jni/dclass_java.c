@@ -1,6 +1,12 @@
 #include "dclass_client.h"
 #include "dclass_java.h"
 
+#if _WIN64
+typedef long long plong;
+#else
+typedef long plong;
+#endif
+
 void Java_dclass_dClass_setindex(JNIEnv *env,jobject obj,dclass_index *dci)
 {
     jclass cls;
@@ -12,7 +18,7 @@ void Java_dclass_dClass_setindex(JNIEnv *env,jobject obj,dclass_index *dci)
         fid=(*env)->GetFieldID(env,cls,"dclass_index","J");
 
     if(fid)
-        (*env)->SetLongField(env,obj,fid,(long)dci);
+        (*env)->SetLongField(env,obj,fid,(plong)dci);
 }
 
 JNIEXPORT jint JNICALL Java_dclass_dClass_init(JNIEnv *env,jobject obj,jstring jpath)
@@ -49,7 +55,7 @@ JNIEXPORT jlong JNICALL Java_dclass_dClass_classify(JNIEnv *env,jobject obj,jlon
     dclass_index *dci;
     const dclass_keyvalue *kv;
 
-    dci=(dclass_index*)(long)ptr;
+    dci=(dclass_index*)(plong)ptr;
 
     s=(*env)->GetStringUTFChars(env,js,NULL);
 
@@ -57,7 +63,7 @@ JNIEXPORT jlong JNICALL Java_dclass_dClass_classify(JNIEnv *env,jobject obj,jlon
 
     (*env)->ReleaseStringUTFChars(env,js,s);
 
-    return (long)kv;
+    return (plong)kv;
 }
 
 JNIEXPORT jlong JNICALL Java_dclass_dClass_get(JNIEnv *env,jobject obj,jlong ptr,jstring js)
@@ -66,7 +72,7 @@ JNIEXPORT jlong JNICALL Java_dclass_dClass_get(JNIEnv *env,jobject obj,jlong ptr
     dclass_index *dci;
     const dclass_keyvalue *kv;
 
-    dci=(dclass_index*)(long)ptr;
+    dci=(dclass_index*)(plong)ptr;
 
     s=(*env)->GetStringUTFChars(env,js,NULL);
 
@@ -74,14 +80,14 @@ JNIEXPORT jlong JNICALL Java_dclass_dClass_get(JNIEnv *env,jobject obj,jlong ptr
 
     (*env)->ReleaseStringUTFChars(env,js,s);
 
-    return (long)kv;
+    return (plong)kv;
 }
 
 JNIEXPORT jint JNICALL Java_dclass_dClass_kvlength(JNIEnv *env,jobject obj,jlong jkv)
 {
     const dclass_keyvalue *kv;
 
-    kv=(dclass_keyvalue*)(long)jkv;
+    kv=(dclass_keyvalue*)(plong)jkv;
 
     return (jint)kv->size;
 }
@@ -91,7 +97,7 @@ JNIEXPORT jstring JNICALL Java_dclass_dClass_kvgetid(JNIEnv *env,jobject obj,jlo
     jstring ret;
     const dclass_keyvalue *kv;
 
-    kv=(dclass_keyvalue*)(long)jkv;
+    kv=(dclass_keyvalue*)(plong)jkv;
 
     ret=(*env)->NewStringUTF(env,kv->id);
 
@@ -103,7 +109,7 @@ JNIEXPORT jstring JNICALL Java_dclass_dClass_kvgetkey(JNIEnv *env,jobject obj,jl
     jstring ret;
     const dclass_keyvalue *kv;
 
-    kv=(dclass_keyvalue*)(long)jkv;
+    kv=(dclass_keyvalue*)(plong)jkv;
 
     if(pos>=0 && pos<kv->size)
         ret=(*env)->NewStringUTF(env,kv->keys[pos]);
@@ -118,7 +124,7 @@ JNIEXPORT jstring JNICALL Java_dclass_dClass_kvgetvalue(JNIEnv *env,jobject obj,
     jstring ret;
     const dclass_keyvalue *kv;
 
-    kv=(dclass_keyvalue*)(long)jkv;
+    kv=(dclass_keyvalue*)(plong)jkv;
 
     if(pos>=0 && pos<kv->size)
         ret=(*env)->NewStringUTF(env,kv->values[pos]);
@@ -132,7 +138,7 @@ JNIEXPORT void JNICALL Java_dclass_dClass_free(JNIEnv *env,jobject obj,jlong ptr
 {
     dclass_index *dci;
 
-    dci=(dclass_index*)(long)ptr;
+    dci=(dclass_index*)(plong)ptr;
 
     Java_dclass_dClass_setindex(env,obj,NULL);
 

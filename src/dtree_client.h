@@ -183,7 +183,7 @@ int dtree_add_entry(dtree_dt_index *,const char*,void*,flag_f,void*);
 
 void *dtree_get(const dtree_dt_index*,const char*,flag_f);
 const dtree_dt_node *dtree_get_node(const dtree_dt_index*,const char*,flag_f);
-extern inline const dtree_dt_node *dtree_get_flag(const dtree_dt_index*,const dtree_dt_node*,flag_f);
+extern const dtree_dt_node *dtree_get_flag(const dtree_dt_index*,const dtree_dt_node*,flag_f);
 flag_f dtree_get_flags(const dtree_dt_index*,const dtree_dt_node*);
 
 char *dtree_alloc_string(dtree_dt_index*,const char*,int);
@@ -193,14 +193,6 @@ void dtree_free(dtree_dt_index*);
 
 long dtree_print(const dtree_dt_index*,const char*(*f)(void*));
 void dtree_printd(int,const char*,...);
-
-
-#ifdef _DTREE_NO_TIMESPEC
-struct timespec {
-    time_t tv_sec;
-    long tv_nsec;
-} timespec_t;
-#endif
 
 
 #endif /* _WX_DTREE_H_INCLUDED_ */

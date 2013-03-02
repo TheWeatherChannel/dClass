@@ -26,7 +26,7 @@ static const dtree_dt_node *dtree_search_node(const dtree_dt_index*,const dtree_
 unsigned int dtree_hash_char(char);
 
 extern packed_ptr dtree_alloc_node(dtree_dt_index*);
-extern inline int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
+extern int dtree_node_depth(const dtree_dt_index*,const dtree_dt_node*);
 
 
 //adds an entry to the tree

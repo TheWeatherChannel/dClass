@@ -1,16 +1,18 @@
 @ECHO OFF
 
-SET PATH=%PATH%;C:\DEV\MinGW\bin
+SET PATH=%PATH%;C:\DEV\mingw64\bin
 SET MAKE=mingw32-make.exe
 
 SET RM=del
 SET CP=copy
 SET SEP=\
-SET CFLAGS=-O3 -Wall -D_GNU_SOURCE=1 -D_DTREE_NO_TIMESPEC=1
-SET LFLAGS=-Wl,--kill-at
-SET OS=win32
-SET ARCH=32
-SET OUT=dclassjava.dll
+SET OS=win
+SET ARCH=64
+SET JAVAI=win32
+SET CFLAGS=-O3 -Wall -m%ARCH% -D__USE_MINGW_ANSI_STDIO=1
+SET LDFLAGS=-Wl,--kill-at -m%ARCH%
+SET PREOUT=
+SET OUTEXT=dll
 
 %MAKE% -f Makefile -e %1
 

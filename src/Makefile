@@ -1,6 +1,7 @@
 #compile flags 
 CC=gcc
 CFLAGS=-O3 -Wall
+LDFLAGS=
 LIBFLAGS=$(NEED_LIBRT)
 RM=rm -rf
 
@@ -17,10 +18,10 @@ lib:			CFLAGS=-O3 -Wall -fPIC
 lib:			clean libdclass.so libdclass.a
 
 dclass_client:		$(CLIENT_OBJS) main.o
-			$(CC) -o dclass_client $(CLIENT_OBJS) main.o $(LIBFLAGS)
+			$(CC) $(LDFLAGS) -o dclass_client $(CLIENT_OBJS) main.o $(LIBFLAGS)
 
 libdclass.so:		$(CLIENT_OBJS)
-			$(CC) -shared $(CLIENT_OBJS) -o libdclass.so
+			$(CC) $(LDFLAGS) -shared $(CLIENT_OBJS) -o libdclass.so
 
 libdclass.a:		$(CLIENT_OBJS)
 			ar cr libdclass.a $(CLIENT_OBJS)
