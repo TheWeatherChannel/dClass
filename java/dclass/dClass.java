@@ -90,6 +90,7 @@ public class dClass
         super.finalize();
     }
 
+    //TODO make this like main.c in seperate class
     public static void main(String[] args) throws Throwable
     {
         System.out.println("java dClass");

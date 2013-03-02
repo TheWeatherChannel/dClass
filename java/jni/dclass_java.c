@@ -31,14 +31,14 @@ JNIEXPORT jint JNICALL Java_dclass_dClass_init(JNIEnv *env,jobject obj,jstring j
     if(!dci)
         return -1;
 
-    Java_dclass_dClass_setindex(env,obj,dci);
-
     ret=dclass_load_file(dci,path);
 
     if(ret<=0)
         ret=openddr_load_resources(dci,path);
 
     (*env)->ReleaseStringUTFChars(env,jpath,path);
+
+    Java_dclass_dClass_setindex(env,obj,dci);
 
     return ret;
 }
@@ -134,9 +134,9 @@ JNIEXPORT void JNICALL Java_dclass_dClass_free(JNIEnv *env,jobject obj,jlong ptr
 
     dci=(dclass_index*)(long)ptr;
 
+    Java_dclass_dClass_setindex(env,obj,NULL);
+
     dclass_free(dci);
 
     free(dci);
-
-    Java_dclass_dClass_setindex(env,obj,NULL);
 }

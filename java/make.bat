@@ -8,7 +8,8 @@ SET CP=copy
 SET SEP=\
 SET CFLAGS=-O3 -Wall -D_GNU_SOURCE=1 -D_DTREE_NO_TIMESPEC=1
 SET LFLAGS=-Wl,--kill-at
-SET ARCH=win32
+SET OS=win32
+SET ARCH=32
 SET OUT=dclassjava.dll
 
 %MAKE% -f Makefile -e %1
