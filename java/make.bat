@@ -1,6 +1,8 @@
 @ECHO OFF
 
-SET PATH=%PATH%;C:\DEV\mingw64\bin
+SET JAVA_HOME=C:\DEV\Java\jdk1.7.0
+SET MINGW_PATH=C:\DEV\mingw64\bin
+SET PATH=%JAVA_HOME%\bin;%MINGW_PATH%;%PATH%
 SET MAKE=mingw32-make.exe
 
 SET RM=del
@@ -11,7 +13,7 @@ SET ARCH=64
 SET JAVAI=win32
 SET CFLAGS=-O3 -Wall -m%ARCH% -D__USE_MINGW_ANSI_STDIO=1
 SET LDFLAGS=-Wl,--kill-at -m%ARCH%
-SET PREOUT=
+SET OUTPRE=dclassjava
 SET OUTEXT=dll
 
 %MAKE% -f Makefile -e %1
