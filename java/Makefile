@@ -21,7 +21,7 @@ all:			$(OUT)
 
 $(OUT):			libdclass.a dclass_java.o dclass/dClass.class dclass/dClassLoader.class
 			$(CC) -shared $(LDFLAGS) -o $(OUT) dclass_java.o libdclass.a
-			$(CP) $(OUT) lib$(SEP)$(OUTPRE)$(OS)$(ARCH).$(OUTEXT)
+			$(CP) $(OUT) lib$(SEP)dclassjava$(OS)$(ARCH).$(OUTEXT)
 
 libdclass.a:		
 			$(MAKE) -C ../src/ -f ../src/Makefile "CFLAGS=$(CFLAGS)" lib
