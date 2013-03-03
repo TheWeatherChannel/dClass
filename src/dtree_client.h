@@ -95,6 +95,7 @@ typedef unsigned int packed_ptr;
 #define DTREE_S_FLAG_PARTIAL    (1 << 1)
 #define DTREE_S_FLAG_REGEX      (1 << 2)
 #define DTREE_S_FLAG_DUPS       (1 << 3)
+#define DTREE_S_FLAG_NOTRIM     (1 << 4)
 #define DTREE_S_MAX_CHAIN       10
 
 #define DTREE_M_MAX_SLABS       64

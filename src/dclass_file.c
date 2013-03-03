@@ -49,7 +49,7 @@ typedef struct
 } dtree_file_entry;
 
 
-static void dclass_parse_fentry(char*,dtree_file_entry*);
+static void dclass_parse_fentry(char*,dtree_file_entry*,int);
 static long dclass_write_tree(const dtree_dt_index*,const dtree_dt_node*,char*,int,FILE*);
 static void dclass_write_node(const dtree_dt_node*,char*,FILE*);
 
@@ -166,6 +166,11 @@ int dclass_load_file(dclass_index *di,const char *path)
                         h->sflags |= DTREE_S_FLAG_DUPS;
                         dtree_printd(DTREE_PRINT_INITDTREE,"INIT FORCE: dups\n");
                     }
+                    else if(!strncasecmp(p,"notrim",6))
+                    {
+                        h->sflags |= DTREE_S_FLAG_NOTRIM;
+                        dtree_printd(DTREE_PRINT_INITDTREE,"INIT FORCE: notrim\n");
+                    }
                     break;
             }          
             continue;
@@ -174,7 +179,7 @@ int dclass_load_file(dclass_index *di,const char *path)
         memset(&fe,0,sizeof(fe));
         
         //parse the line
-        dclass_parse_fentry(buf,&fe);
+        dclass_parse_fentry(buf,&fe,h->sflags & DTREE_S_FLAG_NOTRIM);
         
         if((!fe.count && fe.legacy) || (!fe.id && !fe.legacy))
         {
@@ -386,12 +391,13 @@ lerror:
 }
 
 //parses a line into a file_entry
-static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
+static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
 {
     int count=0;
     char sep;
     char *p;
     char *t;
+    char *e;
     char *key=NULL;
     size_t klen=0;
     size_t len;
@@ -399,28 +405,46 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe)
     for(p=buf;*p;p++)
     {
         //start
-        t=p;
+        e=t=p;
         
         //end
         for(;*p;p++)
         {
+            e=p;
+
             if(*p==';' || *p==',' || *p=='=' || *p=='\n')
             {
+                if(!notrim)
+                {
+                    while((*t==' ' || *t=='\t') && t<p)
+                        t++;
+                    while((*(p-1)==' ' || *(p-1)=='\t') && p>t)
+                        p--;
+                }
                 if(*t=='\"' && *(p-1)=='\"')
                 {
                     t++;
                     *(p-1)='\0';
                 }
                 else if(*t=='\"' && *p!='\n')
+                {
+                    if(!notrim)
+                        p=e;
                     continue;
+                }
                 
                 break;
             }
         }
         
         sep=*p;
+
+        if(!notrim)
+            sep=*e;
+
         *p='\0';
-        
+        p=e;
+
         len=p-t;
         
         if(!*(p-1) && len)

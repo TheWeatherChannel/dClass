@@ -85,3 +85,6 @@ test7;test7;B;;
 set\\test;settest3;S;;slash=true
 
 (group1\)?) (group(2)?) (t[e3]?st\? )?(group3);g123;;
+
+   "pattern 123  "  456 "   ;  p123456s  ; S ;;  var1  = "value1,fake=part of var1", " value 2 "  = two
+   "pattern 123  456 "   ;  p123456n  ; S ;;  var1  = val1  ,   var2=two
