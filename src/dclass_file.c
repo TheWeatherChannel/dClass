@@ -213,8 +213,6 @@ int dclass_load_file(dclass_index *di,const char *path)
                 fe.flag=DTREE_DT_FLAG_STRONG;
             else if(*fe.type=='W')
                 fe.flag=DTREE_DT_FLAG_WEAK;
-            else if(*fe.type=='P')
-                fe.flag=DTREE_DT_FLAG_BPART;
             else if(*fe.type=='B')
                 fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
             else if(*fe.type=='C')
@@ -640,8 +638,6 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
         fputc('S',f);
     else if(n->flags & DTREE_DT_FLAG_WEAK)
         fputc('W',f);
-    else if(n->flags & DTREE_DT_FLAG_BPART)
-        fputc('P',f);
     else if(n->flags & DTREE_DT_FLAG_BCHAIN)
         fputc('B',f);
     else if(n->flags & DTREE_DT_FLAG_CHAIN)

@@ -67,6 +67,8 @@ typedef unsigned int packed_ptr;
 #define DTREE_DT_GETPP(H,PP)    (&((dtree_dt_node*)(H)->slabs[DTREE_DT_GETPPH(PP)])[DTREE_DT_GETPPL(PP)])
 #define DTREE_DT_GENPP(P,H,L)   (((H)<<10)|(L))
 
+#define DTREE_DT_PTR_TYPE       "v"
+
 #else /*NOT DTREE_DT_PACKED*/
 
 //it is safe to change these values
@@ -75,6 +77,8 @@ typedef unsigned int packed_ptr;
 
 #define DTREE_DT_GETPP(H,PP)    ((dtree_dt_node*)(PP))
 #define DTREE_DT_GENPP(P,H,L)   ((packed_ptr)(P))
+
+#define DTREE_DT_PTR_TYPE       "n"
 
 #endif /*DTREE_DT_PACKED*/
 
@@ -86,10 +90,11 @@ typedef unsigned int packed_ptr;
 #define DTREE_DT_FLAG_TOKEN     (1 << 0)
 #define DTREE_DT_FLAG_STRONG    (1 << 1)
 #define DTREE_DT_FLAG_WEAK      (1 << 2)
-#define DTREE_DT_FLAG_BPART     (1 << 3)
+#define DTREE_DT_FLAG_POS       (1 << 3)
 #define DTREE_DT_FLAG_NONE      (1 << 4)
 #define DTREE_DT_FLAG_CHAIN     (1 << 5)
 #define DTREE_DT_FLAG_BCHAIN    (1 << 6)
+#define DTREE_DT_FLAG_DIST      (1 << 7)
 
 #define DTREE_S_FLAG_NONE       (1 << 0)
 #define DTREE_S_FLAG_PARTIAL    (1 << 1)
@@ -129,7 +134,12 @@ typedef struct
 {
     char                  data;
     flag_f                flags;
+
+    unsigned char         pos;
+    char                  dist;
     
+    unsigned char         rank;
+
 #if DTREE_DT_PACKED
     packed_ptr            nodes[DTREE_HASH_NCOUNT];
     packed_ptr            curr;

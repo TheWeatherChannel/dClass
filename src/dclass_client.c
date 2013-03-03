@@ -35,6 +35,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     int valid;
     int bcvalid;
     int i;
+    unsigned int pos=0;
     unsigned int hash;
     char buf[DTREE_DATA_BUFLEN];
     const char *p;
@@ -67,6 +68,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
             {
                 token=p;
                 on=1;
+                pos++;
             }
             
             valid=1;
@@ -77,8 +79,8 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
             //EOT found
             fbnode=dtree_get_node(h,token,0);
             
-            dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() token:'%s' = '%s':%d\n",
-                    token,fbnode?dtree_node_path(h,fbnode,buf):"",fbnode?(int)fbnode->flags:0);
+            dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() token %d: '%s' = '%s':%d\n",
+                    pos,token,fbnode?dtree_node_path(h,fbnode,buf):"",fbnode?(int)fbnode->flags:0);
             
             if(fbnode && dtree_get_flag(h,fbnode,DTREE_DT_FLAG_TOKEN))
             {
@@ -130,7 +132,8 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                                 if(!cnodes[i].cn)
                                 {
                                     cnodes[i].cn=fnode->payload;
-                                    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain added: %p('%d')\n",fnode->payload,i);
+                                    cnodes[i].pos=pos;
+                                    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain added: %p('%d'):%d\n",fnode->payload,i,pos);
                                     break;
                                 }
                             }
