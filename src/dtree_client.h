@@ -102,6 +102,10 @@ typedef unsigned int packed_ptr;
 #define DTREE_S_FLAG_DUPS       (1 << 3)
 #define DTREE_S_FLAG_NOTRIM     (1 << 4)
 #define DTREE_S_MAX_CHAIN       10
+#define DTREE_S_MAX_POS         255
+#define DTREE_S_MAX_RANK        255
+#define DTREE_S_MIN_DIR         -127
+#define DTREE_S_MAX_DIR         127
 
 #define DTREE_M_MAX_SLABS       64
 #define DTREE_M_SLAB_SIZE       (1024*128)
@@ -136,9 +140,8 @@ typedef struct
     flag_f                flags;
 
     unsigned char         pos;
-    char                  dist;
-    
     unsigned char         rank;
+    char                  dir;
 
 #if DTREE_DT_PACKED
     packed_ptr            nodes[DTREE_HASH_NCOUNT];
@@ -188,14 +191,28 @@ typedef struct
 dtree_dt_index;
 
 
+//add_entry struct
+typedef struct
+{
+    void                  *data;
+    void                  *param;
+
+    flag_f                flags;
+
+    unsigned char         pos;
+    unsigned char         rank;
+    char                  dir;
+}
+dtree_dt_add_entry;
+
 void dtree_init_index(dtree_dt_index*);
 
-int dtree_add_entry(dtree_dt_index *,const char*,void*,flag_f,void*);
+int dtree_add_entry(dtree_dt_index *,const char*,dtree_dt_add_entry*);
 
 void *dtree_get(const dtree_dt_index*,const char*,flag_f);
-const dtree_dt_node *dtree_get_node(const dtree_dt_index*,const char*,flag_f);
-extern const dtree_dt_node *dtree_get_flag(const dtree_dt_index*,const dtree_dt_node*,flag_f);
-flag_f dtree_get_flags(const dtree_dt_index*,const dtree_dt_node*);
+const dtree_dt_node *dtree_get_node(const dtree_dt_index*,const char*,flag_f,unsigned char);
+const dtree_dt_node *dtree_get_flag(const dtree_dt_index*,const dtree_dt_node*,flag_f,unsigned char);
+flag_f dtree_get_flags(const dtree_dt_index*,const dtree_dt_node*,unsigned char);
 
 char *dtree_alloc_string(dtree_dt_index*,const char*,int);
 void *dtree_alloc_mem(dtree_dt_index*,size_t);

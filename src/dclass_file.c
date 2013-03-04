@@ -41,9 +41,12 @@ typedef struct
     size_t cparam_len;
     
     int count;
-    int legacy;
     
     flag_f flag;
+
+    unsigned int pos;
+    unsigned int rank;
+    signed int dir;
     
     dtree_kv_pair p[DTREE_DATA_MKEYS];
 } dtree_file_entry;
@@ -79,6 +82,7 @@ int dclass_load_file(dclass_index *di,const char *path)
     dtree_file_entry fe;
     dclass_keyvalue *kvd;
     dclass_keyvalue *cparam;
+    dtree_dt_add_entry entry;
     
 #if DTREE_PERF_WALKING
     struct timespec startn,endn,diffn;
@@ -139,7 +143,11 @@ int dclass_load_file(dclass_index *di,const char *path)
 
                             kvd->id=s;
 
-                            if(dtree_add_entry(&ids,kvd->id,kvd,0,NULL)<0)
+                            memset(&entry,0,sizeof(dtree_dt_add_entry));
+
+                            entry.data=kvd;
+
+                            if(dtree_add_entry(&ids,kvd->id,&entry)<0)
                                 goto lerror;
 
                             dtree_printd(DTREE_PRINT_INITDTREE,"IDS: Successful add: '%s'\n",kvd->id);
@@ -181,51 +189,74 @@ int dclass_load_file(dclass_index *di,const char *path)
         //parse the line
         dclass_parse_fentry(buf,&fe,h->sflags & DTREE_S_FLAG_NOTRIM);
         
-        if((!fe.count && fe.legacy) || (!fe.id && !fe.legacy))
+        if(!fe.id)
         {
             dtree_printd(DTREE_PRINT_INITDTREE,"LOAD: bad line detected: '%s':%d\n",buf,lines);
             continue;
         }
                 
-        //normalize legacy fe
-        if(fe.legacy)
-        {
-            for(i=0;i<fe.count;i++)
-            {
-                s=dtree_alloc_string(h,fe.p[i].key,fe.p[i].key_len);
-                if(!i || DTREE_DC_DISTANCE(h,s)<DTREE_DC_DISTANCE(h,(char*)fe.id))
-                {
-                    fe.id=s;
-                    fe.id_len=fe.p[i].key_len;
-                    fe.type=fe.p[i].value;
-                }
-
-            }
-            
-            fe.count=0;
-            
-            h->sflags |= DTREE_S_FLAG_PARTIAL;
-        }
-        
         if(fe.type)
         {
-            if(*fe.type=='S')
-                fe.flag=DTREE_DT_FLAG_STRONG;
-            else if(*fe.type=='W')
-                fe.flag=DTREE_DT_FLAG_WEAK;
-            else if(*fe.type=='B')
-                fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
-            else if(*fe.type=='C')
-                fe.flag=DTREE_DT_FLAG_CHAIN;
-            else
-                fe.flag=DTREE_DT_FLAG_NONE;
+            for(s=fe.type;*s;s++)
+            {
+                if(*s=='S')
+                    fe.flag=DTREE_DT_FLAG_STRONG;
+                else if(*s=='W')
+                {
+                    fe.flag=DTREE_DT_FLAG_WEAK;
+                    s++;
+                    if(*s>='0' && *s<='9')
+                    {
+                        fe.rank=strtol(s,NULL,10);
+                        while(*(s+1) && *(s+1)<='9')
+                            s++;
+                    }
+                }
+                else if(*s=='B')
+                    fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
+                else if(*s=='C')
+                    fe.flag=DTREE_DT_FLAG_CHAIN;
+                else if(*s=='N')
+                    fe.flag=DTREE_DT_FLAG_NONE;
+                else if(*s==':')
+                {
+                    s++;
+                    fe.pos=strtol(s,NULL,10);
+                    break;
+                }
+            }
         }
-        else
+    
+        if(!fe.flag)
             fe.flag=DTREE_DT_FLAG_NONE;
 
+        if(fe.cparam)
+        {
+            for(s=fe.cparam;*s;s++)
+            {
+                if(*s==':')
+                {
+                    *s='\0';
+
+                    fe.cparam_len=s-fe.cparam;
+
+                    fe.dir=strtol(s+1,NULL,10);
+                }
+            }
+        }
+
+        if(fe.pos>DTREE_S_MAX_POS)
+            fe.pos=DTREE_S_MAX_POS;
+        if(fe.rank>DTREE_S_MAX_RANK)
+            fe.rank=DTREE_S_MAX_RANK;
+        if(fe.dir<DTREE_S_MIN_DIR)
+            fe.dir=DTREE_S_MIN_DIR;
+        else if(fe.dir>DTREE_S_MAX_DIR)
+            fe.dir=DTREE_S_MAX_DIR;
+
         dtree_printd(DTREE_PRINT_INITDTREE,
-                "LOAD: line dump: pattern: '%s' id: '%s':%zu type: '%s' flag: %ud cparam: '%s':%zu legacy: %d\nKVS",
-                fe.pattern,fe.id,fe.id_len,fe.type,fe.flag,fe.cparam,fe.cparam_len,fe.legacy);
+                "LOAD: line dump: pattern: '%s' id: '%s':%zu type: '%s' flag: %ud cparam: '%s':%zu prd: %d,%d,%d\nKVS",
+                fe.pattern,fe.id,fe.id_len,fe.type,fe.flag,fe.cparam,fe.cparam_len,fe.pos,fe.rank,fe.dir);
         for(i=0;i<fe.count;i++)
             dtree_printd(DTREE_PRINT_INITDTREE,",'%s':%zu='%s':%zu",fe.p[i].key,fe.p[i].key_len,fe.p[i].value,fe.p[i].val_len);
         dtree_printd(DTREE_PRINT_INITDTREE,"\n");
@@ -242,8 +273,12 @@ int dclass_load_file(dclass_index *di,const char *path)
             
             //populate kvd
             kvd->id=dtree_alloc_string(h,fe.id,fe.id_len);
+
+            memset(&entry,0,sizeof(dtree_dt_add_entry));
+
+            entry.data=kvd;
             
-            if(dtree_add_entry(&ids,kvd->id,kvd,0,NULL)<0)
+            if(dtree_add_entry(&ids,kvd->id,&entry)<0)
                 goto lerror;
             
             dtree_printd(DTREE_PRINT_INITDTREE,"IDS: Successful add: '%s'\n",kvd->id);
@@ -314,7 +349,7 @@ int dclass_load_file(dclass_index *di,const char *path)
         //lookup cparam
         if(fe.cparam && *fe.cparam)
         {
-            dtree_printd(DTREE_PRINT_INITDTREE,"LOAD: cparam detected: '%s'\n",fe.cparam);
+            dtree_printd(DTREE_PRINT_INITDTREE,"LOAD: cparam detected: '%s':%d\n",fe.cparam,fe.dir);
             
             cparam=(dclass_keyvalue*)dtree_get(&ids,fe.cparam,0);
             
@@ -328,16 +363,29 @@ int dclass_load_file(dclass_index *di,const char *path)
 
                 //populate kvd
                 cparam->id=dtree_alloc_string(h,fe.cparam,fe.cparam_len);
+
+                memset(&entry,0,sizeof(dtree_dt_add_entry));
+
+                entry.data=cparam;
             
-                if(dtree_add_entry(&ids,cparam->id,cparam,0,NULL)<0)
+                if(dtree_add_entry(&ids,cparam->id,&entry)<0)
                     goto lerror;
 
                 dtree_printd(DTREE_PRINT_INITDTREE,"IDS: Successful add: '%s'\n",cparam->id);
             }
         }
         
+        memset(&entry,0,sizeof(dtree_dt_add_entry));
+
+        entry.data=kvd;
+        entry.flags=fe.flag;
+        entry.param=cparam;
+        entry.pos=fe.pos;
+        entry.rank=fe.rank;
+        entry.dir=fe.dir;
+
         //add the entry
-        ret=dtree_add_entry(h,fe.pattern,kvd,fe.flag,cparam);
+        ret=dtree_add_entry(h,fe.pattern,&entry);
         
         if(ret<0)
             goto lerror;
@@ -453,14 +501,6 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
 
         if(!count)
             fe->pattern=t;
-        else if(count==1 && sep=='=')
-        {
-            fe->legacy=1;
-            count=4;
-            key=t;
-            klen=len;
-            continue;
-        }
         else if(count==1)
         {
             fe->id=t;
@@ -636,21 +676,30 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
 
     if(n->flags & DTREE_DT_FLAG_STRONG)
         fputc('S',f);
-    else if(n->flags & DTREE_DT_FLAG_WEAK)
+    if(n->flags & DTREE_DT_FLAG_WEAK)
+    {
         fputc('W',f);
-    else if(n->flags & DTREE_DT_FLAG_BCHAIN)
+        if(n->rank)
+            fprintf(f,"%hd",n->rank);
+    }
+    if(n->flags & DTREE_DT_FLAG_BCHAIN)
         fputc('B',f);
     else if(n->flags & DTREE_DT_FLAG_CHAIN)
         fputc('C',f);
-    else
+    if(n->flags & DTREE_DT_FLAG_NONE)
         fputc('N',f);
     
+    if(n->pos)
+        fprintf(f,":%hd",n->pos);
+
     fputc(';',f);
     
     if(n->cparam)
     {
         fputc('\"',f);
         fputs(((dclass_keyvalue*)n->cparam)->id,f);
+        if(n->dir)
+            fprintf(f,":%d",n->dir);
         fputc('\"',f);
     }
     

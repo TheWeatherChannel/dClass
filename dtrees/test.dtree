@@ -7,7 +7,7 @@
 # These IDs (#!) have the highest index order and will be returned as such.
 # Also used for string caching.
 
-#!unknown,bat,mat,vat
+#!unknown,bat,mat,vat,wtest5b
 
 
 #FORMAT:
@@ -86,5 +86,17 @@ set\\test;settest3;S;;slash=true
 
 (group1\)?) (group(2)?) (t[e3]?st\? )?(group3);g123;;
 
-   "pattern 123  "  456 "   ;  p123456s  ; S ;;  var1  = "value1,fake=part of var1", " value 2 "  = two
+   "pattern 123  \"  456 "   ;  p123456s  ; S ;;  var1  = "value1,fake=part of var1", " value 2 "  = two
    "pattern 123  456 "   ;  p123456n  ; S ;;  var1  = val1  ,   var2=two
+
+ptest;ptest1;S:1;;pos=1
+ptest;ptest2;S:2;;pos=2
+ptest;ptest3;S:3;;pos=3
+ptest;pteste;S:-1;;pos=end
+
+wtest       ;wtest;     W;      ;weak=blank
+wtest1      ;wtest1;    W1;     ;weak=1
+wtest5b     ;wtest5b;   W5;     ;weak=5,beta=true
+wtest5      ;wtest5;    W5;     ;weak=5
+wtest25     ;wtest25;   W25;    ;weak=25
+wtest100    ;wtest100;  W100;   ;weak=100

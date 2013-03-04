@@ -33,3 +33,14 @@ group0 group1) group tstxx group3 group4
 pattern 123  456
 pattern 123  456 
 pattern 123  "  456 
+a ptest b c d e f
+ptest b c d e f
+a b ptest c d e f
+a b c ptest d e f
+a b c d e f g ptest
+a b c d e f g h i j k ptest
+some wtest25 text wtest5b wtest wtest100
+some wtest25 text wtest5b wtest wtest10x0
+some wtest5 text wtest5b wtest wtest10x0
+some wtest5 text wtestb wtest wtest10x0
+some wtestx text wtestb wtest wtest10x0

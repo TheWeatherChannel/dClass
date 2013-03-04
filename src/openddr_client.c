@@ -154,6 +154,7 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
     char buf[1048];
     char temp[DTREE_DATA_BUFLEN];
     dclass_keyvalue *kvd=NULL;
+    dtree_dt_add_entry entry;
     
     if(!f)
         return 0;
@@ -225,8 +226,12 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
                 dtree_printd(DTREE_PRINT_INITDTREE,"%s: '%s' ",kvd->keys[i],kvd->values[i]);
         dtree_printd(DTREE_PRINT_INITDTREE,"\n");
 
+        memset(&entry,0,sizeof(dtree_dt_add_entry));
+
+        entry.data=kvd;
+
         //add to device tree
-        if(dtree_add_entry(dev,kvd->id,kvd,0,NULL)<0)
+        if(dtree_add_entry(dev,kvd->id,&entry)<0)
             return -1;
     }
     
@@ -344,6 +349,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,fl
 static int openddr_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dclass_keyvalue *der,dclass_keyvalue *chain,char *pattern,flag_f flags)
 {
     int i;
+    dtree_dt_add_entry entry;
     
     //chain pattern
     if((flags & DTREE_DT_FLAG_CHAIN))
@@ -360,14 +366,21 @@ static int openddr_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dcla
         if(!der->values[i])
             der->values[i]=openddr_copy_string(dev,dclass_get_kvalue(der,"parentId"),der->keys[i]);
     }
+
+    memset(&entry,0,sizeof(dtree_dt_add_entry));
+
+    entry.data=der;
+    entry.flags=flags;
+    entry.param=chain;
     
-    return dtree_add_entry(h,pattern,der,flags,chain);
+    return dtree_add_entry(h,pattern,&entry);
 }
 
 //alloc a device kvd
 static int openddr_alloc_kvd(dtree_dt_index *h,dtree_dt_index *dev,char *id)
 {
     dclass_keyvalue *kvd;
+    dtree_dt_add_entry entry;
     
     kvd=(dclass_keyvalue*)dtree_alloc_mem(h,sizeof(dclass_keyvalue));
     
@@ -375,8 +388,12 @@ static int openddr_alloc_kvd(dtree_dt_index *h,dtree_dt_index *dev,char *id)
         return 0;
     
     kvd->id=dtree_alloc_string(h,id,strlen(id));
+
+    memset(&entry,0,sizeof(dtree_dt_add_entry));
+
+    entry.data=kvd;
     
-    dtree_add_entry(dev,kvd->id,kvd,0,NULL);
+    dtree_add_entry(dev,kvd->id,&entry);
     
     return 1;
 }

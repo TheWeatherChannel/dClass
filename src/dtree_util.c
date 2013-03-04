@@ -28,13 +28,13 @@ int dtree_gettime(struct timespec*);
 
 
 //finds a certain flag among dup nodes
-const dtree_dt_node *dtree_get_flag(const dtree_dt_index *h,const dtree_dt_node *n,flag_f flag)
+const dtree_dt_node *dtree_get_flag(const dtree_dt_index *h,const dtree_dt_node *n,flag_f flag,unsigned char pos)
 {
     packed_ptr pp=n->curr;
     
     while(pp)
     {
-        if(n->flags & flag)
+        if(n->flags & flag && (!n->pos || !pos || n->pos==pos))
             return n;
         
         pp=n->dup;
@@ -45,18 +45,23 @@ const dtree_dt_node *dtree_get_flag(const dtree_dt_index *h,const dtree_dt_node 
 }
 
 //finds a certain flag among dup nodes
-flag_f dtree_get_flags(const dtree_dt_index *h,const dtree_dt_node *n)
+flag_f dtree_get_flags(const dtree_dt_index *h,const dtree_dt_node *n,unsigned char pos)
 {
+    flag_f f;
     packed_ptr pp;
     
     if(n)
     {
+        f=0;
         pp=n->dup;
+
+        if(!n->pos || !pos || n->pos==pos)
+            f=n->flags;
         
         if(pp)
-            return n->flags | dtree_get_flags(h,DTREE_DT_GETPP(h,pp));
+            return f | dtree_get_flags(h,DTREE_DT_GETPP(h,pp),pos);
         else
-            return n->flags;
+            return f;
     }
     else
         return 0;

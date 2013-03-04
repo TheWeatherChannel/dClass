@@ -68,7 +68,9 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
             {
                 token=p;
                 on=1;
-                pos++;
+
+                if(pos<DTREE_S_MAX_POS)
+                    pos++;
             }
             
             valid=1;
@@ -77,29 +79,30 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
         if((!valid || (!*(p+1))) && on)
         {
             //EOT found
-            fbnode=dtree_get_node(h,token,0);
+            fbnode=dtree_get_node(h,token,0,0);
             
             dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() token %d: '%s' = '%s':%d\n",
                     pos,token,fbnode?dtree_node_path(h,fbnode,buf):"",fbnode?(int)fbnode->flags:0);
             
-            if(fbnode && dtree_get_flag(h,fbnode,DTREE_DT_FLAG_TOKEN))
+            if(fbnode && dtree_get_flag(h,fbnode,DTREE_DT_FLAG_TOKEN,pos))
             {
-                if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_STRONG)))
+                if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_STRONG,pos)))
                     return fnode->payload;
-                else if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_WEAK)))
+                else if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_WEAK,pos)))
                 {
                     i=DTREE_DC_DISTANCE(h,(char*)fnode->payload);
-                    if(!wnode || (i>=0 && i<DTREE_DC_DISTANCE(h,(char*)wnode->payload)))
+                    if(!wnode || fnode->rank>wnode->rank || (fnode->rank==wnode->rank &&
+                            i>=0 && i<DTREE_DC_DISTANCE(h,(char*)wnode->payload)))
                         wnode=fnode;
                 }
-                else if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_NONE)))
+                else if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_NONE,pos)))
                 {
                     i=DTREE_DC_DISTANCE(h,(char*)fnode->payload);
                     if(!nnode || (i>=0 && i<DTREE_DC_DISTANCE(h,(char*)nnode->payload)))
                         nnode=fnode;
                 }
                 
-                if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_CHAIN)))
+                if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_CHAIN,pos)))
                 {
                     dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain detected\n");
                     
@@ -144,6 +147,14 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                     }
                 }
             }
+
+            if(!*(p+1) && pos!=DTREE_S_MAX_POS)
+            {
+                p--;
+                pos=DTREE_S_MAX_POS;
+                continue;
+            }
+
             on=0;
         }
     }
@@ -166,7 +177,7 @@ const dclass_keyvalue *dclass_get(const dclass_index *di,const char *str)
     if(!str || !h->head)
         return dclass_get_kverror(di);
 
-    node=dtree_get_node(h,str,DTREE_DT_FLAG_TOKEN);
+    node=dtree_get_node(h,str,DTREE_DT_FLAG_TOKEN,0);
     
     if(node && node->payload)
         return node->payload;
