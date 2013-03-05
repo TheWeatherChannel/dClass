@@ -94,8 +94,13 @@ ptest;ptest2;S:2;;pos=2
 ptest;ptest3;S:3;;pos=3
 ptest$;pteste;S;;pos=end
 
-^fullstring$;fulls;S;;pos=full
-fullstring;fullsa;W;;pos=any
+^fullstring$;fulls;S;;pos=full,space=false
+fullstring;fullsa;W;;pos=any,space=false
+
+^full;sfullb;B;;
+string$;sfulls;C;sfullb:-1;pos=full,space=true
+string$;sfulls1;C;sfullb:-2;pos=full,space=2
+string$;sfulls2;C;sfullb:-3;pos=full,space=3
 
 wtest       ;wtest;     W;      ;weak=blank
 wtest1      ;wtest1;    W1;     ;weak=1
@@ -103,3 +108,7 @@ wtest5b     ;wtest5b;   W5;     ;weak=5,beta=true
 wtest5      ;wtest5;    W5;     ;weak=5
 wtest25     ;wtest25;   W25;    ;weak=25
 wtest100    ;wtest100;  W100;   ;weak=100
+
+this is the  ;thisis ;B  ;          ;
+start        ;thiss  ;C10;thisis:-3 ;this is=start
+end$         ;thise  ;C  ;thisis:-4 ;this is=end,end=""

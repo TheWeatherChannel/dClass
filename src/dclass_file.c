@@ -200,31 +200,32 @@ int dclass_load_file(dclass_index *di,const char *path)
         {
             for(s=fe.type;*s;s++)
             {
-                if(*s=='S')
-                    fe.flag=DTREE_DT_FLAG_STRONG;
-                else if(*s=='W')
-                {
-                    fe.flag=DTREE_DT_FLAG_WEAK;
-                    s++;
-                    if(*s>='0' && *s<='9')
-                    {
-                        fe.rank=strtol(s,NULL,10);
-                        while(*(s+1) && *(s+1)<='9')
-                            s++;
-                    }
-                }
-                else if(*s=='B')
-                    fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
-                else if(*s=='C')
-                    fe.flag=DTREE_DT_FLAG_CHAIN;
-                else if(*s=='N')
-                    fe.flag=DTREE_DT_FLAG_NONE;
-                else if(*s==':')
+                if(*s==':')
                 {
                     s++;
                     fe.pos=strtol(s,NULL,10);
                     break;
                 }
+                else if(fe.flag)
+                    continue;
+                else if(*s=='S')
+                    fe.flag=DTREE_DT_FLAG_STRONG;
+                else if(*s=='W')
+                {
+                    fe.flag=DTREE_DT_FLAG_WEAK;
+                    if(*(s+1)>='0' && *(s+1)<='9')
+                        fe.rank=strtol(s+1,NULL,10);
+                }
+                else if(*s=='B')
+                    fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
+                else if(*s=='C')
+                {
+                    fe.flag=DTREE_DT_FLAG_CHAIN;
+                    if(*(s+1)>='0' && *(s+1)<='9')
+                        fe.rank=strtol(s+1,NULL,10);
+                }
+                else if(*s=='N')
+                    fe.flag=DTREE_DT_FLAG_NONE;
             }
         }
     
@@ -476,6 +477,7 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
         for(;*p;p++)
         {
             e=p;
+            len=p-t;
 
             if(*p==';' || *p==',' || *p=='=' || *p=='\n')
             {
@@ -485,11 +487,14 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
                         t++;
                     while((*(p-1)==' ' || *(p-1)=='\t') && p>t)
                         p--;
+
+                    len=p-t;
                 }
                 if(*t=='\"' && *(p-1)=='\"')
                 {
                     t++;
                     *(p-1)='\0';
+                    len-=2;
                 }
                 else if(*t=='\"' && *p!='\n')
                 {
@@ -508,15 +513,14 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
             sep=*e;
 
         *p='\0';
+
         p=e;
 
-        len=p-t;
-        
-        if(!*(p-1) && len)
-            len--;
-        
         if(len>=DTREE_DATA_BUFLEN)
             len=DTREE_DATA_BUFLEN-1;
+
+        if(strlen(t)!=len)
+            dtree_printd(DTREE_PRINT_INITDTREE,"LOAD: ERROR: '%s' != %zu\n",t,len);
 
         if(!count)
         {
@@ -698,17 +702,21 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
 
     if(n->flags & DTREE_DT_FLAG_STRONG)
         fputc('S',f);
-    if(n->flags & DTREE_DT_FLAG_WEAK)
+    else if(n->flags & DTREE_DT_FLAG_WEAK)
     {
         fputc('W',f);
         if(n->rank)
             fprintf(f,"%hd",n->rank);
     }
-    if(n->flags & DTREE_DT_FLAG_BCHAIN)
+    else if(n->flags & DTREE_DT_FLAG_BCHAIN)
         fputc('B',f);
     else if(n->flags & DTREE_DT_FLAG_CHAIN)
+    {
         fputc('C',f);
-    if(n->flags & DTREE_DT_FLAG_NONE)
+        if(n->rank)
+            fprintf(f,"%hd",n->rank);
+    }
+    else
         fputc('N',f);
     
     if(n->pos)

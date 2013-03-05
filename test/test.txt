@@ -42,8 +42,15 @@ a b c d e f g h i j k ptest
 a b fullstring c
 a fullstring
 fullstring
+a full string
+full string
+full 55 b string
+full string b
 some wtest25 text wtest5b wtest wtest100
 some wtest25 text wtest5b wtest wtest10x0
 some wtest5 text wtest5b wtest wtest10x0
 some wtest5 text wtestb wtest wtest10x0
 some wtestx text wtestb wtest wtest10x0
+3 this is the end x
+4 this is the start x
+5 this is the start end

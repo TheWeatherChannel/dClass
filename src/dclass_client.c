@@ -36,11 +36,13 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     int bcvalid;
     int i;
     unsigned int pos=0;
+    unsigned int rpos=0;
     unsigned int hash;
     char buf[DTREE_DATA_BUFLEN];
     const char *p;
     const char *token="";
     packed_ptr pp;
+    const dtree_dt_node *cnode=NULL;
     const dtree_dt_node *wnode=NULL;
     const dtree_dt_node *nnode=NULL;
     const dtree_dt_node *fbnode;
@@ -69,6 +71,8 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                 token=p;
                 on=1;
 
+                rpos++;
+
                 if(pos<DTREE_S_MAX_POS)
                     pos++;
             }
@@ -81,8 +85,8 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
             //EOT found
             fbnode=dtree_get_node(h,token,0,0);
             
-            dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() token %d: '%s' = '%s':%d\n",
-                    pos,token,fbnode?dtree_node_path(h,fbnode,buf):"",fbnode?(int)fbnode->flags:0);
+            dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() token %d(%d): '%s' = '%s':%d\n",
+                    pos,rpos,token,fbnode?dtree_node_path(h,fbnode,buf):"",fbnode?(int)fbnode->flags:0);
             
             if(fbnode && dtree_get_flag(h,fbnode,DTREE_DT_FLAG_TOKEN,pos))
             {
@@ -114,16 +118,20 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                         
                         if(fnode->flags & DTREE_DT_FLAG_CHAIN && fnode->cparam)
                         {   
-                            dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() looking for pchain %p\n",fnode->cparam);
+                            dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() looking for pchain %p at dir: %d\n",fnode->cparam,fnode->dir);
                             for(i=0;i<DTREE_S_MAX_CHAIN && cnodes[i].cn;i++)
                             {
                                 //chain hit
                                 if(cnodes[i].cn==fnode->cparam)
                                 {
+                                    if((fnode->dir<0 && cnodes[i].pos-rpos<fnode->dir) || (fnode->dir>0 && rpos-cnodes[i].pos>fnode->dir))
+                                        continue;
                                     if(fnode->flags & DTREE_DT_FLAG_BCHAIN)
                                         bcvalid=1;
-                                    else
+                                    else if(!fnode->rank)
                                         return fnode->payload;
+                                    else if(!cnode || fnode->rank>cnode->rank)
+                                        cnode=fnode;
                                 }
                             }
                         }
@@ -135,8 +143,8 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                                 if(!cnodes[i].cn)
                                 {
                                     cnodes[i].cn=fnode->payload;
-                                    cnodes[i].pos=pos;
-                                    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain added: %p('%d'):%d\n",fnode->payload,i,pos);
+                                    cnodes[i].pos=rpos;
+                                    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain added: %p('%d'):%d\n",fnode->payload,i,rpos);
                                     break;
                                 }
                             }
@@ -164,7 +172,9 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
         }
     }
     
-    if(wnode)
+    if(cnode)
+        return cnode->payload;
+    else if(wnode)
         return wnode->payload;
     else if(nnode)
         return nnode->payload;
