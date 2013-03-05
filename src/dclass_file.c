@@ -466,7 +466,7 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
     char *e;
     char *key=NULL;
     size_t klen=0;
-    size_t len;
+    size_t len=0;
     
     for(p=buf;*p;p++)
     {
