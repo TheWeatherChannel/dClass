@@ -2,6 +2,7 @@
 
 OPENDDR_RESOURCE=/some/path/OpenDDR/latest/resources
 DCLASS_BIN=../src/dclass_client
+#DCLASS_BIN="../java/dclass/dClassMain.class"
 
 if [ ! -s "uas.txt" ]
 then
@@ -14,6 +15,8 @@ then
         echo "ERROR: dclass_client binary not found"
         exit 1
 fi
+
+#DCLASS_BIN="java -cp ../java dclass.dClassMain"
 
 CFLAG=`$DCLASS_BIN test.txt | grep "UA lookup 5: '" | wc -l`
 

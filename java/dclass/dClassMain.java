@@ -15,9 +15,9 @@ public class dClassMain
         int argc=args.length;
         int openddr=0;
         long count,total;
-        long startn,endn,diffn;
+        long startn,diffn;
         String loadFile="../dtrees/openddr.dtree";
-        String outFile="";
+        String outFile=null;
         String parameter=null;
         dClass di;
         Map<String,String> kv;
@@ -62,13 +62,28 @@ public class dClassMain
 
         ret=di.init();
 
-        endn=System.nanoTime();
-        diffn=endn-startn;
+        diffn=System.nanoTime()-startn;
 
-        System.out.println("load dtree tokens: "+ret+" time: "+diffn/(1000*1000*1000)+"s "+
-            diffn/(1000*1000)%(1000*1000)+"ms "+diffn/1000%1000+"us "+diffn%1000+"ns");
+        System.out.println("load dtree tokens: "+ret+" time: "+getTime(diffn));
 
         System.out.println("dtree stats: nodes: "+di.nodes+" mem: "+di.memory);
+
+        startn=System.nanoTime();
+
+        ret=(int)di.walk();
+
+        diffn=System.nanoTime()-startn;
+
+        System.out.println("walk tree: "+ret+" tokens "+di.nodes+" nodes time: "+getTime(diffn));
+
+        if(outFile!=null)
+        {
+            System.out.println("Dumping dtree: '"+outFile+"'");
+        
+            ret=di.write(outFile);
+        
+            System.out.println("Wrote "+ret+" entries");
+        }
 
         String test="Mozilla/5.0 (Linux; U; Android 2.2; en; HTC Aria A6380 Build/ERE27) AppleWebKit/540.13+ (KHTML, like Gecko) Version/3.1 Mobile Safari/524.15.0";
 
@@ -76,11 +91,9 @@ public class dClassMain
 
         kv=di.classify(test);
 
-        endn=System.nanoTime();
-        diffn=endn-startn;
+        diffn=System.nanoTime()-startn;
 
-        System.out.println("HTC Aria lookup: '"+kv.get("id")+"' time: "+diffn/(1000*1000*1000)+"s "+
-            diffn/(1000*1000)%(1000*1000)+"ms "+diffn/1000%1000+"us "+diffn%1000+"ns");
+        System.out.println("HTC Aria lookup: '"+kv.get("id")+"' time: "+getTime(diffn));
 
         if(parameter==null);
         else if((new File(parameter)).exists())
@@ -104,15 +117,13 @@ public class dClassMain
 
                     kv=di.classify(line);
 
-                    endn=System.nanoTime();
-                    diffn=endn-startn;
+                    diffn=System.nanoTime()-startn;
 
                     total+=diffn;
                     count++;
 
                     if(DTREE_LOG_UALOOKUP)
-                        System.out.println("UA lookup "+count+": '"+kv.get("id")+"' time: "+diffn/(1000*1000*1000)+"s "+
-                            diffn/(1000*1000)%(1000*1000)+"ms "+diffn/1000%1000+"us "+diffn%1000+"ns");
+                        System.out.println("UA lookup "+count+": '"+kv.get("id")+"' time: "+getTime(diffn));
                 }
 
                 in.close();
@@ -126,8 +137,7 @@ public class dClassMain
 
             total/=count; 
 
-            System.out.println("TOTAL average time: "+count+", "+total/(1000*1000*1000)+"s "+
-                total/(1000*1000)%(1000*1000)+"ms "+total/1000%1000+"us "+total%1000+"ns");
+            System.out.println("TOTAL average time: "+count+", "+getTime(diffn));
         }
         else
         {
@@ -137,11 +147,9 @@ public class dClassMain
 
             kv=di.classify(parameter);
 
-            endn=System.nanoTime();
-            diffn=endn-startn;
+            diffn=System.nanoTime()-startn;
 
-            System.out.println("Param UA lookup: '"+kv.get("id")+"' time: "+diffn/(1000*1000*1000)+"s "+
-                diffn/(1000*1000)%(1000*1000)+"ms "+diffn/1000%1000+"us "+diffn%1000+"ns");
+            System.out.println("Param UA lookup: '"+kv.get("id")+"' time: "+getTime(diffn));
 
             System.out.print("OpenDDR attributes => ");
 
@@ -155,5 +163,10 @@ public class dClassMain
         }
 
         di.free();
+    }
+
+    public static String getTime(long diffn)
+    {
+        return diffn/(1000*1000*1000)+"s "+diffn/(1000*1000)%(1000*1000)+"ms "+diffn/1000%1000+"us "+diffn%1000+"ns";
     }
 }

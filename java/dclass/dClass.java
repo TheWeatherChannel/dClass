@@ -17,6 +17,8 @@ public class dClass
     }
 
     private native int init(String file);
+    private native int write(long index,String file);
+    private native long walk(long index);
     private native static String statversion();
     private native static String stataddressing();
     private native static long statnodesize();
@@ -29,8 +31,6 @@ public class dClass
     private native String kvgetid(long kv);
     private native String kvgetkey(long kv,int pos);
     private native String kvgetvalue(long kv,int pos);
-
-    private dClass() { }
 
     public static String getVersion()
     {
@@ -46,6 +46,8 @@ public class dClass
     {
         return statnodesize();
     }
+
+    private dClass() { }
 
     public dClass(String s)
     {
@@ -69,6 +71,22 @@ public class dClass
             }
             return patterns;
         }
+        else
+            return -1;
+    }
+
+    public int write(String opath)
+    {
+        if(dclass_index!=0)
+            return write(dclass_index,opath);
+        else
+            return -1;
+    }
+
+    public long walk()
+    {
+        if(dclass_index!=0)
+            return walk(dclass_index);
         else
             return -1;
     }
