@@ -89,10 +89,13 @@ set\\test;settest3;S;;slash=true
    "pattern 123  \"  456 "   ;  p123456s  ; S ;;  var1  = "value1,fake=part of var1", " value 2 "  = two
    "pattern 123  456 "   ;  p123456n  ; S ;;  var1  = val1  ,   var2=two
 
-ptest;ptest1;S:1;;pos=1
+^ptest;ptest1;S;;pos=1
 ptest;ptest2;S:2;;pos=2
 ptest;ptest3;S:3;;pos=3
-ptest;pteste;S:-1;;pos=end
+ptest$;pteste;S;;pos=end
+
+^fullstring$;fulls;S;;pos=full
+fullstring;fullsa;W;;pos=any
 
 wtest       ;wtest;     W;      ;weak=blank
 wtest1      ;wtest1;    W1;     ;weak=1

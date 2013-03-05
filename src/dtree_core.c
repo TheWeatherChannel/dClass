@@ -232,7 +232,7 @@ static int dtree_set_payload(dtree_dt_index *h,dtree_dt_node *n,const dtree_dt_a
     
     //dup
     if((entry->flags & n->flags)==entry->flags && entry->data==n->payload && entry->param==n->cparam &&
-            entry->dir==n->dir)
+            entry->pos==n->pos && entry->dir==n->dir)
         return 0;
     
     dtree_printd(DTREE_PRINT_INITDTREE,"ADD: EOT: '%c' level: %d p(%p) pp(%p) param(%p)\n",
@@ -251,7 +251,7 @@ static int dtree_set_payload(dtree_dt_index *h,dtree_dt_node *n,const dtree_dt_a
             
             //dup
             if((entry->flags & n->flags)==entry->flags && entry->data==n->payload && entry->param==n->cparam &&
-                    entry->dir==n->dir)
+                    entry->pos==n->pos && entry->dir==n->dir)
                 return 0;
             
             pp=n->dup;
@@ -329,7 +329,7 @@ unsigned int dtree_hash_char(char c)
 }
 
 //dtree lookup
-void *dtree_get(const dtree_dt_index *h,const char *str,flag_f filter)
+void *dtree_get(const dtree_dt_index *h,const char *str,dtree_flag_f filter)
 {
     const dtree_dt_node *ret;
     const dtree_dt_node *fnode;
@@ -356,7 +356,7 @@ void *dtree_get(const dtree_dt_index *h,const char *str,flag_f filter)
 }
 
 //gets the flag for a token
-const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,flag_f sflags,unsigned char pos)
+const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,dtree_flag_f sflags,dtree_pos_f pos)
 {
     unsigned int hash;
     char n;
@@ -419,10 +419,10 @@ const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,flag_f
 }
 
 //searches for a token with regex
-static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtree_dt_node *n,const char *t,unsigned char pos)
+static const dtree_dt_node *dtree_search_node(const dtree_dt_index *h,const dtree_dt_node *n,const char *t,dtree_pos_f pos)
 {
     unsigned int hash;
-    flag_f rf,nf;
+    dtree_flag_f rf,nf;
     packed_ptr pp;
     const dtree_dt_node *rflag;
     

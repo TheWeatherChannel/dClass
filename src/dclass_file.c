@@ -37,12 +37,13 @@ typedef struct
     char *cparam;
     char *type;
     
+    size_t pattern_len;
     size_t id_len;
     size_t cparam_len;
     
     int count;
     
-    flag_f flag;
+    dtree_flag_f flag;
 
     unsigned int pos;
     unsigned int rank;
@@ -245,7 +246,7 @@ int dclass_load_file(dclass_index *di,const char *path)
             }
         }
 
-        if(fe.pos>DTREE_S_MAX_POS)
+        if(fe.pos>DTREE_S_BE_POS)
             fe.pos=DTREE_S_MAX_POS;
         if(fe.rank>DTREE_S_MAX_RANK)
             fe.rank=DTREE_S_MAX_RANK;
@@ -254,9 +255,27 @@ int dclass_load_file(dclass_index *di,const char *path)
         else if(fe.dir>DTREE_S_MAX_DIR)
             fe.dir=DTREE_S_MAX_DIR;
 
+        if(*fe.pattern==DTREE_PATTERN_BEGIN)
+        {
+            fe.pos=1;
+            fe.pattern++;
+            fe.pattern_len--;
+        }
+
+        if(*(fe.pattern+fe.pattern_len-1)==DTREE_PATTERN_END && *(fe.pattern+fe.pattern_len-2)!=DTREE_PATTERN_ESCAPE)
+        {
+            if(fe.pos==1)
+                fe.pos=DTREE_S_BE_POS;
+            else
+                fe.pos=DTREE_S_MAX_POS;
+
+            *(fe.pattern+fe.pattern_len-1)='\0';
+            fe.pattern_len--;
+        }
+
         dtree_printd(DTREE_PRINT_INITDTREE,
-                "LOAD: line dump: pattern: '%s' id: '%s':%zu type: '%s' flag: %ud cparam: '%s':%zu prd: %d,%d,%d\nKVS",
-                fe.pattern,fe.id,fe.id_len,fe.type,fe.flag,fe.cparam,fe.cparam_len,fe.pos,fe.rank,fe.dir);
+                "LOAD: line dump: pattern: '%s':%zu id: '%s':%zu type: '%s' flag: %ud cparam: '%s':%zu prd: %d,%d,%d\nKVS",
+                fe.pattern,fe.pattern_len,fe.id,fe.id_len,fe.type,fe.flag,fe.cparam,fe.cparam_len,fe.pos,fe.rank,fe.dir);
         for(i=0;i<fe.count;i++)
             dtree_printd(DTREE_PRINT_INITDTREE,",'%s':%zu='%s':%zu",fe.p[i].key,fe.p[i].key_len,fe.p[i].value,fe.p[i].val_len);
         dtree_printd(DTREE_PRINT_INITDTREE,"\n");
@@ -500,7 +519,10 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
             len=DTREE_DATA_BUFLEN-1;
 
         if(!count)
+        {
             fe->pattern=t;
+            fe->pattern_len=len;
+        }
         else if(count==1)
         {
             fe->id=t;

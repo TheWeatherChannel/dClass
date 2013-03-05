@@ -25,8 +25,8 @@ static const char *openddr_key_array[] = OPENDDR_KEYS;
 
 
 static int openddr_read_device_raw(FILE*,dtree_dt_index*,dtree_dt_index*);
-static int openddr_read_pattern(FILE*,dtree_dt_index*,dtree_dt_index*,flag_f*);
-static int openddr_add_device_pattern(dtree_dt_index*,dtree_dt_index*,dclass_keyvalue*,dclass_keyvalue*,char*,flag_f);
+static int openddr_read_pattern(FILE*,dtree_dt_index*,dtree_dt_index*,dtree_flag_f*);
+static int openddr_add_device_pattern(dtree_dt_index*,dtree_dt_index*,dclass_keyvalue*,dclass_keyvalue*,char*,dtree_flag_f);
 static const char *openddr_copy_string(dtree_dt_index*,const char*,const char*);
 static int openddr_alloc_kvd(dtree_dt_index*,dtree_dt_index*,char*);
 static char *openddr_get_attr(const char*,const char*,dtree_dt_index*,char**,char*);
@@ -50,7 +50,7 @@ int openddr_load_resources(dclass_index *di,const char *path)
     int pcount=0;
     char fpath[1024];
     FILE *f=NULL;
-    flag_f flags=0;
+    dtree_flag_f flags=0;
     dtree_dt_index dev;
     dtree_dt_index *h=&di->dti;
 
@@ -239,7 +239,7 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
 }
 
 //read a pattern from file, insert it
-static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,flag_f *flags)
+static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dtree_flag_f *flags)
 {
     int ret=0;
     char buf[1048];
@@ -249,7 +249,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,fl
     dclass_keyvalue *chain=NULL;
     
 #if OPENDDR_BLKBRY_FIX
-    flag_f bb_flag;
+    dtree_flag_f bb_flag;
 #endif
     
     if(!f)
@@ -346,7 +346,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,fl
 }
 
 //adds a device pattern to the root tree
-static int openddr_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dclass_keyvalue *der,dclass_keyvalue *chain,char *pattern,flag_f flags)
+static int openddr_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dclass_keyvalue *der,dclass_keyvalue *chain,char *pattern,dtree_flag_f flags)
 {
     int i;
     dtree_dt_add_entry entry;

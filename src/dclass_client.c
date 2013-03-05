@@ -148,10 +148,15 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                 }
             }
 
-            if(!*(p+1) && pos!=DTREE_S_MAX_POS)
+            if(!*(p+1) && pos<DTREE_S_MAX_POS)
             {
                 p--;
-                pos=DTREE_S_MAX_POS;
+
+                if(token==str)
+                    pos=DTREE_S_BE_POS;
+                else
+                    pos=DTREE_S_MAX_POS;
+    
                 continue;
             }
 

@@ -39,6 +39,9 @@ a b ptest c d e f
 a b c ptest d e f
 a b c d e f g ptest
 a b c d e f g h i j k ptest
+a b fullstring c
+a fullstring
+fullstring
 some wtest25 text wtest5b wtest wtest100
 some wtest25 text wtest5b wtest wtest10x0
 some wtest5 text wtest5b wtest wtest10x0
