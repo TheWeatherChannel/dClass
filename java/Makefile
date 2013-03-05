@@ -19,7 +19,7 @@ OUT=$(OUTPRE).$(OUTEXT)
 
 all:			$(OUT)
 
-$(OUT):			libdclass.a dclass_java.o dclass/dClass.class dclass/dClassLoader.class
+$(OUT):			libdclass.a dclass_java.o dclass/dClass.class dclass/dClassLoader.class dclass/dClassMain.class
 			$(CC) -shared $(LDFLAGS) -o $(OUT) dclass_java.o libdclass.a
 			$(CP) $(OUT) lib$(SEP)dclassjava$(OS)$(ARCH).$(OUTEXT)
 
@@ -40,4 +40,4 @@ clean:
 			$(RM) *.a *.o dclass_java.h dclass$(SEP)*.class $(OUT)
 
 test:			all
-			$(JAVA) -cp . -Djava.library.path=. dclass.dClass "../dtrees/openddr.dtree" "Mozilla/5.0 (Linux; U; Android 2.2; en; HTC Aria A6380 Build/ERE27) AppleWebKit/540.13+ (KHTML, like Gecko) Version/3.1 Mobile Safari/524.15.0"
+			$(JAVA) -cp . -Djava.library.path=. dclass.dClassMain

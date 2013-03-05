@@ -49,6 +49,45 @@ JNIEXPORT jint JNICALL Java_dclass_dClass_init(JNIEnv *env,jobject obj,jstring j
     return ret;
 }
 
+JNIEXPORT jstring JNICALL Java_dclass_dClass_statversion(JNIEnv *env,jclass cls)
+{
+    return (*env)->NewStringUTF(env,DCLASS_VERSION);
+}
+
+JNIEXPORT jstring JNICALL Java_dclass_dClass_stataddressing(JNIEnv *env,jclass cls)
+{
+    char buf[10];
+
+    *buf='\0';
+
+    sprintf(buf,"%s%zu",DTREE_DT_PTR_TYPE,DTREE_DT_PTR_SIZE);
+
+    return (*env)->NewStringUTF(env,buf);
+}
+
+JNIEXPORT jlong JNICALL Java_dclass_dClass_statnodes(JNIEnv *env,jobject obj,jlong ptr)
+{
+    dclass_index *dci;
+
+    dci=(dclass_index*)(plong)ptr;
+
+    return (jlong)dci->dti.node_count;
+}
+
+JNIEXPORT jlong JNICALL Java_dclass_dClass_statnodesize(JNIEnv *env,jclass cls)
+{
+    return (jlong)sizeof(dtree_dt_node);
+}
+
+JNIEXPORT jlong JNICALL Java_dclass_dClass_statmemory(JNIEnv *env,jobject obj,jlong ptr)
+{
+    dclass_index *dci;
+
+    dci=(dclass_index*)(plong)ptr;
+
+    return (jlong)dci->dti.size;
+}
+
 JNIEXPORT jlong JNICALL Java_dclass_dClass_classify(JNIEnv *env,jobject obj,jlong ptr,jstring js)
 {
     const char *s;

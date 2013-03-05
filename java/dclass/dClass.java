@@ -7,6 +7,9 @@ public class dClass
 {
     private String path;
     private long dclass_index;
+    public int patterns;
+    public long nodes;
+    public long memory;
 
     static
     {
@@ -14,6 +17,11 @@ public class dClass
     }
 
     private native int init(String file);
+    private native static String statversion();
+    private native static String stataddressing();
+    private native static long statnodesize();
+    private native long statnodes(long index);
+    private native long statmemory(long index);
     private native void free(long index);
     private native long classify(long index,String s);
     private native long get(long index,String s);
@@ -24,16 +32,43 @@ public class dClass
 
     private dClass() { }
 
+    public static String getVersion()
+    {
+        return statversion();
+    }
+
+    public static String getAddressing()
+    {
+        return stataddressing();
+    }
+
+    public static long getNodeSize()
+    {
+        return statnodesize();
+    }
+
     public dClass(String s)
     {
         path=s;
         dclass_index=0;
+        patterns=0;
+        nodes=0;
+        memory=0;
     }
 
     public int init()
     {
         if(dclass_index==0)
-            return init(path);
+        {
+            patterns=init(path);
+
+            if(dclass_index!=0)
+            {
+                nodes=statnodes(dclass_index);
+                memory=statmemory(dclass_index);
+            }
+            return patterns;
+        }
         else
             return -1;
     }
@@ -88,39 +123,5 @@ public class dClass
     {
         free();
         super.finalize();
-    }
-
-    //TODO make this like main.c in seperate class
-    public static void main(String[] args) throws Throwable
-    {
-        System.out.println("java dClass");
-
-        if(args.length!=2)
-        {
-            System.out.println("usage: [path] [string]");
-            return;
-        }
-
-        System.out.println("path: '"+args[0]+"'");
-
-        dClass dc=new dClass(args[0]);
-
-        int records=dc.init();
-
-        System.out.println("init records: "+records);
-
-        System.out.println("string: '"+args[1]+"'");
-
-        Map<String,String> kv=dc.classify(args[1]);
-
-        System.out.println("result size: "+kv.size());
-
-        for(String key:kv.keySet())
-        {
-            String value=kv.get(key);
-            System.out.println("key: '"+key+"' value: '"+value+"'");
-        }
-
-        dc.free();
     }
 }

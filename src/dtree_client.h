@@ -122,6 +122,8 @@ typedef unsigned int packed_ptr;
 #define DTREE_HASH_ANY          (DTREE_HASH_NCOUNT-1)
 #define DTREE_PATTERN_ANY       '.'
 #define DTREE_PATTERN_OPTIONAL  '?'
+#define DTREE_PATTERN_BEGIN     '^'
+#define DTREE_PATTERN_END       '$'
 #define DTREE_PATTERN_SET_S     '['
 #define DTREE_PATTERN_SET_E     ']'
 #define DTREE_PATTERN_GROUP_S   '('

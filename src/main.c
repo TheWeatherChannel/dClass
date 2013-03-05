@@ -38,7 +38,7 @@ int main(int argc,char **args)
     dtree_dt_index *h=&di.dti;
     const dclass_keyvalue *kvd;
     
-    printf("dClass (version %s %s%zubit addressing %zubytes dt_node)\n",dclass_get_version(),
+    printf("dClass (version %s %s%zubit addressing %zubyte dt_node)\n",dclass_get_version(),
         DTREE_DT_PTR_TYPE,DTREE_DT_PTR_SIZE,sizeof(dtree_dt_node));
     
     for(i=1;i<argc;i++)
