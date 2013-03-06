@@ -32,6 +32,9 @@
 #define OPENDDR_RSRC_BDP      "BuilderDataSourcePatch.xml"
 
 
+#define OPENDDR_COMMENT       "OpenDDR %s http://www.openddr.org (device detection ddr)"
+
+
 #define OPENDDR_KEYS          {                            \
                                 "vendor",                  \
                                 "model",                   \

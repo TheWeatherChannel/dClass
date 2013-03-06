@@ -273,8 +273,16 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
             
             continue;
         }
-        
-        if(strstr(buf,"<device "))
+
+        if(!h->comment && strstr(buf,"<ver>"))
+        {
+            openddr_get_value(buf,"ver",NULL,NULL,pattern);
+            sprintf(buf,OPENDDR_COMMENT,pattern);
+            h->comment=dtree_alloc_mem(h,(strlen(buf)+1)*sizeof(char));
+            if(h->comment)
+                strncpy(h->comment,buf,strlen(buf));
+        }
+        else if(strstr(buf,"<device "))
         {
             openddr_get_attr(buf,"id",NULL,NULL,id);
             

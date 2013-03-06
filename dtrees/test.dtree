@@ -1,4 +1,4 @@
-#Test dtree
+# Test dtree
 
 #$regex - regular expression tree indexing and searching
 #$dups - allow pattern duplicates

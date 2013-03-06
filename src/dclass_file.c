@@ -127,6 +127,21 @@ int dclass_load_file(dclass_index *di,const char *path)
         {
             switch(*++p)
             {
+                //comment
+                case ' ':
+                    if(!h->comment)
+                    {
+                        for(++p,s=p;*p;p++)
+                        {
+                            if(*p=='\n')
+                                break;
+                        }
+                        *p='\0';
+                        h->comment=dtree_alloc_mem(h,(p-s+1)*sizeof(char));
+                        if(h->comment)
+                            strncpy(h->comment,s,p-s);
+                    }
+                    break;
                 //string order is being forced here
                 case '!':
                     for(++p,s=p;*p;p++)
@@ -584,7 +599,14 @@ int dclass_write_file(const dclass_index *di,const char *outFile)
         return -1;
     }
     
-    fputs("# dtree dump\n",f);
+    if(h->comment)
+    {
+        fputs("# ",f);
+        fputs(h->comment,f);
+        fputc('\n',f);
+    }
+    else
+        fputs("# dtree dump\n",f);
     
     if(h->sflags & DTREE_S_FLAG_PARTIAL)
         fputs("#$partial\n",f);

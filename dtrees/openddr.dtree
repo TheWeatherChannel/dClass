@@ -1,4 +1,4 @@
-# dtree dump
+# OpenDDR 1.15 http://www.openddr.org (device detection ddr)
 #$regex
 #$dups
 #!unknown,genericPhone,genericTouchPhone,desktopDevice,true,false
