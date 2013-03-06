@@ -535,7 +535,8 @@ static char *openddr_unregex(const char *s,char *dest)
             h=0;
             continue;
         }
-        else if(*s==DTREE_PATTERN_OPTIONAL)
+        else if(*s==DTREE_PATTERN_OPTIONAL || *s==DTREE_PATTERN_BEGIN || *s==DTREE_PATTERN_END ||
+            *s==DTREE_PATTERN_GROUP_S || *s==DTREE_PATTERN_GROUP_E || *s==DTREE_PATTERN_ESCAPE)
         {
             s++;
             continue;

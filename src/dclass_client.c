@@ -35,8 +35,8 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     int valid;
     int bcvalid;
     int i;
-    unsigned int pos=0;
-    unsigned int rpos=0;
+    int pos=0;
+    int rpos=0;
     unsigned int hash;
     char buf[DTREE_DATA_BUFLEN];
     const char *p;

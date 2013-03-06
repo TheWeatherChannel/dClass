@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _WX_OPENDDR_CLIENT_H
-#define	_WX_OPENDDR_CLIENT_H
+#ifndef _DCLASS_OPENDDR_CLIENT_H
+#define _DCLASS_OPENDDR_CLIENT_H
 
 
 #include "dtree_client.h"
@@ -55,5 +55,5 @@ int openddr_load_resources(dclass_index*,const char*);
 #define OPENDDR_BLKBRY_FIX    1
 
 
-#endif	/* _WX_OPENDDR_CLIENT_H */
+#endif	/* _DCLASS_OPENDDR_CLIENT_H */
 

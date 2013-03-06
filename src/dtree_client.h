@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _WX_DTREE_H_INCLUDED_
-#define _WX_DTREE_H_INCLUDED_
+#ifndef _DTREE_H_INCLUDED_
+#define _DTREE_H_INCLUDED_
 
 
 #include <stdio.h>
@@ -90,11 +90,9 @@ typedef unsigned int packed_ptr;
 #define DTREE_DT_FLAG_TOKEN     (1 << 0)
 #define DTREE_DT_FLAG_STRONG    (1 << 1)
 #define DTREE_DT_FLAG_WEAK      (1 << 2)
-#define DTREE_DT_FLAG_POS       (1 << 3)
-#define DTREE_DT_FLAG_NONE      (1 << 4)
-#define DTREE_DT_FLAG_CHAIN     (1 << 5)
-#define DTREE_DT_FLAG_BCHAIN    (1 << 6)
-#define DTREE_DT_FLAG_DIST      (1 << 7)
+#define DTREE_DT_FLAG_NONE      (1 << 3)
+#define DTREE_DT_FLAG_CHAIN     (1 << 4)
+#define DTREE_DT_FLAG_BCHAIN    (1 << 5)
 
 #define DTREE_S_FLAG_NONE       (1 << 0)
 #define DTREE_S_FLAG_PARTIAL    (1 << 1)
@@ -230,4 +228,4 @@ long dtree_print(const dtree_dt_index*,const char*(*f)(void*));
 void dtree_printd(int,const char*,...);
 
 
-#endif /* _WX_DTREE_H_INCLUDED_ */
+#endif /* _DTREE_H_INCLUDED_ */

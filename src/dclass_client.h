@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _WX_DCLASS_H_INCLUDED_
-#define _WX_DCLASS_H_INCLUDED_
+#ifndef _DCLASS_H_INCLUDED_
+#define _DCLASS_H_INCLUDED_
 
 
 #include "dtree_client.h"
@@ -53,7 +53,7 @@ dclass_index;
 //cnode
 typedef struct
 {
-    unsigned int         pos;
+    int                  pos;
     
     const void           *cn;
 }
@@ -79,4 +79,4 @@ const char *dclass_get_id(void*);
 const char *dclass_get_version();
 
 
-#endif	/* _WX_DCLASS_H_INCLUDED_ */
+#endif	/* _DCLASS_H_INCLUDED_ */
