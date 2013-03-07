@@ -120,6 +120,18 @@ JNIEXPORT jlong JNICALL Java_dclass_dClass_statmemory(JNIEnv *env,jobject obj,jl
     return (jlong)dci->dti.size;
 }
 
+JNIEXPORT jstring JNICALL Java_dclass_dClass_comment(JNIEnv *env,jobject obj,jlong ptr)
+{
+    dclass_index *dci;
+
+    dci=(dclass_index*)(plong)ptr;
+
+    if(dci->dti.comment)
+        return (*env)->NewStringUTF(env,dci->dti.comment);
+    else
+        return (*env)->NewStringUTF(env,DTREE_M_SERROR);
+}
+
 JNIEXPORT jlong JNICALL Java_dclass_dClass_classify(JNIEnv *env,jobject obj,jlong ptr,jstring js)
 {
     const char *s;

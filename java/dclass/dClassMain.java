@@ -66,7 +66,7 @@ public class dClassMain
 
         System.out.println("load dtree tokens: "+ret+" time: "+getTime(diffn));
 
-        System.out.println("dtree stats: nodes: "+di.nodes+" mem: "+di.memory);
+        System.out.println("dtree stats: nodes: "+di.getNodes()+" mem: "+di.getMemory());
 
         startn=System.nanoTime();
 

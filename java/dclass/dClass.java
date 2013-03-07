@@ -10,6 +10,7 @@ public class dClass
     public int patterns;
     public long nodes;
     public long memory;
+    public String comment;
 
     static
     {
@@ -24,6 +25,7 @@ public class dClass
     private native static long statnodesize();
     private native long statnodes(long index);
     private native long statmemory(long index);
+    private native String comment(long index);
     private native void free(long index);
     private native long classify(long index,String s);
     private native long get(long index,String s);
@@ -56,6 +58,7 @@ public class dClass
         patterns=0;
         nodes=0;
         memory=0;
+        comment="";
     }
 
     public int init()
@@ -68,11 +71,32 @@ public class dClass
             {
                 nodes=statnodes(dclass_index);
                 memory=statmemory(dclass_index);
+                comment=comment(dclass_index);
             }
             return patterns;
         }
         else
             return -1;
+    }
+
+    public int getPatterns()
+    {
+        return patterns;
+    }
+
+    public long getNodes()
+    {
+        return nodes;
+    }
+
+    public long getMemory()
+    {
+        return memory;
+    }
+
+    public String getComment()
+    {
+        return comment;
     }
 
     public int write(String opath)
