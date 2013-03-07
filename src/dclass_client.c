@@ -173,7 +173,12 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
     }
     
     if(cnode)
+    {
+        if(wnode && wnode->rank>cnode->rank)
+            return wnode->payload;
+
         return cnode->payload;
+    }
     else if(wnode)
         return wnode->payload;
     else if(nnode)

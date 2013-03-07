@@ -111,4 +111,5 @@ wtest100    ;wtest100;  W100;   ;weak=100
 
 this is the  ;thisis ;B  ;          ;
 start        ;thiss  ;C10;thisis:-3 ;this is=start
-end$         ;thise  ;C  ;thisis:-4 ;this is=end,end=""
+end$         ;thise  ;C11;thisis:-4 ;this is=end,end=""
+middle       ;middle ;W12;          ;middle=weak11
