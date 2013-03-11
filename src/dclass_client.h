@@ -50,16 +50,6 @@ typedef struct
 dclass_index;
 
 
-//cnode
-typedef struct
-{
-    int                  pos;
-    
-    const void           *cn;
-}
-dclass_cnode;
-
-
 #include "openddr_client.h"
 
 

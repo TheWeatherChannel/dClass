@@ -137,7 +137,6 @@ typedef unsigned char     dtree_rank_f;
 typedef char              dtree_dir_f;
 
 
-
 //dtree dtnode
 typedef struct
 {

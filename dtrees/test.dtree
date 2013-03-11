@@ -113,3 +113,8 @@ this is the  ;thisis ;B  ;          ;
 start        ;thiss  ;C10;thisis:-3 ;this is=start
 end$         ;thise  ;C11;thisis:-4 ;this is=end,end=""
 middle       ;middle ;W12;          ;middle=weak11
+
+aaa;aaa;B;;
+bbb;bbbb;C20;ccc:1;b=before c
+bbb;bbba;C30;ccc:-1;b=after c
+ccc;ccc;B;;

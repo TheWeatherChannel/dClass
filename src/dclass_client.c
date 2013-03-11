@@ -20,6 +20,16 @@
 #include "dclass_client.h"
 
 
+//cnode
+typedef struct
+{
+    int                  pos;
+
+    const dtree_dt_node  *cn;
+}
+dclass_cnode;
+
+
 char **dclass_get_value_pos(dclass_keyvalue*,char*);
 static const dclass_keyvalue *dclass_get_kverror(const dclass_index*);
 static char *dclass_error_string(const dtree_dt_index*);
@@ -108,43 +118,63 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                 
                 if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_CHAIN,pos)))
                 {
-                    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain detected\n");
-                    
                     pp=fnode->curr;
 
                     while(pp)
                     {
                         bcvalid=0;
                         
-                        if(fnode->flags & DTREE_DT_FLAG_CHAIN && fnode->cparam)
+                        if(fnode->flags & DTREE_DT_FLAG_CHAIN)
                         {   
-                            dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() looking for pchain %p at dir: %d\n",fnode->cparam,fnode->dir);
+                            if(fnode->cparam)
+                                dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() looking for pchain %p at dir: %d\n",fnode->cparam,fnode->dir);
+                            else
+                                dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain candidate %p\n",fnode->payload);
+
                             for(i=0;i<DTREE_S_MAX_CHAIN && cnodes[i].cn;i++)
                             {
                                 //chain hit
-                                if(cnodes[i].cn==fnode->cparam)
+                                if(cnodes[i].cn->payload==fnode->cparam && fnode->dir<=0)
                                 {
-                                    if((fnode->dir<0 && cnodes[i].pos-rpos<fnode->dir) || (fnode->dir>0 && rpos-cnodes[i].pos>fnode->dir))
+                                    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain match: %p('%d'):%d %d\n",cnodes[i].cn->payload,i,cnodes[i].pos,rpos);
+
+                                    if(fnode->dir<0 && cnodes[i].pos-rpos<fnode->dir)
                                         continue;
-                                    if(fnode->flags & DTREE_DT_FLAG_BCHAIN)
+                                    else if(fnode->flags & DTREE_DT_FLAG_BCHAIN)
                                         bcvalid=1;
                                     else if(!fnode->rank)
                                         return fnode->payload;
                                     else if(!cnode || fnode->rank>cnode->rank)
                                         cnode=fnode;
                                 }
+
+                                if(cnodes[i].cn->cparam==fnode->payload && cnodes[i].cn->dir>0)
+                                {
+                                    dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain forward match: %p('%d'):%d %d\n",fnode->payload,i,cnodes[i].pos,rpos);
+
+                                    if(rpos-cnodes[i].pos>cnodes[i].cn->dir)
+                                        continue;
+                                    //forward chain has a dependency, not implemented
+                                    else if(fnode->cparam);
+                                    else if(!cnodes[i].cn->rank)
+                                        return cnodes[i].cn->payload;
+                                    else if(!cnode || cnodes[i].cn->rank>cnode->rank)
+                                        cnode=cnodes[i].cn;
+                                }
                             }
                         }
                         
-                        if(fnode->flags & DTREE_DT_FLAG_BCHAIN && (bcvalid || !fnode->cparam))
+                        if(fnode->flags & DTREE_DT_FLAG_CHAIN && (bcvalid || !fnode->cparam || fnode->dir>0))
                         {
                             for(i=0;i<DTREE_S_MAX_CHAIN;i++)
                             {
                                 if(!cnodes[i].cn)
                                 {
-                                    cnodes[i].cn=fnode->payload;
+                                    cnodes[i].cn=fnode;
                                     cnodes[i].pos=rpos;
+
                                     dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() pchain added: %p('%d'):%d\n",fnode->payload,i,rpos);
+
                                     break;
                                 }
                             }
