@@ -2,7 +2,7 @@
 
 OPENDDR_RESOURCE=/some/path/OpenDDR/latest/resources
 DCLASS_BIN=../src/dclass_client
-#DCLASS_BIN="../java/dclass/dClassMain.class"
+#DCLASS_BIN="../java/dclass.jar"
 
 if [ ! -s "uas.txt" ]
 then
@@ -16,7 +16,7 @@ then
         exit 1
 fi
 
-#DCLASS_BIN="java -cp ../java dclass.dClassMain"
+#DCLASS_BIN="java -cp ../java/dclass.jar dclass.dClassMain"
 
 CFLAG=`$DCLASS_BIN test.txt | grep "UA lookup 5: '" | wc -l`
 

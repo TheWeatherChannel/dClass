@@ -9,6 +9,7 @@ INCLUDE=-I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(JAVAI) -I../src
 JAVAC=javac
 JAVAH=javah
 JAVA=java
+JAR=jar
 RM=rm -rf
 CP=cp
 SEP=/
@@ -17,9 +18,12 @@ OUTEXT=so
 #OUTEXT=dylib
 OUT=$(OUTPRE).$(OUTEXT)
 
-all:			$(OUT)
+all:			dclass.jar
 
-$(OUT):			libdclass.a dclass_java.o dclass/dClass.class dclass/dClassLoader.class dclass/dClassMain.class
+dclass.jar:		dclass/dClassLoader.class dclass/dClass.class dclass/dClassMain.class $(OUT)
+			$(JAR) cf dclass.jar dclass/*.class lib
+
+$(OUT):			libdclass.a dclass_java.o
 			$(CC) -shared $(LDFLAGS) -o $(OUT) dclass_java.o libdclass.a
 			$(CP) $(OUT) lib$(SEP)dclassjava$(OS)$(ARCH).$(OUTEXT)
 
@@ -37,7 +41,7 @@ dclass_java.o:		jni/dclass_java.c dclass_java.h
 			$(CC) $(INCLUDE) $(CFLAGS) -c jni/dclass_java.c -o dclass_java.o
 
 clean:
-			$(RM) *.a *.o dclass_java.h dclass$(SEP)*.class $(OUT)
+			$(RM) *.a *.o dclass.jar dclass_java.h dclass$(SEP)*.class $(OUT)
 
 test:			all
-			$(JAVA) -cp . -Djava.library.path=. dclass.dClassMain
+			$(JAVA) -cp dclass.jar dclass.dClassMain
