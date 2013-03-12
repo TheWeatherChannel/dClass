@@ -94,6 +94,8 @@ typedef unsigned int packed_ptr;
 #define DTREE_DT_FLAG_CHAIN     (1 << 4)
 #define DTREE_DT_FLAG_BCHAIN    (1 << 5)
 
+#define DTREE_DT_FLAG_ACHAIN    (DTREE_DT_FLAG_CHAIN|DTREE_DT_FLAG_BCHAIN)
+
 #define DTREE_S_FLAG_NONE       (1 << 0)
 #define DTREE_S_FLAG_PARTIAL    (1 << 1)
 #define DTREE_S_FLAG_REGEX      (1 << 2)

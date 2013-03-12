@@ -232,7 +232,7 @@ int dclass_load_file(dclass_index *di,const char *path)
                         fe.rank=strtol(s+1,NULL,10);
                 }
                 else if(*s=='B')
-                    fe.flag=DTREE_DT_FLAG_BCHAIN|DTREE_DT_FLAG_CHAIN;
+                    fe.flag=DTREE_DT_FLAG_BCHAIN;
                 else if(*s=='C')
                 {
                     fe.flag=DTREE_DT_FLAG_CHAIN;

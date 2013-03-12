@@ -115,6 +115,8 @@ end$         ;thise  ;C11;thisis:-4 ;this is=end,end=""
 middle       ;middle ;W12;          ;middle=weak11
 
 aaa;aaa;B;;
-bbb;bbbb;C20;ccc:1;b=before c
-bbb;bbba;C30;ccc:-1;b=after c
+bbb;bbbb;C120;ccc:1;b=before c
+bbb;bbbbm;C50;ccc:10;b=before c,multi=true
+bbb;bbba;C130;ccc:-1;b=after c
+bbb;bbbam;C30;ccc:-10;b=after c,multi=true
 ccc;ccc;B;;

@@ -116,7 +116,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                         nnode=fnode;
                 }
                 
-                if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_CHAIN,pos)))
+                if((fnode=dtree_get_flag(h,fbnode,DTREE_DT_FLAG_ACHAIN,pos)))
                 {
                     pp=fnode->curr;
 
@@ -124,7 +124,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                     {
                         bcvalid=0;
                         
-                        if(fnode->flags & DTREE_DT_FLAG_CHAIN)
+                        if(fnode->flags & DTREE_DT_FLAG_ACHAIN)
                         {   
                             if(fnode->cparam)
                                 dtree_printd(DTREE_PRINT_CLASSIFY,"dtree_classify() looking for pchain %p at dir: %d\n",fnode->cparam,fnode->dir);
@@ -164,7 +164,7 @@ const dclass_keyvalue *dclass_classify(const dclass_index *di,const char *str)
                             }
                         }
                         
-                        if(fnode->flags & DTREE_DT_FLAG_CHAIN && (bcvalid || !fnode->cparam || fnode->dir>0))
+                        if(fnode->flags & DTREE_DT_FLAG_ACHAIN && (bcvalid || !fnode->cparam || fnode->dir>0))
                         {
                             for(i=0;i<DTREE_S_MAX_CHAIN;i++)
                             {
