@@ -61,7 +61,7 @@ public class dClass
         comment="";
     }
 
-    public int init()
+    public synchronized int init()
     {
         if(dclass_index==0)
         {
@@ -155,7 +155,7 @@ public class dClass
         return ret;
     }
 
-    public void free()
+    public synchronized void free()
     {
         if(dclass_index!=0)
             free(dclass_index);
