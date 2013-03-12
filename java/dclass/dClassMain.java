@@ -74,7 +74,7 @@ public class dClassMain
 
         diffn=System.nanoTime()-startn;
 
-        System.out.println("walk tree: "+ret+" tokens "+di.nodes+" nodes time: "+getTime(diffn));
+        System.out.println("walk tree: "+ret+" tokens "+di.getNodes()+" nodes time: "+getTime(diffn));
 
         if(outFile!=null)
         {

@@ -7,10 +7,10 @@ public class dClass
 {
     private String path;
     private long dclass_index;
-    public int patterns;
-    public long nodes;
-    public long memory;
-    public String comment;
+    private int patterns;
+    private long nodes;
+    private long memory;
+    private String comment;
 
     static
     {
