@@ -8,9 +8,6 @@ public class dClass
     private String path;
     private long dclass_index;
     private int patterns;
-    private long nodes;
-    private long memory;
-    private String comment;
 
     static
     {
@@ -56,9 +53,6 @@ public class dClass
         path=s;
         dclass_index=0;
         patterns=0;
-        nodes=0;
-        memory=0;
-        comment="";
     }
 
     public synchronized int init()
@@ -67,12 +61,6 @@ public class dClass
         {
             patterns=init(path);
 
-            if(dclass_index!=0)
-            {
-                nodes=statnodes(dclass_index);
-                memory=statmemory(dclass_index);
-                comment=comment(dclass_index);
-            }
             return patterns;
         }
         else
@@ -86,17 +74,26 @@ public class dClass
 
     public long getNodes()
     {
-        return nodes;
+        if(dclass_index!=0)
+            return statnodes(dclass_index);
+        else
+            return -1;
     }
 
     public long getMemory()
     {
-        return memory;
+        if(dclass_index!=0)
+            return statmemory(dclass_index);
+        else
+            return -1;
     }
 
     public String getComment()
     {
-        return comment;
+        if(dclass_index!=0)
+            return comment(dclass_index);
+        else
+            return "";
     }
 
     public int write(String opath)

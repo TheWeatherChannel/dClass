@@ -31,7 +31,7 @@ libdclass.a:
 			$(MAKE) -C ../src/ -f ../src/Makefile "CFLAGS=$(CFLAGS)" lib
 			$(CP) ..$(SEP)src$(SEP)libdclass.a .
 
-dclass/%.class:	dclass/%.java
+dclass/%.class:		dclass/%.java
 			$(JAVAC) $<
 
 dclass_java.h:		dclass/dClass.class
