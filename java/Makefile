@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-O3 -Wall -fPIC -m$(ARCH)
-LDFLAGS=
+CFLAGS=-O3 -Wall -fPIC -m$(ARCH) -D_DTREE_NO_TIMESPEC=1
+LDFLAGS=-m$(ARCH)
 OS=linux
 #OS=darwin
 ARCH=$(shell getconf LONG_BIT)
@@ -28,7 +28,7 @@ $(OUT):			libdclass.a dclass_java.o
 			$(CP) $(OUT) lib$(SEP)dclassjava$(OS)$(ARCH).$(OUTEXT)
 
 libdclass.a:		
-			$(MAKE) -C ../src/ -f ../src/Makefile "CFLAGS=$(CFLAGS)" lib
+			$(MAKE) -C ../src/ -f ../src/Makefile "CFLAGS=$(CFLAGS)" "LDFLAGS=$(LDFLAGS)" lib
 			$(CP) ..$(SEP)src$(SEP)libdclass.a .
 
 dclass/%.class:		dclass/%.java
