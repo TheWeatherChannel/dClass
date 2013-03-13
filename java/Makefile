@@ -21,7 +21,7 @@ OUT=$(OUTPRE).$(OUTEXT)
 all:			dclass.jar
 
 dclass.jar:		dclass/dClassLoader.class dclass/dClass.class dclass/dClassMain.class $(OUT)
-			$(JAR) cf dclass.jar dclass/*.class lib
+			$(JAR) cvf dclass.jar dclass/*.class lib
 
 $(OUT):			libdclass.a dclass_java.o
 			$(CC) -shared $(LDFLAGS) -o $(OUT) dclass_java.o libdclass.a
@@ -42,6 +42,7 @@ dclass_java.o:		jni/dclass_java.c dclass_java.h
 
 clean:
 			$(RM) *.a *.o dclass.jar dclass_java.h dclass$(SEP)*.class $(OUT)
+			$(MAKE) -C ../src/ -f ../src/Makefile clean
 
 test:			all
 			$(JAVA) -cp dclass.jar dclass.dClassMain

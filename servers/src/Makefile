@@ -15,7 +15,7 @@ all:			varnish
 varnish:		libvmod_dclass.so
 
 libvmod_dclass.so:	 libdclass.a vcc_if.o vmod_dclass.o
-			$(CC) -shared libdclass.a vcc_if.o vmod_dclass.o -o libvmod_dclass.so
+			$(CC) -shared -o libvmod_dclass.so vcc_if.o vmod_dclass.o libdclass.a
 
 vcc_if.o:		vcc_if.c vcc_if.h
 			$(CC) $(VCFLAGS) -c vcc_if.c -o vcc_if.o
@@ -27,8 +27,9 @@ vcc_if.%:		vmod_dclass.vcc
 			$(PYTHON) $(VMODPY) vmod_dclass.vcc
 
 libdclass.a:
-			$(MAKE) -C ../../src/ -f ../src/Makefile lib
+			$(MAKE) -C ../../src/ -f ../src/Makefile "CFLAGS=$(CFLAGS)" lib
 			cp ../../src/libdclass.a .
 
 clean:
 			$(RM) *.o vcc_if.c vcc_if.h *.so *.a
+			$(MAKE) -C ../../src/ -f ../src/Makefile clean
