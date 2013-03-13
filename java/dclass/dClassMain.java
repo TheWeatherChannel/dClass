@@ -68,6 +68,8 @@ public class dClassMain
 
         System.out.println("dtree stats: nodes: "+di.getNodes()+" mem: "+di.getMemory());
 
+        System.out.println("dtree comment: '"+di.getComment()+"'");
+
         startn=System.nanoTime();
 
         ret=(int)di.walk();

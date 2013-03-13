@@ -89,6 +89,8 @@ int main(int argc,char **args)
     printf("dtree stats: nodes: %zu slabs: %zu mem: %zu bytes strings: %zu(%zu,%zu)\n",
            h->node_count,h->slab_count,h->size,h->dc_count,h->dc_slab_count,h->dc_slab_pos);
     
+    printf("dtree comment: '%s'\n",(h->comment?h->comment:""));
+
     dtree_gettime(&startn);
     
     count=dtree_print(h,&dclass_get_id);
