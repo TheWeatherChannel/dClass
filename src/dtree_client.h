@@ -58,7 +58,7 @@ typedef unsigned short int packed_ptr;
 #else
 //32bit pointer, 22 bits max for SLABS (max=4194304)
 typedef unsigned int packed_ptr;
-#define DTREE_DT_MAX_SLABS      1024
+#define DTREE_DT_MAX_SLABS      4096
 #endif /*DTREE_DT_PACKED_16*/
 
 #define DTREE_DT_SLAB_SIZE      1024
@@ -72,8 +72,8 @@ typedef unsigned int packed_ptr;
 #else /*NOT DTREE_DT_PACKED*/
 
 //it is safe to change these values
-#define DTREE_DT_MAX_SLABS      1024
-#define DTREE_DT_SLAB_SIZE      1024
+#define DTREE_DT_MAX_SLABS      4096
+#define DTREE_DT_SLAB_SIZE      4096
 
 #define DTREE_DT_GETPP(H,PP)    ((dtree_dt_node*)(PP))
 #define DTREE_DT_GENPP(P,H,L)   ((packed_ptr)(P))
