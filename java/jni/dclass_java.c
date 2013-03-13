@@ -129,7 +129,7 @@ JNIEXPORT jstring JNICALL Java_dclass_dClass_comment(JNIEnv *env,jobject obj,jlo
     if(dci->dti.comment)
         return (*env)->NewStringUTF(env,dci->dti.comment);
     else
-        return (*env)->NewStringUTF(env,DTREE_M_SERROR);
+        return (*env)->NewStringUTF(env,"");
 }
 
 JNIEXPORT jlong JNICALL Java_dclass_dClass_classify(JNIEnv *env,jobject obj,jlong ptr,jstring js)
