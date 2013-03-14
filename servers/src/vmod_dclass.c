@@ -129,12 +129,12 @@ const char *vmod_classify_p(struct sess *sp,struct vmod_priv *priv,const char *s
     
     kvd=(dclass_keyvalue*)dclass_classify(&dtc->heads[p],str);
     
-    if(!kvd)
-        kvd=NULL;
-    
     dcc->kvd[p]=kvd;
     
-    return kvd->id;
+    if(!kvd)
+        return NULL;
+    else
+        return kvd->id;
 }
 
 const char *vmod_get_field(struct sess *sp, struct vmod_priv *priv, const char *key)
