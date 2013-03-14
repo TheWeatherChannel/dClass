@@ -144,20 +144,24 @@ const char *vmod_get_field(struct sess *sp, struct vmod_priv *priv, const char *
 
 const char *vmod_get_field_p(struct sess *sp,struct vmod_priv *priv,const char *key,int p)
 {
+    const char *ret=NULL;
     vmod_dtree_container *dtc;
     vmod_dclass_container *dcc;
     
     if(p<0 || p>=VMOD_DTREE_SIZE)
-        return NULL;
+        return "";
     
     dtc=(vmod_dtree_container*)priv->priv;
     
     dcc=dcc_get(sp,dtc);
     
     if(dcc->kvd[p])
-        return dclass_get_kvalue(dcc->kvd[p],key);
+        ret=dclass_get_kvalue(dcc->kvd[p],key);
     
-    return NULL;
+    if(ret)
+        return ret;
+    else
+        return "";
 }
 
 int vmod_get_ifield(struct sess *sp, struct vmod_priv *priv, const char *key)
@@ -181,11 +185,11 @@ int vmod_get_ifield_p(struct sess *sp,struct vmod_priv *priv,const char *key,int
     if(dcc->kvd[p])
     {
         s=dclass_get_kvalue(dcc->kvd[p],key);
+
         if(s)
             return atoi(s);
         else
             return 0;
-        
     }
     
     return 0;
