@@ -247,9 +247,11 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
     char id[DTREE_DATA_BUFLEN];
     dclass_keyvalue *der=NULL;
     dclass_keyvalue *chain=NULL;
+    const dtree_dt_node *base;
     
 #if OPENDDR_BLKBRY_FIX
     dtree_flag_f bb_flag;
+    dclass_keyvalue *bb_chain;
 #endif
     
     if(!f)
@@ -311,17 +313,24 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
             
             if(!chain && *flags & DTREE_DT_FLAG_CHAIN)
             {
-                //look for base chain
+                dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR CHAIN PATTERN: '%s' id: '%s'\n",pattern,der->id);
+
                 chain=(dclass_keyvalue*)dtree_get(h,pattern,DTREE_DT_FLAG_BCHAIN);
 
                 //TODO need to iterate thru regex and add all possible chain values
                 if(!chain)
-                    chain=(dclass_keyvalue*)dtree_get(h,openddr_unregex(pattern,id),DTREE_DT_FLAG_BCHAIN);
+                {
+                    dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR ALT CHAIN PATTERN: '%s' id: '%s'\n",openddr_unregex(pattern,id),der->id);
 
-                //this pattern exists
+                    base=dtree_get_node(h,openddr_unregex(pattern,id),0,0);
+
+                    if(base && (base=dtree_get_flag(h,base,DTREE_DT_FLAG_BCHAIN,0)))
+                        chain=base->payload;
+                }
+
                 if(chain)
                 {
-                    dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR DUP CHAIN PATTERN: '%s' id: '%s'\n",pattern,der->id);
+                    dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR FOUND DUP CHAIN PATTERN: '%s' id: '%s' (%s)\n",pattern,der->id,chain->id);
 
                     continue;
                 }
@@ -329,11 +338,13 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
             
 #if OPENDDR_BLKBRY_FIX
             bb_flag=*flags;
+            bb_chain=chain;
             
             if(!strncasecmp(der->id,"blackberry",10) && chain && (*flags & DTREE_DT_FLAG_CHAIN))
             {
                 *flags=0;
-                
+                chain=NULL;
+
                 openddr_convert_bb(pattern);
             }
 #endif
@@ -343,6 +354,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
             
 #if OPENDDR_BLKBRY_FIX
             *flags=bb_flag;
+            chain=bb_chain;
 #endif
 
             if(*flags & DTREE_DT_FLAG_CHAIN)

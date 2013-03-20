@@ -211,6 +211,7 @@ typedef struct
 }
 dtree_dt_add_entry;
 
+
 void dtree_init_index(dtree_dt_index*);
 
 int dtree_add_entry(dtree_dt_index *,const char*,dtree_dt_add_entry*);

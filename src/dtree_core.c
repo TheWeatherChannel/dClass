@@ -230,13 +230,16 @@ static int dtree_set_payload(dtree_dt_index *h,dtree_dt_node *n,const dtree_dt_a
     packed_ptr pp;
     dtree_dt_node *base=n;
     
-    //dup
     if((entry->flags & n->flags)==entry->flags && entry->data==n->payload && entry->param==n->cparam &&
             entry->pos==n->pos && entry->dir==n->dir)
-        return 0;
+    {
+        dtree_printd(DTREE_PRINT_INITDTREE,"ADD: PURE DUPLICATE detected, skipping\n");
     
-    dtree_printd(DTREE_PRINT_INITDTREE,"ADD: EOT: '%c' level: %d p(%p) pp(%p) param(%p)\n",
-             n->data?n->data:'^',dtree_node_depth(h,n),n,n->curr,entry->param);
+        return 0;
+    }
+    
+    dtree_printd(DTREE_PRINT_INITDTREE,"ADD: EOT: '%c' level: %d p(%p) pp(%p) param(%p) flags: %d\n",
+             n->data?n->data:'^',dtree_node_depth(h,n),n,n->curr,entry->param,entry->flags);
     
     if(n->flags && (h->sflags & DTREE_S_FLAG_DUPS))
     {
@@ -387,7 +390,7 @@ const dtree_dt_node *dtree_get_node(const dtree_dt_index *h,const char *t,dtree_
         
         return lflag;
     }
-            
+    
     pp=h->head->nodes[dtree_hash_char(*t)];
     base=DTREE_DT_GETPP(h,pp);
     
