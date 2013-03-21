@@ -22,12 +22,18 @@
 
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
+
+#ifdef _DTREE_NO_TIMESPEC
+#define __timespec_defined 1
+#else
 #include <time.h>
 #include <sys/time.h>
+#endif
+
+#include <stdlib.h>
 
 
 //logging and testing
@@ -228,6 +234,16 @@ void dtree_free(dtree_dt_index*);
 
 long dtree_print(const dtree_dt_index*,const char*(*f)(void*));
 void dtree_printd(int,const char*,...);
+
+
+#ifdef _DTREE_NO_TIMESPEC
+struct timespec
+{
+    time_t tv_sec;
+    long tv_nsec;
+}
+timespec_t;
+#endif
 
 
 #endif /* _DTREE_H_INCLUDED_ */
