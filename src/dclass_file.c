@@ -28,7 +28,8 @@ typedef struct
     
     size_t key_len;
     size_t val_len;
-} dtree_kv_pair;
+}
+dtree_kv_pair;
 
 typedef struct
 {
@@ -50,7 +51,8 @@ typedef struct
     signed int dir;
     
     dtree_kv_pair p[DTREE_DATA_MKEYS];
-} dtree_file_entry;
+}
+dtree_file_entry;
 
 
 static void dclass_parse_fentry(char*,dtree_file_entry*,int);

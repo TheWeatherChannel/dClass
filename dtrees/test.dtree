@@ -1,53 +1,9 @@
 # Test dtree
 
-#$regex - regular expression tree indexing and searching
-#$dups - allow pattern duplicates
-
-
-# These IDs (#!) have the highest index order and will be returned as such.
-# Also used for string caching.
+#$regex
+#$dups
 
 #!unknown,bat,mat,vat,wtest5b
-
-
-#FORMAT:
-#pattern;id;TYPE;parent;key1=value1,key2=value2
-
-# pattern - Pattern to match. Supports . (wildcard), ? (optional) and [] (set).
-#           Patterns are searched from left to right. Patterns must begin and
-#           end on non alphanumeric boundaries.
-
-# id - Unique id for pattern. Patterns with matching ids will share key values.
-#      If referenced as parent, only 1 pattern of an id set needs to match.
-
-# TYPE - S,B,C,W,N
-#    S - Strong pattern. If found, pattern is immediately returned.
-#    B - Base pattern. This pattern is only used as a parent dependency. May
-#        itself have a parent dependency. Dependencies must be matched in
-#        search order.
-#    C - Chain pattern. If parent dependencies have been satisfied and this
-#        pattern is found, it is immediately returned.
-#    W - Weak pattern. This pattern is only returned in the absence of S and C
-#        patterns. Entire string must be searched. Index order is used to
-#        break ties.
-#    N - None pattern. This pattern is only returned in the absence of S, C,
-#        and W patterns. Entire string must be searched. Index order is used to
-#        break ties.
-
-# parent - id of a base (B) pattern which is a dependency of this pattern.
-#          Parents must be found in search order.
-
-# key=values - Key value pairs which are returned when a pattern is matched.
-#              (Note that a uniform keyset (empty keyset is allowed) gives the
-#              best runtime performance since each pattern will point to the
-#              same keyset memory location)
-
-
-#OPENDDR
-# All OpenDDR builders are implemented as strong patterns with the exception of
-#SimpleDeviceBuilder which is implemented as weak patterns and
-#TwoStepDeviceBuilder which is implemented as a base/chain pattern.
-
 
 abc123;abc;S;;key1="value,1",key 2=value 2
 xy[zc]?1234?;xyz;S;;

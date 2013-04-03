@@ -1,7 +1,7 @@
 dClass - Pattern Classification Engine
 
 dClass is an indexed pattern classification engine. dClass is capable of
-performing near constant time pattern classification. dClass will quickly and
+performing near constant time pattern classification. dClass can quickly and
 accurately find the best matching pattern rule for a given input. For an input
 of size M classified against an index of size N, dClass has worst case O(M)
 performance, even for large values of N. To accomplish this, dClass uses a
@@ -72,11 +72,11 @@ Enhancements for 3.0
 NOTES
 
 All US-ASCII alphanumeric characters are pattern searchable. Non alphanumeric
-pattern searchable characters are defined in DTREE_HASH_SCHARS. Add or remove
-characters as needed. Indexed US-ASCII print characters (0x20 thru 0x7E) which
+pattern searchable characters are defined in DTREE_HASH_SCHARS. These chars
+are token seperators. Indexed US-ASCII print characters (0x20 thru 0x7E) which
 aren't pattern searchable are replaced with DTREE_PATTERN_ANY and can match on
 any character. All pattern matching is US-ASCII case insensitive. Extended
-character set recognition is supported via DTREE_HASH_TCHARS.
+non-seperator character set recognition is supported via DTREE_HASH_TCHARS.
 
 Write operations on the index are not thread safe. Read operations are thread
 safe (with at most one writer). Read operations have the dclass index parameter
