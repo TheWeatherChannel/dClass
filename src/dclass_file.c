@@ -129,21 +129,6 @@ int dclass_load_file(dclass_index *di,const char *path)
         {
             switch(*++p)
             {
-                //comment
-                case ' ':
-                    if(!h->comment)
-                    {
-                        for(++p,s=p;*p;p++)
-                        {
-                            if(*p=='\n')
-                                break;
-                        }
-                        *p='\0';
-                        h->comment=dtree_alloc_mem(h,(p-s+1)*sizeof(char));
-                        if(h->comment)
-                            strncpy(h->comment,s,p-s);
-                    }
-                    break;
                 //string order is being forced here
                 case '!':
                     for(++p,s=p;*p;p++)
@@ -196,6 +181,23 @@ int dclass_load_file(dclass_index *di,const char *path)
                     {
                         h->sflags |= DTREE_S_FLAG_NOTRIM;
                         dtree_printd(DTREE_PRINT_INITDTREE,"INIT FORCE: notrim\n");
+                    }
+                    break;
+                //comment
+                default:
+                    if(!h->comment)
+                    {
+                        if(*p==' ')
+                            p++;
+                        for(s=p;*p;p++)
+                        {
+                            if(*p=='\n')
+                                break;
+                        }
+                        *p='\0';
+                        h->comment=dtree_alloc_mem(h,(p-s+1)*sizeof(char));
+                        if(h->comment)
+                            strncpy(h->comment,s,p-s);
                     }
                     break;
             }          
