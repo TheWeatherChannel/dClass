@@ -51,8 +51,9 @@ directive.
 
 pattern
 
-This is the pattern to match. If the regex directive is used, the following
-regex is supported:
+This is the pattern to match. Patterns must begin and end on a seperator
+character boundary (DTREE_HASH_SCHARS). Patterns may contain seperator
+characters. If the regex directive is used, the following regex is supported:
 
  .  - any character
  ?  - option character
@@ -76,17 +77,21 @@ type
 The following types are supports: S,B,C,W,N.
 
  S - STRONG pattern. If found, classification is stopped the pattern is returned
+     immediately regardless of other patterns found or to be found.
  B - BASE pattern. This parents is only used as a parent dependency. May itself
      have a parent dependency.
- C - CHAIN pattern. If all parent dependencies have been satisfied and no
-     rank has been assigned, this pattern is returned. Otherwise the highest
-     ranking CHAIN or WEAK pattern is returned.
- W - WEAK pattern. This pattern is only returned if its the highest ranking
-     pattern found in the absence of a STRONG or unranked CHAIN pattern.
- N - NONE pattern. This pattern is only returned in the absence of STRONG,
-     CHAIN, or WEAK patterns.
+ C - CHAIN pattern. If all parent dependent BASE patterns have been found then
+     this pattern is complete. If no rank has been assigned, classification is
+     stopped and the pattern is returned immediately. Otherwise the highest
+     ranking CHAIN pattern is returned at the end of classification in the
+     absence of a higher ranking WEAK pattern.
+ W - WEAK pattern. This pattern is only returned at the end of classification
+     if its the highest ranking WEAK pattern found in the absence of a higher
+     rankng CHAIN pattern.
+ N - NONE pattern. This pattern is only returned at the end of classification
+     in the absence of CHAIN, or WEAK patterns.
 
-All types can take an option position parameter. Some of the types take option
+All types can take an option position parameter. Some of the types take optional
 rank parameters. Ex:
 
 type[RANK]:[POS]
@@ -99,8 +104,8 @@ pattern is returned.
 
 All patterns can take an option position parameter. Positions can range from 1
 to 254. A position of 1 is equivalent to the ^ regex character. The pattern
-must be found in the given word position (using the defined TCHATS and SCHARS)
-to be valid.
+must be found in the given word position in the classified text (using the
+defined TCHATS and SCHARS) to be valid.
 
 Example:
 
@@ -111,12 +116,12 @@ W50:5 - the WEAK pattern must be the fifth word and has a rank of 50
 parent
 
 id of the BASE pattern which is dependent on this pattern. Only BASE or CHAIN
-patterns can have parents. The parent parameter can take an option direction
+patterns can have parents. The parent parameter can take an optional direction
 parameter which is the maximum word distance the parent can be from the given
 pattern. Directions can range from -127 to 127. If a parent has no range or a
 range of 0, the parent can be any distance before the given pattern. Negative
 ranges proceed the given pattern and positive ranges follow the given pattern.
-Positive range parents cannot have any parent dependencies.
+Positive range parents cannot itself have any parent dependencies.
 
 
 key values
@@ -124,3 +129,4 @@ key values
 Key value pairs which are returned with the pattern when matched. A uniform set
 of keys gives the best runtime performance since the key set is reused across
 all patterns (an empty keyset does not violate this).
+
