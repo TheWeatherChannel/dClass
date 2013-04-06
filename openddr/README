@@ -1,0 +1,2 @@
+This script moves the dClass patch files into the OpenDDR resources and
+generates a .dtree file using the dClass test client.

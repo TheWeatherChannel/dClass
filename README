@@ -23,25 +23,35 @@ classification language allowing for centralized domain specific classification
 while retaining near constant time performance.
 
 
+PATTERNS
+
+dClass loads its patterns from a .dtree file or from a DDR xml directory.
+Patterns can also be added directly to the index via the dtree C API. The test
+client allows for the conversion of a DDR xml directory into a .dtree file and
+an API exists to dump the current index into a .dtree file.
+
+Please see the README in the dtree directory for detailed .dtree notes.
+
+
 AUTHORS
 
 Reza Naghibi (reza.naghibi@yahoo.com)
 
 Special thanks:
-OpenDDR (DeviceMap) team, Anthony Watson, Eric Honer, Joe Pearson, Luke Kolin,
-Ivan Kozhuharov, Chris Hill, Chris McClellen, and The Weather Channel team.
+OpenDDR team, Anthony Watson, Eric Honer, Joe Pearson, Luke Kolin,
+Ivan Kozhuharov, Chris Hill, Chris McClellen, and The Weather Channel.
 
 
 HOWTO
 
 To compile the test client, run make in the src directory.
 
-To build with varnish and nginx, please reference the varnish and nginx
-servers subdirectories.
+To build with varnish and nginx, please reference the READMEs in the varnish
+and nginx servers subdirectories.
 
 To integrate with the dClass API:
 
-  -include the dclass header file:
+  -include the dClass header file:
     #include "dclass_client.h"
 
   -define a dclass_index:

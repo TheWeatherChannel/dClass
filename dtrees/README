@@ -1,1 +1,126 @@
-dtree file pattern format README
+dClass pattern format and file structure
+
+
+COMMENTS
+
+Comments in the .dtree file are prefixed with '#'. The comment prefix must be
+the first character in the line. The first non directive comment in the .dtree
+file is used as the index comment and will be stored within the index. Ex:
+
+#This is a comment
+
+
+COMMENT DIRECTIVES
+
+The dClass index supports several pattern search modes. Modes are prefixed as a
+directive comment using the following characters '#!'. dClass supports the
+following search modes:
+
+#$regex
+This allows for regular expression pattern matching.
+
+#$dups
+This allows for a single pattern to have multiple pattern definitions.
+
+#$partial
+This allows for partial pattern matches in non regex searches.
+
+#$notrim
+This does not trim extra whitespace around pattern definitions.
+
+The dClass index supports string caching. Cached strings are only allocated
+once and re-referenced there after. The order of strings in this directive (and
+the order of pattern definitions) are used to break ties in patterns with the
+same rank. The size of the cache is set using DTREE_M_LOOKUP_CACHE.
+
+#!string1,groupa,string ab3
+
+
+PATTERNS
+
+All patterns are defined in the following format:
+
+pattern ; id ; type ; parent ; key1=value , key2=value2
+
+Note that semicolons are used to separate the pattern attributes and
+commas are used to separate the key value pairs. By default whitespace is
+trimmed. There are two ways to include leading and trailing whitespace. First,
+you can wrap your attribute in double quotes. Second, you can set the notrim
+directive.
+
+
+pattern
+
+This is the pattern to match. If the regex directive is used, the following
+regex is supported:
+
+ .  - any character
+ ?  - option character
+ ^  - the beginning of the text to classify
+ $  - the end of the text to classify
+ \  - escape, treat the next character as non regex
+ [] - a set of characters, only 1 of the set needs to match
+ () - a group of characters, the whole group needs to match, to be used with ?
+
+
+id
+
+Unique identifier for the pattern. Patterns with matching ids will share key
+values (the first defined key value set will be used). If referenced as a
+parent (or defined as a base), only one of of the patterns in the id set needs
+to match.
+
+
+type
+
+The following types are supports: S,B,C,W,N.
+
+ S - STRONG pattern. If found, classification is stopped the pattern is returned
+ B - BASE pattern. This parents is only used as a parent dependency. May itself
+     have a parent dependency.
+ C - CHAIN pattern. If all parent dependencies have been satisfied and no
+     rank has been assigned, this pattern is returned. Otherwise the highest
+     ranking CHAIN or WEAK pattern is returned.
+ W - WEAK pattern. This pattern is only returned if its the highest ranking
+     pattern found in the absence of a STRONG or unranked CHAIN pattern.
+ N - NONE pattern. This pattern is only returned in the absence of STRONG,
+     CHAIN, or WEAK patterns.
+
+All types can take an option position parameter. Some of the types take option
+rank parameters. Ex:
+
+type[RANK]:[POS]
+
+CHAIN and WEAK patterns can take an option rank parameter. Ranks can range from
+1 to 255. The highest ranking CHAIN or WEAK pattern is returned. If a CHAIN
+pattern has no rank, its returned immediately without analyzing the rest of
+the string. If both a CHAIN and WEAK pattern have the same rank, the CHAIN
+pattern is returned.
+
+All patterns can take an option position parameter. Positions can range from 1
+to 254. A position of 1 is equivalent to the ^ regex character. The pattern
+must be found in the given word position (using the defined TCHATS and SCHARS)
+to be valid.
+
+Example:
+
+B:2   - the BASE pattern must be the second word
+W50:5 - the WEAK pattern must be the fifth word and has a rank of 50
+
+
+parent
+
+id of the BASE pattern which is dependent on this pattern. Only BASE or CHAIN
+patterns can have parents. The parent parameter can take an option direction
+parameter which is the maximum word distance the parent can be from the given
+pattern. Directions can range from -127 to 127. If a parent has no range or a
+range of 0, the parent can be any distance before the given pattern. Negative
+ranges proceed the given pattern and positive ranges follow the given pattern.
+Positive range parents cannot have any parent dependencies.
+
+
+key values
+
+Key value pairs which are returned with the pattern when matched. A uniform set
+of keys gives the best runtime performance since the key set is reused across
+all patterns (an empty keyset does not violate this).
