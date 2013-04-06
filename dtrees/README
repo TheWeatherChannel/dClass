@@ -56,7 +56,7 @@ character boundary (DTREE_HASH_SCHARS). Patterns may contain seperator
 characters. If the regex directive is used, the following regex is supported:
 
  .  - any character
- ?  - option character
+ ?  - optional character
  ^  - the beginning of the text to classify
  $  - the end of the text to classify
  \  - escape, treat the next character as non regex
@@ -91,19 +91,19 @@ The following types are supports: S,B,C,W,N.
  N - NONE pattern. This pattern is only returned at the end of classification
      in the absence of CHAIN, or WEAK patterns.
 
-All types can take an option position parameter. Some of the types take optional
-rank parameters. Ex:
+All types can take an optional position parameter. Some of the types take
+optional rank parameters. Ex:
 
 type[RANK]:[POS]
 
-CHAIN and WEAK patterns can take an option rank parameter. Ranks can range from
-1 to 255. The highest ranking CHAIN or WEAK pattern is returned. If a CHAIN
-pattern has no rank, its returned immediately without analyzing the rest of
-the string. If both a CHAIN and WEAK pattern have the same rank, the CHAIN
+CHAIN and WEAK patterns can take an optional rank parameter. Ranks can range
+from 1 to 255. The highest ranking CHAIN or WEAK pattern is returned. If a
+CHAIN pattern has no rank, its returned immediately without analyzing the rest
+of the string. If both a CHAIN and WEAK pattern have the same rank, the CHAIN
 pattern is returned.
 
-All patterns can take an option position parameter. Positions can range from 1
-to 254. A position of 1 is equivalent to the ^ regex character. The pattern
+All patterns can take an optional position parameter. Positions can range from
+1 to 254. A position of 1 is equivalent to the ^ regex character. The pattern
 must be found in the given word position in the classified text (using the
 defined TCHATS and SCHARS) to be valid.
 
