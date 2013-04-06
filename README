@@ -83,7 +83,7 @@ NOTES
 
 All US-ASCII alphanumeric characters are pattern searchable. Non alphanumeric
 pattern searchable characters are defined in DTREE_HASH_SCHARS. These chars
-are token seperators. Indexed US-ASCII print characters (0x20 thru 0x7E) which
+are word seperators. Indexed US-ASCII print characters (0x20 thru 0x7E) which
 aren't pattern searchable are replaced with DTREE_PATTERN_ANY and can match on
 any character. All pattern matching is US-ASCII case insensitive. Extended
 non-seperator character set recognition is supported via DTREE_HASH_TCHARS.
