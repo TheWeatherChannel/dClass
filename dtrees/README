@@ -13,7 +13,7 @@ file is used as the index comment and will be stored within the index. Ex:
 COMMENT DIRECTIVES
 
 The dClass index supports several pattern search modes. Modes are prefixed as a
-directive comment using the following characters '#!'. dClass supports the
+directive comment using the following characters '#$'. dClass supports the
 following search modes:
 
 #$regex
