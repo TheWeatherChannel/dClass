@@ -78,7 +78,7 @@ The following types are supported: S,B,C,W,N.
 
  S - STRONG pattern. If found, classification is stopped the pattern is returned
      immediately regardless of other patterns found or to be found.
- B - BASE pattern. This parents is only used as a parent dependency. May itself
+ B - BASE pattern. This pattern is only used as a parent dependency. May itself
      have a parent dependency.
  C - CHAIN pattern. If all parent dependent BASE patterns have been found then
      this pattern is complete. If no rank has been assigned, classification is
@@ -103,7 +103,7 @@ of the string. If both a CHAIN and WEAK pattern have the same rank, the CHAIN
 pattern is returned.
 
 All patterns can take an optional position parameter. Positions can range from
-1 to 254. A position of 1 is equivalent to the ^ regex character. The pattern
+1 to 254. A position of 1 is equivalent to the '^' regex character. The pattern
 must be found at the given word position in the classified text (using the
 defined seperator chars) to be valid.
 
@@ -118,7 +118,7 @@ parent
 id of the BASE pattern which is dependent on this pattern. Only BASE or CHAIN
 patterns can have parents. The parent parameter can take an optional direction
 parameter which is the maximum word distance the parent can be from the given
-parent pattern. Example:
+pattern. Example:
 
 parent:[DIR]
 

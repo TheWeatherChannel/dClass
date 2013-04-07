@@ -96,4 +96,6 @@ designated with a 'const'.
 Memory limits are tightly bounded. Default configuration allows for 65k search
 nodes and 8mb of general memory. Adjusting DTREE_DT_PACKED* will allow for more
 search nodes and increasing DTREE_M_MAX_SLABS will allow for more general use
-memory.
+memory. Since the dtree data structure is memory pointer heavy, pointers have
+the option to be compressed down into 16bit or 32bit values.
+
