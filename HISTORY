@@ -1,3 +1,10 @@
+2.2.0
+ -Added Java support via JNI
+ -Expanded regex support
+ -Added pattern ranking
+ -Added directional chaining
+ -Added index comments
+
 2.0.15 
  -Updated OpenDDR/DeviceMap (1.16)
 
