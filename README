@@ -10,7 +10,7 @@ heavily optimized for searching, retrieval, and high performance on modern day
 CPUs (classification runtime is in the range of 10 microseconds on modern day
 hardware).
 
-dClass introduces several classification pattern types: STRONG, CHAINED, WEAK,
+dClass introduces several classification pattern types: STRONG, CHAIN, WEAK,
 and NONE. These types can be coupled with regular expressions, absolute
 positioning, grouping, inheritance, duplicates, ranking, and directional
 proximity. This allows for an expressive index which is capable of handling
@@ -75,8 +75,9 @@ ROADMAP
 
 Enhancements for 3.0
 
-  -Expanded regex support
   -Realtime additions, modifications, and deletion
+  -Expanded regex support
+  -Make index directives the default
 
 
 NOTES

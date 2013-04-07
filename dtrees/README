@@ -52,23 +52,24 @@ directive.
 pattern
 
 This is the pattern to match. Patterns must begin and end on a seperator
-character boundary (DTREE_HASH_SCHARS). Patterns may contain seperator
-characters. If the regex directive is used, the following regex is supported:
+character boundary (DTREE_HASH_SCHARS, greater than DTREE_HASH_SEP, etc).
+Patterns may contain seperator characters. If the regex directive is used, the
+following regex is supported:
 
  .  - any character
- ?  - optional character
+ ?  - the preceding character or group is optional
  ^  - the beginning of the text to classify
  $  - the end of the text to classify
  \  - escape, treat the next character as non regex
  [] - a set of characters, only 1 of the set needs to match
- () - a group of characters, the whole group needs to match, to be used with ?
+ () - a group of characters, the whole group needs to match
 
 
 id
 
 Unique identifier for the pattern. Patterns with matching ids will share key
 values (the first defined key value set will be used). If referenced as a
-parent (or defined as a base), only one of of the patterns in the id set needs
+parent (or defined as a BASE), only one of of the patterns in the id set needs
 to match.
 
 
