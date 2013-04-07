@@ -19,18 +19,18 @@ classifications like device detection, all under a unified syntax and API.
 
 dClass is built in a modular fashion and allows for schema free data modeling.
 This means that multiple pattern indexes can be combined with their own custom
-classification language allowing for centralized domain specific classification
+classification language allowing for networked knowledge based classification
 while retaining near constant time performance.
 
 
 PATTERNS
 
-dClass loads its patterns from a .dtree file or from a DDR xml directory.
+dClass can load its patterns from a .dtree file or from a DDR xml directory.
 Patterns can also be added directly to the index via the dtree C API. The test
 client allows for the conversion of a DDR xml directory into a .dtree file and
 an API exists to dump the current index into a .dtree file.
 
-Please see the README in the dtree directory for detailed .dtree notes.
+Please see the README in the dtree directory for detailed dtree pattern notes.
 
 
 AUTHORS
@@ -46,7 +46,7 @@ HOWTO
 
 To compile the test client, run make in the src directory.
 
-To build with varnish and nginx, please reference the READMEs in the varnish
+To build with varnish or nginx, please reference the READMEs in the varnish
 and nginx servers subdirectories.
 
 To integrate with the dClass API:
@@ -77,7 +77,7 @@ Enhancements for 3.0
 
   -Realtime additions, modifications, and deletion
   -Expanded regex support
-  -Make index directives the default
+  -Remove index directives
 
 
 NOTES
