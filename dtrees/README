@@ -85,11 +85,11 @@ The following types are supported: S,B,C,W,N.
      stopped and the pattern is returned immediately. Otherwise it is returned
      at the end of classification if its the highest ranking CHAIN pattern found
      in the absence of a higher ranking WEAK pattern.
- W - WEAK pattern. This pattern is only returned at the end of classification
-     if its the highest ranking WEAK pattern found in the absence of a higher
-     ranking CHAIN pattern.
- N - NONE pattern. This pattern is only returned at the end of classification
-     in the absence of CHAIN or WEAK patterns.
+ W - WEAK pattern. If found, this pattern is returned at the end of
+     classification if its the highest ranking WEAK pattern found in the
+     absence of a higher ranking CHAIN pattern.
+ N - NONE pattern. If found, this pattern is returned at the end of
+     classification in the absence of CHAIN or WEAK patterns.
 
 Some types can take an optional rank parameter. All types can take an optional
 position parameter. Example:
@@ -104,8 +104,8 @@ pattern is returned.
 
 All patterns can take an optional position parameter. Positions can range from
 1 to 254. A position of 1 is equivalent to the '^' regex character. The pattern
-must be found at the given word position in the classified text (using the
-defined separator chars) to be valid.
+must start at the given word position in the classified text (using the defined 
+separator chars) to be valid.
 
 Example:
 
