@@ -108,7 +108,7 @@ public class dClassLoader
         else if(os.contains("linux"))
             return "linux"+bit+".so";
         else if(os.contains("mac os"))
-            return "osx"+bit+".dylib";
+            return "darwin"+bit+".dylib";
 
         return "";
     }
