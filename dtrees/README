@@ -13,8 +13,8 @@ file is used as the index comment and will be stored within the index. Example:
 COMMENT DIRECTIVES
 
 The dClass index supports several pattern search modes. Modes are prefixed as a
-directive comment using the following characters '#$'. dClass supports the
-following search modes:
+comment directive using the following characters '#$'. dClass supports the
+following directive search modes:
 
 #$regex
 This allows for regular expression pattern matching.
@@ -50,9 +50,9 @@ your attribute in double quotes. Second, you can set the notrim directive.
 
 pattern
 
-This is the pattern to match. Patterns must begin and end on a seperator
+This is the pattern to match. Patterns must begin and end on a separator
 character boundary (DTREE_HASH_SCHARS, greater than DTREE_HASH_SEP, etc).
-Patterns may contain seperator characters. If the regex directive is used, the
+Patterns may contain separator characters. If the regex directive is used, the
 following regex is supported:
 
  .  - any character
@@ -105,12 +105,12 @@ pattern is returned.
 All patterns can take an optional position parameter. Positions can range from
 1 to 254. A position of 1 is equivalent to the '^' regex character. The pattern
 must be found at the given word position in the classified text (using the
-defined seperator chars) to be valid.
+defined separator chars) to be valid.
 
 Example:
 
-B:2   - the BASE pattern must be the second word
-W50:5 - the WEAK pattern must be the fifth word and has a rank of 50
+B:2   - the BASE pattern must start at the second word
+W50:5 - the WEAK pattern must start at the fifth word and has a rank of 50
 
 
 parent
@@ -122,9 +122,11 @@ pattern. Example:
 
 parent:[DIR]
 
-Directions can range from -127 to 127. If a parent has no direction or a direction of 0, the parent can be any distance before the given pattern. Negative
-directions proceed the given pattern and positive directions follow the given
-pattern. Positive direction parents cannot itself have any parent dependencies.
+Directions can range from -127 to 127. If a parent has no direction or a
+direction of 0, the parent can be any distance before the given pattern.
+Positive directions proceed the given pattern and negative directions follow
+the given pattern. Negative direction parents cannot itself have any parent
+dependencies.
 
 
 key values
