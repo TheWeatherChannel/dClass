@@ -239,7 +239,7 @@ void dtree_printd(int,const char*,...);
 #ifdef _DTREE_NO_TIMESPEC
 struct timespec
 {
-    time_t tv_sec;
+    long tv_sec;
     long tv_nsec;
 }
 timespec_t;
