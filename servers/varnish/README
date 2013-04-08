@@ -1,4 +1,4 @@
-Tested with varnish 3.0.1
+Tested with varnish 3.0.1 and 3.0.3
 
 run: make varnish
 copy libvmod_dclass.so to the varnish installation vmod directory:
