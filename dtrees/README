@@ -122,11 +122,11 @@ pattern. Example:
 
 parent:[DIR]
 
-Directions can range from -127 to 127. If a parent has no direction or a
+Directions can range from 127 to -127. If a parent has no direction or a
 direction of 0, the parent can be any distance before the given pattern.
 Positive directions proceed the given pattern and negative directions follow
-the given pattern. Negative direction parents cannot itself have any parent
-dependencies.
+the given pattern (ie: 127 to -127). Negative direction parents cannot itself
+have any parent dependencies.
 
 
 key values
