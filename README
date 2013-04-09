@@ -23,7 +23,7 @@ classification language allowing for networked knowledge based classification
 while retaining near constant time performance.
 
 
-PATTERNS
+ PATTERNS
 
 dClass can load its patterns from a .dtree file or from a DDR xml directory.
 Patterns can also be added directly to the index via the dtree C API. The test
@@ -34,7 +34,7 @@ Please see the README in the dtree directory for detailed dtree pattern notes,
 examples, and tips (dtrees/README).
 
 
-AUTHORS
+ AUTHORS
 
 Reza Naghibi (reza.naghibi@yahoo.com)
 
@@ -43,7 +43,13 @@ OpenDDR team, Anthony Watson, Eric Honer, Joe Pearson, Luke Kolin,
 Ivan Kozhuharov, Chris Hill, Chris McClellen, and The Weather Channel.
 
 
-HOWTO
+ OPENDDR (DEVICE MAP)
+
+This project will track OpenDDR updates with its own patches. All OpenDDR
+updates will be backwards compatible with dClass 2.0 code.
+
+
+ HOWTO
 
 To compile the test client, run make in the src directory.
 
@@ -72,7 +78,7 @@ To integrate with the dClass API:
     dclass_free(&dci);
 
 
-ROADMAP
+ ROADMAP
 
 Enhancements for 3.0
 
@@ -80,8 +86,12 @@ Enhancements for 3.0
   -Expanded regex support
   -Remove index directives
 
+Beyond
 
-NOTES
+  -Image and vision processing?
+
+
+ NOTES
 
 All US-ASCII alphanumeric characters are pattern searchable. Non alphanumeric
 pattern searchable characters are defined in DTREE_HASH_SCHARS. These chars

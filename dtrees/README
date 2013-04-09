@@ -1,7 +1,7 @@
 dClass pattern format and file structure
 
 
-COMMENTS
+ COMMENTS
 
 Comments in the .dtree file are prefixed with '#'. The comment prefix must be
 the first character in the line. The first non directive comment in the .dtree
@@ -10,7 +10,7 @@ file is used as the index comment and will be stored within the index. Example:
 #This is a comment
 
 
-COMMENT DIRECTIVES
+ COMMENT DIRECTIVES
 
 The dClass index supports several pattern search modes. Modes are prefixed as a
 comment directive using the following characters '#$'. dClass supports the
@@ -37,7 +37,7 @@ first string allocated will be returned as the error id with no key values.
 #!unknown,string1,groupa,string ab3
 
 
-PATTERNS
+ PATTERNS
 
 All patterns are defined in the following format:
 
@@ -137,7 +137,7 @@ of keys gives the best runtime performance since the key set is reused across
 all patterns (an empty keyset does not violate this).
 
 
-EXAMPLES
+ EXAMPLES
 
 The following is an example .dtree with comments:
 
@@ -179,7 +179,7 @@ Here are some example strings and their classification results:
 "A girl saw nothing"             => unknown
 
 
-TIPS
+ TIPS
 
 While it may be tempting to do so, you do not have to put every pattern into a
 single .dtree file. Breaking up patterns into their own logical .dtree files has
