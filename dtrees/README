@@ -31,9 +31,10 @@ This does not trim extra whitespace around pattern definitions.
 The dClass index supports string caching. Cached strings are only allocated
 once and re-referenced there after. The order of strings in this directive (and
 the order of pattern definitions) are used to break ties in patterns with the
-same rank. The size of the cache is set using DTREE_M_LOOKUP_CACHE.
+same rank. The size of the cache is set using DTREE_M_LOOKUP_CACHE. Also, the
+first string allocated will be returned as the error id with no key values.
 
-#!string1,groupa,string ab3
+#!unknown,string1,groupa,string ab3
 
 
 PATTERNS
@@ -122,10 +123,10 @@ pattern. Example:
 
 parent:[DIR]
 
-Directions can range from 127 to -127. If a parent has no direction or a
+Directions can range from -127 to 127. If a parent has no direction or a
 direction of 0, the parent can be any distance before the given pattern.
-Positive directions proceed the given pattern and negative directions follow
-the given pattern (ie: 127 to -127). Negative direction parents cannot itself
+Negative directions proceed the given pattern and positive directions follow
+the given pattern (ie: -127 to 127). Positive direction parents cannot itself
 have any parent dependencies.
 
 
@@ -134,4 +135,62 @@ key values
 Key value pairs which are returned with the pattern when matched. A uniform set
 of keys gives the best runtime performance since the key set is reused across
 all patterns (an empty keyset does not violate this).
+
+
+EXAMPLES
+
+The following is an example .dtree with comments:
+
+#hotdog example
+#enable regex, dups, and set unknown as the error id
+#$regex
+#$dups
+#!unknown
+
+#pattern  ;id      ;type  ;parent  ;key=values
+cat       ;cat     ;S     ;        ;return=cat
+dog       ;dog     ;W10   ;        ;return=dog
+hot ?dog  ;hotdog  ;W25   ;        ;return=hotdog
+hot       ;hot     ;B     ;        ;
+dog       ;hotdogc ;C40   ;hot:-2  ;return=special hot dog
+bird      ;bird    ;N     ;        ;return=bird
+
+#end example
+
+The first cat pattern is STRONG meaning when the pattern is found, it is
+returned immediately. The next dog pattern is a WEAK pattern of rank 10. The
+hotdog pattern after that has an optional space and it has a WEAK rank of 25.
+Next is a base pattern with the word hot. This pattern is referenced by a
+duplicate dog pattern and the parent (dog) must be within 2 words of this
+pattern. This pattern has the highest rank of 40, but still ranks below the
+STRONG pattern. Finally, there is a bird pattern which has a NONE type which
+means its only returned when found and no other pattern was found.
+
+Here are some example strings and their classification results:
+
+"A bird saw a cat and a dog"     => cat
+"A bird saw a dog"               => dog
+"A bird saw a hot dog"           => hotdog
+"A bird saw a hot nice dog"      => special hot dog
+"A bird saw a hotdog"            => hotdog
+"A bird saw nothing"             => bird
+"A bird saw a hotdog and a cat"  => cat
+"A bird saw a hot and nice dog"  => dog
+"A girl saw nothing"             => unknown
+
+
+TIPS
+
+While it may be tempting to do so, you do not have to put every pattern into a
+single .dtree file. Breaking up patterns into their own logical .dtree files has
+several advantages and avoids unneeded complexity. For example, if trying to
+detect people, places, and things, put all three of these categories into their
+own dtree index.
+
+Also take advantage of the schema free data modeling. If a pattern has a low
+confidence for accuracy, add a key value to it saying so. When using multiple
+indexes, this low confidence pattern will be exposed. Patterns can have values
+which signal across indexes like triggering a search into a certain domain of
+indexes. Essentially, you can build your own classification language centered
+around your data and indexes.
 

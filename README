@@ -30,7 +30,8 @@ Patterns can also be added directly to the index via the dtree C API. The test
 client allows for the conversion of a DDR xml directory into a .dtree file and
 an API exists to dump the current index into a .dtree file.
 
-Please see the README in the dtree directory for detailed dtree pattern notes.
+Please see the README in the dtree directory for detailed dtree pattern notes,
+examples, and tips (dtrees/README).
 
 
 AUTHORS
