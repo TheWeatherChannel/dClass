@@ -2,17 +2,17 @@ dClass - Pattern Classification Engine
 
 dClass is an indexed pattern classification engine. dClass is capable of
 performing near constant time pattern classification. dClass can quickly and
-accurately find the best matching pattern rule for a given input. For an input
+accurately find the best matching pattern for a given input. For an input
 of size M classified against an index of size N, dClass has worst case O(M)
 performance, even for large values of N. To accomplish this, dClass uses a
-dtree, a multi edge networked graph of sub pattern nodes. This structure is
+dtree, a multi edge aliased network of sub pattern nodes. This structure is
 heavily optimized for searching, retrieval, and high performance on modern day
 CPUs (classification runtime is in the range of 10 microseconds on modern day
 hardware).
 
 dClass introduces several classification pattern types: STRONG, CHAIN, WEAK,
 and NONE. These types can be coupled with regular expressions, absolute
-positioning, grouping, inheritance, duplicates, ranking, and directional
+positioning, grouping, inheritance, duplication, ranking, and directional
 proximity. This allows for an expressive index which is capable of handling
 complex context aware patterns like language as well as simpler pattern
 classifications like device detection, all under a unified syntax and API.
@@ -91,21 +91,30 @@ Beyond
   -Image and vision processing?
 
 
+ JAVA
+
+dClass supports Java via a native JNI extension. A custom JNI loader is used.
+It first attempts to load a system shared object (dclassjava). If that fails,
+it then attempts to load a locally packaged shared object. A pre compiled jar
+is included at java/dist/dclass.jar which comes packaged with 32bit and 64bit
+shared objects for Windows, Linux, and OS X.
+
+
  NOTES
 
 All US-ASCII alphanumeric characters are pattern searchable. Non alphanumeric
 pattern searchable characters are defined in DTREE_HASH_SCHARS. These chars
-are word seperators. Indexed US-ASCII print characters (0x20 thru 0x7E) which
+are word separators. Indexed US-ASCII print characters (0x20 thru 0x7E) which
 aren't pattern searchable are replaced with DTREE_PATTERN_ANY and can match on
 any character. All pattern matching is US-ASCII case insensitive. Extended
-non-seperator character set recognition is supported via DTREE_HASH_TCHARS.
+non-separator character set recognition is supported via DTREE_HASH_TCHARS.
 
 Write operations on the index are not thread safe. Read operations are thread
 safe (with at most one writer). Read operations have the dclass index parameter
 designated with a 'const'.
 
 Memory limits are tightly bounded. Default configuration allows for 65k search
-nodes and 8mb of general memory. Adjusting DTREE_DT_PACKED* will allow for more
+nodes and 8MB of general memory. Adjusting DTREE_DT_PACKED* will allow for more
 search nodes and increasing DTREE_M_MAX_SLABS will allow for more general use
 memory. Since the dtree data structure is memory pointer heavy, pointers have
 the option to be compressed down into 16bit or 32bit values.
