@@ -161,7 +161,7 @@ The first cat pattern is STRONG meaning when the pattern is found, it is
 returned immediately. The next dog pattern is a WEAK pattern of rank 10. The
 hotdog pattern after that has an optional space and it has a WEAK rank of 25.
 Next is a base pattern with the word hot. This pattern is referenced by a
-duplicate dog pattern and the parent (dog) must be within 2 words of this
+duplicate dog pattern and the parent (hot) must be within 2 words of this
 pattern. This pattern has the highest rank of 40, but still ranks below the
 STRONG pattern. Finally, there is a bird pattern which has a NONE type which
 means its only returned when found and no other pattern was found.
