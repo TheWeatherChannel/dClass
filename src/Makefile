@@ -1,6 +1,6 @@
-#compile flags 
+#compile flags
 CC=gcc
-CFLAGS=-O3 -Wall
+CFLAGS=-O3 -Wall -fPIC
 LDFLAGS=
 LIBFLAGS=$(NEED_LIBRT)
 RM=rm -rf
@@ -11,14 +11,14 @@ CLIENT_OBJS=dtree_core.o openddr_client.o dclass_file.o dtree_mem.o dtree_util.o
 #os config
 NEED_LIBRT=$(shell echo 'int main() {}' | $(CC) -x c - -lrt -o /dev/null > /dev/null 2>&1 && echo -lrt)
 
+.PHONY : clean all lib
 
 #targets
-all:			dclass_client
-lib:			CFLAGS=-O3 -Wall -fPIC
-lib:			clean libdclass.so libdclass.a
+all:			dclass_client lib
+lib:			libdclass.so libdclass.a
 
-dclass_client:		$(CLIENT_OBJS) main.o
-			$(CC) $(LDFLAGS) -o dclass_client $(CLIENT_OBJS) main.o $(LIBFLAGS)
+dclass_client:		libdclass.a main.o
+			$(CC) $(LDFLAGS) -o $@ main.o libdclass.a $(LIBFLAGS)
 
 libdclass.so:		$(CLIENT_OBJS)
 			$(CC) $(LDFLAGS) -shared -o libdclass.so $(CLIENT_OBJS)
