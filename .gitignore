@@ -1,0 +1,4 @@
+*.o
+src/libdclass.so
+src/libdclass.a
+src/dclass_client
