@@ -1,7 +1,7 @@
 Tested with nginx 1.0.2, 1.0.15, and 1.2.8
 
 Add the following param to your configure:
- --add-module=/some/path/dClass/src
+ --add-module=/some/path/dClass/servers/src
 
 Enable or disable the lookup:
     dclass on;

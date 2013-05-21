@@ -32,4 +32,3 @@ libdclass.a:
 
 clean:
 			$(RM) *.o vcc_if.c vcc_if.h *.so *.a
-			$(MAKE) -C ../../src/ -f ../src/Makefile clean

@@ -1,6 +1,6 @@
 #compile flags 
 CC=gcc
-CFLAGS=-O3 -Wall
+CFLAGS=-O3 -Wall -fPIC
 LDFLAGS=
 LIBFLAGS=$(NEED_LIBRT)
 RM=rm -rf
@@ -13,18 +13,17 @@ NEED_LIBRT=$(shell echo 'int main() {}' | $(CC) -x c - -lrt -o /dev/null > /dev/
 
 
 #targets
-all:			dclass_client
-lib:			CFLAGS=-O3 -Wall -fPIC
-lib:			clean libdclass.so libdclass.a
+all:			dclass_client lib
+lib:			libdclass.so libdclass.a
 
-dclass_client:		$(CLIENT_OBJS) main.o
-			$(CC) $(LDFLAGS) -o dclass_client $(CLIENT_OBJS) main.o $(LIBFLAGS)
+dclass_client:		libdclass.a main.o
+			$(CC) $(LDFLAGS) -o $@ main.o libdclass.a $(LIBFLAGS)
 
-libdclass.so:		$(CLIENT_OBJS)
-			$(CC) $(LDFLAGS) -shared -o libdclass.so $(CLIENT_OBJS)
+libdclass.so:		libdclass.a
+			$(CC) $(LDFLAGS) -shared -o $@ libdclass.a
 
 libdclass.a:		$(CLIENT_OBJS)
-			ar cr libdclass.a $(CLIENT_OBJS)
+			ar cr $@ $(CLIENT_OBJS)
 
 %.o:			%.c dtree_client.h openddr_client.h dclass_client.h
 			$(CC) $(CFLAGS) -c $< -o $@
