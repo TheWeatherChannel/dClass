@@ -59,6 +59,7 @@ sub vcl_hash {
 		hash_data(server.ip);
 	}
 
+    #use this if you are serving different device content on the same URL
 	hash_data(req.http.dclass_type);
 
 	return (hash);
