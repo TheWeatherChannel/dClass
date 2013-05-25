@@ -25,6 +25,10 @@ This means that multiple pattern indexes can be combined with their own custom
 classification language allowing for networked knowledge based classification
 while retaining near constant time performance.
 
+Please see the webClass project to see dClass in action:
+
+https://github.com/rezan/webClass
+
 
  PATTERNS
 
@@ -83,6 +87,11 @@ To integrate with the dClass API:
 
  ROADMAP
 
+Enhancements for 2.4
+
+  -Configurable v16 bit, v32 bit, and native addressing per index
+  -Better support for Unicode [1]
+
 Enhancements for 3.0
 
   -Realtime additions, modifications, and deletion
@@ -121,4 +130,7 @@ nodes and 8MB of general memory. Adjusting DTREE_DT_PACKED* will allow for more
 search nodes and increasing DTREE_M_MAX_SLABS will allow for more general use
 memory. Since the dtree data structure is memory pointer heavy, pointers have
 the option to be compressed down into 16bit or 32bit values.
+
+[1] Unicode can be supported by adding '%' to DTREE_HASH_TCHARS and using
+    percent encoding on your data.
 
