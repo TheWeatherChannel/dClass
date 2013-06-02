@@ -126,7 +126,7 @@ pattern searchable characters are defined in DTREE_HASH_SCHARS. These chars
 are word separators. Indexed US-ASCII print characters (0x20 thru 0x7E) which
 aren't pattern searchable are replaced with DTREE_PATTERN_ANY and can match on
 any character. All pattern matching is US-ASCII case insensitive. Extended
-non-separator character set recognition is supported via DTREE_HASH_TCHARS.
+non-separator character set recognition is supported via DTREE_HASH_TCHARS [1].
 
 Write operations on the index are not thread safe. Read operations are thread
 safe (with at most one writer). Read operations have the dclass index parameter
