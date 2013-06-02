@@ -38,7 +38,9 @@ client allows for the conversion of a DDR xml directory into a .dtree file and
 an API exists to dump the current index into a .dtree file.
 
 Please see the README in the dtree directory for detailed dtree pattern notes,
-examples, and tips (dtrees/README).
+examples, and tips:
+
+https://github.com/TheWeatherChannel/dClass/blob/master/dtrees/README
 
 
  AUTHORS
@@ -48,6 +50,11 @@ Reza Naghibi (reza.naghibi@yahoo.com)
 Special thanks:
 OpenDDR team, Anthony Watson, Eric Honer, Joe Pearson, Luke Kolin,
 Ivan Kozhuharov, Chris Hill, Chris McClellen, and The Weather Channel.
+
+
+ DCLASS VS GREP
+
+https://github.com/TheWeatherChannel/dClass/wiki/dClass-vs-grep
 
 
  OPENDDR (DEVICE MAP)
@@ -90,13 +97,13 @@ To integrate with the dClass API:
 Enhancements for 2.4
 
   -Configurable v16 bit, v32 bit, and native addressing per index
+  -Move certain index settings from global to configurable per index
   -Better support for Unicode [1]
 
 Enhancements for 3.0
 
   -Realtime additions, modifications, and deletion
   -Expanded regex support
-  -Remove index directives
 
 Beyond
 
