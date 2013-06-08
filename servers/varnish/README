@@ -1,6 +1,6 @@
 Tested with varnish 3.0.1 and 3.0.3
 
-run: make varnish
+run: make (in servers/src)
 copy libvmod_dclass.so to the varnish installation vmod directory:
 (lib/varnish/vmods)
 
