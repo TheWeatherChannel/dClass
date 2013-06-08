@@ -50,10 +50,14 @@
 
 
 //if enabled, this packs system pointers into 16/32 bits
+#ifndef DTREE_DT_PACKED
 #define DTREE_DT_PACKED         1
+#endif
 
 //if PACKED is enabled, uses 16bit pointers, otherwise 32bit
+#ifndef DTREE_DT_PACKED_16
 #define DTREE_DT_PACKED_16      1
+#endif
 
 #if DTREE_DT_PACKED
 
