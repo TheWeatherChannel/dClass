@@ -19,8 +19,8 @@ lib:			libdclass.so libdclass.a
 dclass_client:		libdclass.a main.o
 			$(CC) $(LDFLAGS) -o $@ main.o libdclass.a $(LIBFLAGS)
 
-libdclass.so:		libdclass.a
-			$(CC) $(LDFLAGS) -shared -o $@ libdclass.a
+libdclass.so:		$(CLIENT_OBJS)
+			$(CC) $(LDFLAGS) -shared -o $@ $(CLIENT_OBJS)
 
 libdclass.a:		$(CLIENT_OBJS)
 			ar cr $@ $(CLIENT_OBJS)
