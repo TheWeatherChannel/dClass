@@ -1,4 +1,10 @@
 *.o
-src/libdclass.so
-src/libdclass.a
+*.class
+vcc_if.*
+libdclass.so
+libdclass.a
+libvmod_dclass.so
 src/dclass_client
+java/dclass.jar
+java/dclass_java.h
+java/libdclassjava.so

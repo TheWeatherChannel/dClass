@@ -42,7 +42,6 @@ dclass_java.o:		jni/dclass_java.c dclass_java.h
 
 clean:
 			$(RM) *.a *.o dclass.jar dclass_java.h dclass$(SEP)*.class $(OUT)
-			$(MAKE) -C ../src/ -f ../src/Makefile clean
 
 test:			all
 			$(JAVA) -cp dclass.jar dclass.dClassMain
