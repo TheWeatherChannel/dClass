@@ -535,9 +535,6 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
 
         p=e;
 
-        if(len>=DTREE_DATA_BUFLEN)
-            len=DTREE_DATA_BUFLEN-1;
-
         if(strlen(t)!=len)
             dtree_printd(DTREE_PRINT_INITDTREE,"LOAD: ERROR: '%s' != %zu\n",t,len);
 
