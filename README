@@ -132,11 +132,11 @@ Write operations on the index are not thread safe. Read operations are thread
 safe (with at most one writer). Read operations have the dclass index parameter
 designated with a 'const'.
 
-Memory limits are tightly bounded. Default configuration allows for 65k search
-nodes and 8MB of general memory. Adjusting DTREE_DT_PACKED* will allow for more
-search nodes and increasing DTREE_M_MAX_SLABS will allow for more general use
-memory. Since the dtree data structure is memory pointer heavy, pointers have
-the option to be compressed down into 16bit or 32bit values.
+Memory limits are tightly bounded. Default 16bit configuration allows for 65k
+search nodes and 64MB of general memory. Adjusting DTREE_DT_PACKED* will allow
+for more search nodes and increasing DTREE_M_MAX_SLABS will allow for more
+general use memory. Since the dtree data structure is memory pointer heavy,
+pointers have the option to be compressed down into 16bit or 32bit values.
 
 [1] Unicode can be supported by adding '%' to DTREE_HASH_TCHARS and using
     percent encoding on your data.
