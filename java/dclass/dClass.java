@@ -126,7 +126,7 @@ public class dClass
     {
         Map<String,String> ret=new HashMap<String,String>();
 
-        if(dclass_index!=0)
+        if(dclass_index!=0 && s!=null)
         {
             long kv;
 

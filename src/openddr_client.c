@@ -142,6 +142,7 @@ dexit:
         fclose(f);
 
     dtree_free(&dev);
+    dtree_free(h);
     
     return -1;
 }
