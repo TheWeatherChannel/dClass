@@ -498,7 +498,7 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
             e=p;
             len=p-t;
 
-            if(*p==';' || *p==',' || *p=='=' || *p=='\n')
+            if((*p==';' && count<4) || ((*p==',' || *p=='=') && count>=4) || *p=='\n')
             {
                 if(!notrim)
                 {
@@ -509,13 +509,13 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
 
                     len=p-t;
                 }
-                if(*t=='\"' && *(p-1)=='\"')
+                if(*t==DTREE_PATTERN_DQUOTE && p>(t+1) && *(p-1)==DTREE_PATTERN_DQUOTE && *(p-2)!=DTREE_PATTERN_ESCAPE)
                 {
                     t++;
                     *(p-1)='\0';
                     len-=2;
                 }
-                else if(*t=='\"' && *p!='\n')
+                else if(*t==DTREE_PATTERN_DQUOTE && *p!='\n')
                 {
                     if(!notrim)
                         p=e;
@@ -651,22 +651,26 @@ static long dclass_write_tree(const dtree_dt_index *h,const dtree_dt_node *n,cha
     if(!n || !n->curr || depth>(DTREE_DATA_BUFLEN-1))
         return 0;
     
-    switch(n->data)
+    if(h->sflags & DTREE_S_FLAG_REGEX)
     {
-        case DTREE_PATTERN_ANY:
-            pp=n->prev;
-            dupn=DTREE_DT_GETPP(h,pp);
-            i=dtree_hash_char(n->data);
-            if(i==DTREE_HASH_ANY || (pp && dupn->nodes[i]!=n->curr))
-                break;
-        case DTREE_PATTERN_OPTIONAL:
-        case DTREE_PATTERN_SET_S:
-        case DTREE_PATTERN_SET_E:
-        case DTREE_PATTERN_GROUP_S:
-        case DTREE_PATTERN_GROUP_E:
-        case DTREE_PATTERN_ESCAPE:
-            path[depth]=DTREE_PATTERN_ESCAPE;
-            depth++;
+        switch(n->data)
+        {
+            case DTREE_PATTERN_ANY:
+                pp=n->prev;
+                dupn=DTREE_DT_GETPP(h,pp);
+                i=dtree_hash_char(n->data);
+                if(i==DTREE_HASH_ANY || (pp && dupn->nodes[i]!=n->curr))
+                    break;
+            case DTREE_PATTERN_OPTIONAL:
+            case DTREE_PATTERN_SET_S:
+            case DTREE_PATTERN_SET_E:
+            case DTREE_PATTERN_GROUP_S:
+            case DTREE_PATTERN_GROUP_E:
+            case DTREE_PATTERN_ESCAPE:
+            case DTREE_PATTERN_DQUOTE:
+                path[depth]=DTREE_PATTERN_ESCAPE;
+                depth++;
+        }
     }
 
     path[depth]=n->data;
@@ -713,15 +717,18 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
     
     s=(dclass_keyvalue*)n->payload;
     
-    fputc('\"',f);
+    fputc(DTREE_PATTERN_DQUOTE,f);
     
     fputs(path,f);
     
-    fputs("\";\"",f);
+    fputc(DTREE_PATTERN_DQUOTE,f);
+    fputc(';',f);
+    fputc(DTREE_PATTERN_DQUOTE,f);
     
     fputs(s->id,f);
     
-    fputs("\";",f);
+    fputc(DTREE_PATTERN_DQUOTE,f);
+    fputc(';',f);
 
     if(n->flags & DTREE_DT_FLAG_STRONG)
         fputc('S',f);
@@ -749,11 +756,11 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
     
     if(n->cparam)
     {
-        fputc('\"',f);
+        fputc(DTREE_PATTERN_DQUOTE,f);
         fputs(((dclass_keyvalue*)n->cparam)->id,f);
         if(n->dir)
             fprintf(f,":%d",n->dir);
-        fputc('\"',f);
+        fputc(DTREE_PATTERN_DQUOTE,f);
     }
     
     fputc(';',f);
@@ -762,14 +769,15 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
     {
         if(i)
             fputc(',',f);
-        fputc('\"',f);
+        fputc(DTREE_PATTERN_DQUOTE,f);
         fputs(s->keys[i],f);
-        fputc('\"',f);
+        fputc(DTREE_PATTERN_DQUOTE,f);
         if(s->values[i])
         {
-            fputs("=\"",f);
+            fputc('=',f);
+            fputc(DTREE_PATTERN_DQUOTE,f);
             fputs(s->values[i],f);
-            fputc('\"',f);
+            fputc(DTREE_PATTERN_DQUOTE,f);
         }
     }
     

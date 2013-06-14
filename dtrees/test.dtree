@@ -76,3 +76,7 @@ bbb;bbbbm;C50;ccc:10;b=before c,multi=true
 bbb;bbba;C130;ccc:-1;b=after c
 bbb;bbbam;C30;ccc:-10;b=after c,multi=true
 ccc;ccc;B;;
+
+del,del=del;delt;S;;var=value1;value2,v2=two
+
+"quote\";\"quote";quote;S;;test="\"value1\",\"value2\"",second="\""

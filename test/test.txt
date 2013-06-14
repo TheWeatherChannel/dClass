@@ -62,3 +62,5 @@ aaa bbb 5 4 3 2 ccc
 aaa bbb 5 4 3 2 ccc bbb
 aaa bbb 5 4 3 2 ccc 7 6 bbb
 aaa bb 5 4 3 2 ccc 7 6 bbb
+del,del=del
+quote";"quote

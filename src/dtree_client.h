@@ -140,6 +140,7 @@ typedef unsigned int packed_ptr;
 #define DTREE_PATTERN_GROUP_S   '('
 #define DTREE_PATTERN_GROUP_E   ')'
 #define DTREE_PATTERN_ESCAPE    '\\'
+#define DTREE_PATTERN_DQUOTE    '\"'
 
 
 //type defs
