@@ -81,6 +81,7 @@ dClass version:   "} + dclass.get_version() + {"
 
 dClass type:      "} + req.http.dclass_type + {"
 
+OpenDDR comment:  "} + dclass.get_comment() + {"
 OpenDDR id:       "} + req.http.dclass_openddr + {"
 OpenDDR device:   "} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"
 OpenDDR display:  "} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_ifield("displayHeight") + {"
@@ -91,6 +92,7 @@ OpenDDR tablet:   "} + dclass.get_field("is_tablet") + {"
 OpenDDR crawler:  "} + dclass.get_field("is_crawler") + {"
 OpenDDR desktop:  "} + dclass.get_field("is_desktop") + {"
 
+browser comment:  "} + dclass.get_comment_p(1) + {"
 browser id:       "} + req.http.dclass_browser + {"
 browser name:     "} + dclass.get_field_p("browser",1) + {"
 browser ver:      "} + dclass.get_ifield_p("version",1) + {"

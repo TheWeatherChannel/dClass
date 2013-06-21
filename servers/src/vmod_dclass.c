@@ -195,6 +195,29 @@ int vmod_get_ifield_p(struct sess *sp,struct vmod_priv *priv,const char *key,int
     return 0;
 }
 
+const char *vmod_get_comment(struct sess *sp, struct vmod_priv *priv)
+{
+    return vmod_get_comment_p(sp,priv,0);
+}
+
+const char *vmod_get_comment_p(struct sess *sp,struct vmod_priv *priv,int p)
+{
+    const char *ret=NULL;
+    vmod_dtree_container *dtc;
+    
+    if(p<0 || p>=VMOD_DTREE_SIZE)
+        return "";
+    
+    dtc=(vmod_dtree_container*)priv->priv;
+    
+    ret=dtc->heads[p].dti.comment;
+    
+    if(ret)
+        return ret;
+    else
+        return "";
+}
+
 //gets a dc from the dc_list
 static vmod_dclass_container *dcc_get(struct sess *sp,vmod_dtree_container *dtc)
 {
