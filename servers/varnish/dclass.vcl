@@ -120,6 +120,7 @@ req.http.dclass_cb + {"{
 "dclass_version":""} + dclass.get_version() + {"",
 "openddr_id":""} + req.http.dclass_openddr + {"",
 "openddr_type":""} + req.http.dclass_type + {"",
+"openddr_comment":""} + dclass.get_comment() + {"",
 "openddr_device":""} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"",
 "openddr_display":""} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_ifield("displayHeight") + {"",
 "openddr_input":""} + dclass.get_field("inputDevices") + {"",
@@ -129,6 +130,7 @@ req.http.dclass_cb + {"{
 "openddr_crawler":""} + dclass.get_field("is_crawler") + {"",
 "openddr_desktop":""} + dclass.get_field("is_desktop") + {"",
 "browser_id":""} + req.http.dclass_browser + {"",
+"browser_comment":""} + dclass.get_comment_p(1) + {"",
 "browser_name":""} + dclass.get_field_p("browser",1) + {"",
 "browser_ver":""} + dclass.get_ifield_p("version",1) + {"",
 "browser_os":""} + dclass.get_field_p("os",1) + {""
