@@ -1,4 +1,4 @@
-#compile flags 
+#compile flags
 CC=gcc
 CFLAGS=-O3 -Wall -fPIC
 LDFLAGS=
@@ -11,6 +11,7 @@ CLIENT_OBJS=dtree_core.o openddr_client.o dclass_file.o dtree_mem.o dtree_util.o
 #os config
 NEED_LIBRT=$(shell echo 'int main() {}' | $(CC) -x c - -lrt -o /dev/null > /dev/null 2>&1 && echo -lrt)
 
+.PHONY : clean all lib
 
 #targets
 all:			dclass_client lib
