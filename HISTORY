@@ -1,3 +1,6 @@
+2.2.3
+  -Updated OpenDDR/DeviceMap (1.20)
+
 2.2.2
   -Increased default memory bounds
   -Stricter parsing

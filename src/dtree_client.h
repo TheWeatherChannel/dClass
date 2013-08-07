@@ -118,7 +118,7 @@ typedef unsigned int packed_ptr;
 #define DTREE_S_MIN_DIR         -127
 #define DTREE_S_MAX_DIR         127
 
-#define DTREE_M_MAX_SLABS       128
+#define DTREE_M_MAX_SLABS       512
 #define DTREE_M_SLAB_SIZE       (1024*512)
 #define DTREE_M_SERROR          "serror"
 #define DTREE_M_LOOKUP_CACHE    6

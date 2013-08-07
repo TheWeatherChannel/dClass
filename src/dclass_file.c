@@ -577,6 +577,9 @@ static void dclass_parse_fentry(char *buf,dtree_file_entry *fe,int notrim)
             fe->p[fe->count].val_len=len;
             
             fe->count++;
+
+            if(fe->count>=DTREE_DATA_MKEYS)
+                break;
             
             key=NULL;
         }
