@@ -1,23 +1,34 @@
 CC=gcc
 CFLAGS=-O3 -Wall -fPIC -m$(BIT) -D_DTREE_NO_TIMESPEC=1 -DDTREE_DT_PACKED_16=0
 LDFLAGS=-m$(BIT)
+
+UOS=$(shell uname -s)
+
 OS=linux
-#OS=darwin
 BIT=$(shell getconf LONG_BIT)
-ARCH=$(shell arch)
+#ARCH=$(shell arch)
+ARCH=x86_$(BIT)
+
+ifeq ($(UNAME_S),Darwin)
+  OS=osx
+  OUTEXT=dylib
+endif
+
+OUTPRE=libdclassjava
+OUTEXT=so
+OUT=$(OUTPRE).$(OUTEXT)
+
 JAVAI=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(OS)
 INCLUDE=-I. -I../src $(JAVAI)
+
 JAVAC=javac
 JAVAH=javah
 JAVA=java
 JAR=jar
+
 RM=rm -rf
 CP=cp
 SEP=/
-OUTPRE=libdclassjava
-OUTEXT=so
-#OUTEXT=dylib
-OUT=$(OUTPRE).$(OUTEXT)
 
 all:			$(OUT) dclass.jar
 
@@ -26,7 +37,7 @@ dclass.jar:		dclass/dClassLoader.class dclass/dClass.class dclass/dClassMain.cla
 
 $(OUT):			libdclass.a dclass_java.o
 			$(CC) -shared $(LDFLAGS) -o $(OUT) dclass_java.o libdclass.a
-			$(CP) $(OUT) lib$(SEP)dclassjava$(OS)$(ARCH).$(OUTEXT)
+			$(CP) $(OUT) lib$(SEP)dclassjava_$(OS)_$(ARCH).$(OUTEXT)
 
 libdclass.a:		
 			$(MAKE) -C ../src/ -f ../src/Makefile "CFLAGS=$(CFLAGS)" "LDFLAGS=$(LDFLAGS)" lib
