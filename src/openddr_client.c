@@ -60,7 +60,7 @@ int openddr_load_resources(dclass_index *di,const char *path)
     h->sflags=DTREE_S_FLAG_REGEX|DTREE_S_FLAG_DUPS;
     
     //string and device cache
-    dtree_alloc_string(h,"unknown",7);
+    di->error.id=dtree_alloc_string(h,"unknown",7);
     
     if(!openddr_alloc_kvd(h,&dev,"genericPhone") || !openddr_alloc_kvd(h,&dev,"genericTouchPhone") ||
             !openddr_alloc_kvd(h,&dev,"desktopDevice"))

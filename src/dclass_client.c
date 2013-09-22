@@ -32,7 +32,6 @@ dclass_cnode;
 
 char **dclass_get_value_pos(dclass_keyvalue*,char*);
 static const dclass_keyvalue *dclass_get_kverror(const dclass_index*);
-static char *dclass_error_string(const dtree_dt_index*);
 
 extern unsigned int dtree_hash_char(char);
 extern char *dtree_node_path(const dtree_dt_index*,const dtree_dt_node*,char*);
@@ -267,19 +266,7 @@ char **dclass_get_value_pos(dclass_keyvalue *kvd,char *key)
 //returns an error kvdata
 static const dclass_keyvalue *dclass_get_kverror(const dclass_index *di)
 {
-    if(!di->error.id)
-        ((dclass_index*)di)->error.id=dclass_error_string(&di->dti);
-    
     return &di->error;
-}
-
-//show first string on error
-static char *dclass_error_string(const dtree_dt_index *h)
-{
-    if(DTREE_M_LOOKUP_CACHE && h->dc_cache[0])
-        return h->dc_cache[0];
-    
-    return DTREE_M_SERROR;
 }
 
 //gets the id for a generic payload
@@ -302,6 +289,8 @@ const char *dclass_get_version()
 void dclass_init_index(dclass_index *di)
 {
     memset(&di->error,0,sizeof(dclass_keyvalue));
+
+    di->error.id=DTREE_M_SERROR;
     
     dtree_init_index(&di->dti);
 }
@@ -311,6 +300,6 @@ void dclass_free(dclass_index *di)
 {
     dtree_free(&di->dti);
     
-    memset(&di->error,0,sizeof(dclass_keyvalue));
+    dclass_init_index(di);
 }
 

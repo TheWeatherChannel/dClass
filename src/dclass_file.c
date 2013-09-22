@@ -463,6 +463,11 @@ int dclass_load_file(dclass_index *di,const char *path)
     
     dtree_free(&ids);
     fclose(f);
+
+    if(!di->error.id || !strcmp(DTREE_M_SERROR,di->error.id)) {
+        if(DTREE_M_LOOKUP_CACHE && h->dc_cache[0])
+            di->error.id=h->dc_cache[0];
+    }
     
     return lines;
     
