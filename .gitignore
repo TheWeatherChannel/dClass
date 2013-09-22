@@ -5,6 +5,7 @@ libdclass.so
 libdclass.a
 libvmod_dclass.so
 src/dclass_client
+src/dclass_client.exe
 java/dclass.jar
 java/dclass_java.h
 java/libdclassjava.so

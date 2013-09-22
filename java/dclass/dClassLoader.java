@@ -14,6 +14,8 @@ public class dClassLoader
 
         String os=detectOS();
 
+        System.out.println("os: '"+os+"'");
+
         if(!os.isEmpty() && loadLibResource("/lib/",lib,os))
             return true;
 
@@ -101,14 +103,18 @@ public class dClassLoader
     private static String detectOS()
     {
         String os=System.getProperty("os.name").toLowerCase();
-        String bit=System.getProperty("sun.arch.data.model");
+        String arch=System.getProperty("os.arch").toLowerCase();
+
+        if(arch.equals("amd64")) {
+            arch="x86_64";
+        }
 
         if(os.contains("windows"))
-            return "win"+bit+".dll";
+            return "win"+arch+".dll";
         else if(os.contains("linux"))
-            return "linux"+bit+".so";
+            return "linux"+arch+".so";
         else if(os.contains("mac os"))
-            return "darwin"+bit+".dylib";
+            return "darwin"+arch+".dylib";
 
         return "";
     }

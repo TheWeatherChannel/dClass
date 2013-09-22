@@ -1,9 +1,10 @@
 CC=gcc
-CFLAGS=-O3 -Wall -fPIC -m$(ARCH) -D_DTREE_NO_TIMESPEC=1 -DDTREE_DT_PACKED_16=0
-LDFLAGS=-m$(ARCH)
+CFLAGS=-O3 -Wall -fPIC -m$(BIT) -D_DTREE_NO_TIMESPEC=1 -DDTREE_DT_PACKED_16=0
+LDFLAGS=-m$(BIT)
 OS=linux
 #OS=darwin
-ARCH=$(shell getconf LONG_BIT)
+BIT=$(shell getconf LONG_BIT)
+ARCH=$(shell arch)
 JAVAI=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(OS)
 INCLUDE=-I. -I../src $(JAVAI)
 JAVAC=javac
@@ -18,9 +19,9 @@ OUTEXT=so
 #OUTEXT=dylib
 OUT=$(OUTPRE).$(OUTEXT)
 
-all:			dclass.jar
+all:			$(OUT) dclass.jar
 
-dclass.jar:		dclass/dClassLoader.class dclass/dClass.class dclass/dClassMain.class $(OUT)
+dclass.jar:		dclass/dClassLoader.class dclass/dClass.class dclass/dClassMain.class
 			$(JAR) cvf dclass.jar dclass/*.class lib
 
 $(OUT):			libdclass.a dclass_java.o
