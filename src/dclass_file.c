@@ -183,6 +183,16 @@ int dclass_load_file(dclass_index *di,const char *path)
                         dtree_printd(DTREE_PRINT_INITDTREE,"INIT FORCE: notrim\n");
                     }
                     break;
+                //kv error id
+                case '@':
+                    p++;
+                    for(s=p;*p;p++)
+                    {
+                        if(*p=='\n')
+                            break;
+                    }
+                    *p='\0';
+                    di->error.id=dtree_alloc_string(h,s,p-s+1);
                 //comment
                 default:
                     if(!h->comment)
@@ -626,6 +636,12 @@ int dclass_write_file(const dclass_index *di,const char *outFile)
     if(h->sflags & DTREE_S_FLAG_DUPS)
         fputs("#$dups\n",f);
     
+    if(di->error.id && strcmp(DTREE_M_SERROR,di->error.id)) {
+        fputs("#@",f);
+        fputs(di->error.id,f);
+        fputc('\n',f);
+    }
+
     //dump cache
     if(h->dc_cache[0])
     {

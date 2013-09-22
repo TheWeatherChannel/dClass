@@ -28,11 +28,15 @@ This allows for partial pattern matches in non regex searches.
 #$notrim
 This does not trim extra whitespace around pattern definitions.
 
+#@error_id
+This sets the id for the kv returned on error.
+
 The dClass index supports string caching. Cached strings are only allocated
 once and re-referenced there after. The order of strings in this directive (and
 the order of pattern definitions) are used to break ties in patterns with the
 same rank. The size of the cache is set using DTREE_M_LOOKUP_CACHE. Also, the
-first string allocated will be returned as the error id with no key values.
+first string allocated will be returned as the error id with no key values if
+the error id directive is not used.
 
 #!unknown,string1,groupa,string ab3
 
@@ -51,8 +55,8 @@ your attribute in double quotes. Second, you can set the notrim directive.
 
 pattern
 
-This is the pattern to match. Patterns must begin and end on a separator
-character boundary (DTREE_HASH_SCHARS, greater than DTREE_HASH_SEP, etc).
+This is the pattern to match. Patterns must begin and end on a token (non
+separator) character boundary (DTREE_HASH_TCHARS or less than DTREE_HASH_SEP).
 Patterns may contain separator characters. If the regex directive is used, the
 following regex is supported:
 
