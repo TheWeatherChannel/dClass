@@ -111,8 +111,6 @@ public class dClassLoader
             arch="x86_64";
         else if(arch.equals("x86") || arch.equals("i686") || arch.equals("i386"))
             arch="x86_32";
-        else if(arch.startsWith("arm"))
-            arch="arm_32";
 
         if(os.contains("windows"))
             return "_win_"+arch+".dll";
