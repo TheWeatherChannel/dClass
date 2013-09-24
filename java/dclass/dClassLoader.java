@@ -14,8 +14,6 @@ public class dClassLoader
 
         String os=detectOS();
 
-        System.out.println("os: '"+os+"'");
-
         if(!os.isEmpty() && loadLibResource("/lib/",lib,os))
             return true;
 
@@ -105,12 +103,12 @@ public class dClassLoader
         String os=System.getProperty("os.name").toLowerCase();
         String arch=System.getProperty("os.arch").toLowerCase();
 
-        System.out.println("os.name='"+os+"' os.arch='"+arch+"'");
-
         if(arch.equals("amd64"))
             arch="x86_64";
         else if(arch.equals("x86") || arch.equals("i686") || arch.equals("i386"))
             arch="x86_32";
+        else if(arch.startsWith("armv7"))
+            arch="armv7";
 
         if(os.contains("windows"))
             return "_win_"+arch+".dll";

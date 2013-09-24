@@ -30,7 +30,9 @@ RM=rm -rf
 CP=cp
 SEP=/
 
-all:			$(OUT) dclass.jar
+all:			dclass.jar
+
+lib:			$(OUT)
 
 dclass.jar:		dclass/dClassLoader.class dclass/dClass.class dclass/dClassMain.class
 			$(JAR) cvf dclass.jar dclass/*.class lib
