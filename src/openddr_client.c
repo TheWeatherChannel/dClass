@@ -143,6 +143,7 @@ dexit:
 
     dtree_free(&dev);
     dtree_free(h);
+    dclass_init_index(di);
     
     return -1;
 }
