@@ -169,6 +169,6 @@ public class dClassMain
 
     public static String getTime(long diffn)
     {
-        return diffn/(1000*1000*1000)+"s "+diffn/(1000*1000)%(1000*1000)+"ms "+diffn/1000%1000+"us "+diffn%1000+"ns";
+        return diffn/(1000*1000*1000)+"s "+diffn/(1000*1000)%1000+"ms "+diffn/1000%1000+"us "+diffn%1000+"ns";
     }
 }
