@@ -68,6 +68,9 @@ following regex is supported:
  [] - a set of characters, only 1 of the set needs to match
  () - a group of characters, the whole group needs to match
 
+The longest pattern is always matched. Token characters are always matched
+before regex characters.
+
 
 id
 
