@@ -103,9 +103,13 @@
 "msie 8";msie8;W;;browser="Internet Explorer",version=8000,os=Windows
 "msie 9";msie9;W;;browser="Internet Explorer",version=9000,os=Windows
 "msie 10";msie10;W;;browser="Internet Explorer",version=10000,os=Windows
-"msie 11";msie10;W;;browser="Internet Explorer",version=11000,os=Windows
-"ie 11";ie10;W;;browser="Internet Explorer",version=11000,os=Windows
+"msie 11";msie11;W;;browser="Internet Explorer",version=11000,os=Windows
+"ie 11";ie11;W;;browser="Internet Explorer",version=11000,os=Windows
 "msie";msie;N;;browser="Internet Explorer",version=0,os=Windows
+"trident";msiet;N;;browser="Internet Explorer",version=0,os=Windows
+"trident";wtrident;B;windows;
+"rv:11";msiet11;C;wtrident;browser="Internet Explorer",version=11000,os=Windows
+"rv:12";msiet12;C;wtrident;browser="Internet Explorer",version=12000,os=Windows
 
 #chrome
 "chrome/10";chrome10l;C;x11;browser=Chrome,version=10000,os=Linux
@@ -355,5 +359,7 @@
 "version/5";safari5m;C;safarim;browser=Safari,version=5000,os=Macintosh
 "version/6";safari6w;C;safariw;browser=Safari,version=6000,os=Windows
 "version/6";safari6m;C;safarim;browser=Safari,version=6000,os=Macintosh
-"version/7";safari7w;C;safari;browser=Safari,version=7000,os=Windows
-"version/7";safari7m;C;safari;browser=Safari,version=7000,os=Macintosh
+"version/7";safari7w;C;safariw;browser=Safari,version=7000,os=Windows
+"version/7";safari7m;C;safarim;browser=Safari,version=7000,os=Macintosh
+"version/8";safari8w;C;safariw;browser=Safari,version=8000,os=Windows
+"version/8";safari8m;C;safarim;browser=Safari,version=8000,os=Macintosh
