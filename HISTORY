@@ -1,3 +1,6 @@
+2.2.5
+  -Updated OpenDDR/DeviceMap (1.23) and browser detection
+
 2.2.4
   -Updated OpenDDR/DeviceMap (1.21)
   -Java JNI loader changes
