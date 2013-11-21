@@ -88,6 +88,7 @@
           <value>android</value>
           <value>blackberry</value>
           <value>bb10</value>
+          <value>tizen</value>
         </list>
       </device>
       <device id="desktopDevice">
