@@ -5,20 +5,22 @@ LDFLAGS=-m$(BIT)
 UOS=$(shell uname -s)
 
 OS=linux
+OSI=$(OS)
 BIT=$(shell getconf LONG_BIT)
 #ARCH=$(shell arch)
 ARCH=x86_$(BIT)
+OUTEXT=so
 
-ifeq ($(UNAME_S),Darwin)
+ifeq ($(UOS),Darwin)
   OS=osx
+  OSI=darwin
   OUTEXT=dylib
 endif
 
 OUTPRE=libdclassjava
-OUTEXT=so
 OUT=$(OUTPRE).$(OUTEXT)
 
-JAVAI=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(OS)
+JAVAI=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(OSI)
 INCLUDE=-I. -I../src $(JAVAI)
 
 JAVAC=javac

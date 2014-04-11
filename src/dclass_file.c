@@ -760,7 +760,7 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
     {
         fputc('W',f);
         if(n->rank)
-            fprintf(f,"%hd",n->rank);
+            fprintf(f,"%hd",(short int)n->rank);
     }
     else if(n->flags & DTREE_DT_FLAG_BCHAIN)
         fputc('B',f);
@@ -768,13 +768,13 @@ static void dclass_write_node(const dtree_dt_node *n,char *path,FILE *f)
     {
         fputc('C',f);
         if(n->rank)
-            fprintf(f,"%hd",n->rank);
+            fprintf(f,"%hd",(short int)n->rank);
     }
     else
         fputc('N',f);
     
     if(n->pos)
-        fprintf(f,":%hd",n->pos);
+        fprintf(f,":%hd",(short int)n->pos);
 
     fputc(';',f);
     
