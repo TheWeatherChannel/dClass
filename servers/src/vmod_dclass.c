@@ -284,9 +284,7 @@ void vmod_free_dtc(void *data)
 
     dtc=(vmod_dclass_container*)data;
 
-#if !_DCLASS_VARNISH4
     free(dtc->vmod_u_list);
-#endif
     
     for(i=0;i<VMOD_DTREE_SIZE;i++)
         dclass_free(&dtc->heads[i]);
