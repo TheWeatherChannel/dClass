@@ -9,10 +9,9 @@ VCFLAGS=$(CFLAGS) -I$(VARNISH_SRC)/include -I$(VARNISH_SRC) -I../../src
 PYTHON=python
 VMODPY=$(VARNISH_SRC)/lib/libvmod_std/vmod.py
 VMODVCC=vmod_dclass.vcc
-VMODOUT=libvmod_dclass.so
 
 #varnish4
-VARNISH4=0
+VARNISH4=1
 VARNISH4_PREFIX=/some/path/share/varnish4
 VARNISH4_SRC=/some/path/varnish/varnish-4.0.0
 
@@ -20,15 +19,14 @@ ifeq ($(VARNISH4),1)
   VMODPY=$(VARNISH4_PREFIX)/share/varnish/vmodtool.py
   VCFLAGS=$(CFLAGS) -I$(VARNISH4_PREFIX)/share/varnish/include -I$(VARNISH4_SRC) -I$(VARNISH4_PREFIX)/include/varnish -I../../src -D_DCLASS_VARNISH4=1
   VMODVCC=vmod_dclass4.vcc
-  VMODOUT=libvmod_dclass4.so
 endif
 
 #targets
 all:			varnish
-varnish:		$(VMODOUT)
+varnish:		libvmod_dclass.so
 
-$(VMODOUT):		libdclass.a vcc_if.o vmod_dclass.o
-			$(CC) -shared -o $(VMODOUT) vcc_if.o vmod_dclass.o libdclass.a
+libvmod_dclass.so:	libdclass.a vcc_if.o vmod_dclass.o
+			$(CC) -shared -o libvmod_dclass.so vcc_if.o vmod_dclass.o libdclass.a
 
 vcc_if.o:		vcc_if.c vcc_if.h
 			$(CC) $(VCFLAGS) -c vcc_if.c -o vcc_if.o
