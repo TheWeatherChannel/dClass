@@ -12,7 +12,7 @@ VMODVCC=vmod_dclass.vcc
 VMODOUT=libvmod_dclass.so
 
 #varnish4
-VARNISH4=1
+VARNISH4=0
 VARNISH4_PREFIX=/some/path/share/varnish4
 VARNISH4_SRC=/some/path/varnish/varnish-4.0.0
 

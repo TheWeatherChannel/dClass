@@ -1,9 +1,11 @@
 *.o
 *.class
+*.rst
 vcc_if.*
 libdclass.so
 libdclass.a
 libvmod_dclass.so
+libvmod_dclass4.so
 src/dclass_client
 src/dclass_client.exe
 java/dclass.jar

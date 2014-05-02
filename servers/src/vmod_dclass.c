@@ -57,7 +57,7 @@ typedef struct
 {
     dclass_index heads[VMOD_DTREE_SIZE];
     vmod_user_container *vmod_u_list;
-    int vmod_u_list_size;
+    vid_t vmod_u_list_size;
     pthread_mutex_t vmod_u_list_mutex;
 }
 vmod_dclass_container;
@@ -238,7 +238,7 @@ static vmod_user_container *uc_get(vctx *sp,vmod_dclass_container *dtc)
     AZ(pthread_mutex_lock(&dtc->vmod_u_list_mutex));
 
 #if _DCLASS_VARNISH4
-    id=1;
+    id=sp->req->sp->fd;
     xid=sp->req->sp->vxid;
 #else
     id=sp->id;
