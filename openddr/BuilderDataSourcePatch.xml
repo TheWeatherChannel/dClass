@@ -89,6 +89,8 @@
           <value>blackberry</value>
           <value>bb10</value>
           <value>tizen</value>
+          <value>Mozilla/5.0 .Mobile</value>
+          <value>Mozilla/5.0 .Tablet</value>
         </list>
       </device>
       <device id="desktopDevice">
