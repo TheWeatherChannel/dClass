@@ -1,4 +1,5 @@
--OSX cleanup, tested with nginx 1.6.0
+2.2.10
+  -cleanups, varnish4, pattern patches, tested with nginx 1.6.0
 
 2.2.9
   -Updated OpenDDR/DeviceMap (1.27)
