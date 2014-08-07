@@ -44,16 +44,16 @@ int main(int argc,char **args)
     for(i=1;i<argc;i++)
     {
         //-l [dtree file]
-        if(!strcmp(args[i],"-l") && argc>(++i))
-            loadFile=args[i];
+        if(!strcmp(args[i],"-l") && argc>(i+1))
+            loadFile=args[++i];
         //-o [output dtree file]
-        else if(!strcmp(args[i],"-o") && argc>(++i))
-            outFile=args[i];
+        else if(!strcmp(args[i],"-o") && argc>(i+1))
+            outFile=args[++i];
         //-m [open ddr resource dir]
-        else if(!strcmp(args[i],"-d") && argc>(++i))
+        else if(!strcmp(args[i],"-d") && argc>(i+1))
         {
             openddr=1;
-            loadFile=args[i];
+            loadFile=args[++i];
         }
         else if(!strncmp(args[i],"-h",2) || !strncmp(args[i],"--h",3))
         {
