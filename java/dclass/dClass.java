@@ -46,8 +46,6 @@ public class dClass
         return statnodesize();
     }
 
-    private dClass() { }
-
     public dClass(String s)
     {
         path=s;
@@ -158,6 +156,7 @@ public class dClass
             free(dclass_index);
     }
 
+    @Override
     protected void finalize() throws Throwable
     {
         free();
