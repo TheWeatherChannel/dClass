@@ -1,3 +1,5 @@
+vcl 4.0;
+
 import dclass;
 #import urlcode;
 
@@ -43,9 +45,9 @@ sub vcl_recv {
 
 	# /uadiag commands
 	if(req.url ~ "^/uadiag.js"){
-		error 849 "uadiag.js";
+		return (synth(849,"uadiag.js"));
 	} else if(req.url ~ "^/uadiag"){
-		error 848 "uadiag";
+		return (synth(848,"uadiag"));
 	}
 }
 
@@ -59,18 +61,18 @@ sub vcl_hash {
 		hash_data(server.ip);
 	}
 
-    #use this if you are serving different device content on the same URL
+	#use this if you are serving different device content on the same URL
 	hash_data(req.http.dclass_type);
 
-	return (hash);
+	return (lookup);
 }
 
-sub vcl_error {
+sub vcl_synth {
 	# plain text ua diag
-	if(obj.status == 848){
-		set obj.status = 200;
-		set obj.http.Content-Type = "text/html; charset=utf-8";
-		synthetic
+	if(resp.status == 848){
+		set resp.status = 200;
+		set resp.http.Content-Type = "text/html; charset=utf-8";
+		synthetic(
 {"<html><title>UADIAG</title>
 <body>
 <h1>UADIAG</h1>
@@ -99,22 +101,22 @@ browser ver:      "} + dclass.get_ifield_p("version",1) + {"
 browser os:       "} + dclass.get_field_p("os",1) + {"
 </pre>
 </body>
-</html>"};
+</html>"});
 		return(deliver);
 	}
 	# json ua diag with optional jsonp callback parameter
-	else if(obj.status == 849){
-		set obj.status = 200;
+	else if(resp.status == 849){
+		set resp.status = 200;
 		set req.http.dclass_cb = "";
 		set req.http.dclass_cbe = "";
 		if(req.url ~ "[^\w]callback=\w+"){
-			set obj.http.Content-Type = "application/javascript; charset=utf-8";
+			set resp.http.Content-Type = "application/javascript; charset=utf-8";
 			set req.http.dclass_cb = regsub(req.url,"^.*[^\w]callback=(\w+).*","\1(");
 			set req.http.dclass_cbe = ");";
 		} else {
-			set obj.http.Content-Type = "application/json; charset=utf-8";
+			set resp.http.Content-Type = "application/json; charset=utf-8";
 		}
-		synthetic
+		synthetic(
 req.http.dclass_cb + {"{
 "user_agent":""} + req.http.User-Agent + {"",
 "dclass_version":""} + dclass.get_version() + {"",
@@ -134,7 +136,7 @@ req.http.dclass_cb + {"{
 "browser_name":""} + dclass.get_field_p("browser",1) + {"",
 "browser_ver":""} + dclass.get_ifield_p("version",1) + {"",
 "browser_os":""} + dclass.get_field_p("os",1) + {""
-}"} + req.http.dclass_cbe;
+}"} + req.http.dclass_cbe);
 		return(deliver);
 	}
 }

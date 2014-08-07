@@ -20,63 +20,74 @@
 #include "dclass_client.h"
 
 #include "vrt.h"
+
+#if _DCLASS_VARNISH4
+#include "cache/cache.h"
+#else
 #include "bin/varnishd/cache.h"
+#endif
+
 #include "vcc_if.h"
 
 
 #define VMOD_DTREE_SIZE    4
 
 
+#if _DCLASS_VARNISH4
+typedef const struct vrt_ctx vctx;
+typedef int vid_t;
+typedef uint32_t vxid_t;
+#else
+typedef struct sess vctx;
+typedef const char* VCL_STRING;
+typedef int VCL_INT;
+typedef int vid_t;
+typedef unsigned vxid_t;
+#endif
+
+
 typedef struct
 {
-    unsigned xid;
+    vxid_t xid;
     dclass_keyvalue *kvd[VMOD_DTREE_SIZE];
 }
-vmod_dclass_container;
+vmod_user_container;
 
 typedef struct
 {
     dclass_index heads[VMOD_DTREE_SIZE];
-    
-    vmod_dclass_container *vmod_dc_list;
-    int vmod_dc_list_size;
-    pthread_mutex_t vmod_dc_list_mutex;
+    vmod_user_container *vmod_u_list;
+    vid_t vmod_u_list_size;
+    pthread_mutex_t vmod_u_list_mutex;
 }
-vmod_dtree_container;
+vmod_dclass_container;
 
 
 void vmod_free_dtc(void*);
-static vmod_dclass_container *dcc_get(struct sess*,vmod_dtree_container*);
+
+static vmod_user_container *uc_get(vctx*,vmod_dclass_container*);
 
 
 //inits a dtc, stores it in PRIV_VCL, inits dc_list
 int init_function(struct vmod_priv *priv, const struct VCL_conf *conf)
 {
-    int i,j;
-    vmod_dtree_container *dtc;
+    int i;
+    vmod_dclass_container *dtc;
     
-    dtc=malloc(sizeof(vmod_dtree_container));
+    dtc=malloc(sizeof(vmod_dclass_container));
     
     AN(dtc);
-    
-    pthread_mutex_init(&dtc->vmod_dc_list_mutex,NULL);
     
     for(i=0;i<VMOD_DTREE_SIZE;i++)
         dclass_init_index(&dtc->heads[i]);
 
-    dtc->vmod_dc_list_size=256;
+    pthread_mutex_init(&dtc->vmod_u_list_mutex,NULL);
     
-    dtc->vmod_dc_list=malloc(dtc->vmod_dc_list_size*sizeof(vmod_dclass_container));
+    dtc->vmod_u_list_size=256;
     
-    AN(dtc->vmod_dc_list);
+    dtc->vmod_u_list=calloc(sizeof(vmod_user_container),dtc->vmod_u_list_size);
     
-    for (i=0;i<dtc->vmod_dc_list_size;i++)
-    {
-        for(j=0;j<VMOD_DTREE_SIZE;j++)
-            dtc->vmod_dc_list[i].kvd[j]=NULL;
-        
-        dtc->vmod_dc_list[i].xid=0;
-    }
+    AN(dtc->vmod_u_list);
     
     priv->priv=dtc;
     priv->free=vmod_free_dtc;
@@ -84,23 +95,23 @@ int init_function(struct vmod_priv *priv, const struct VCL_conf *conf)
     return 0;
 }
 
-void vmod_init_dclass(struct sess *sp,struct vmod_priv *priv,const char *dtree_loc)
+void vmod_init_dclass(vctx *sp,struct vmod_priv *priv,VCL_STRING dtree_loc)
 {
     vmod_init_dclass_p(sp,priv,dtree_loc,0);
 }
 
 //inits a dclass dtree
-void vmod_init_dclass_p(struct sess *sp,struct vmod_priv *priv,const char *dtree_loc,int p)
+void vmod_init_dclass_p(vctx *sp,struct vmod_priv *priv,VCL_STRING dtree_loc,VCL_INT p)
 {
     int ret;
-    vmod_dtree_container *dtc;
+    vmod_dclass_container *dtc;
     
     if(p<0 || p>=VMOD_DTREE_SIZE)
         return;
     
-    dtc=(vmod_dtree_container*)priv->priv;
+    dtc=(vmod_dclass_container*)priv->priv;
     
-    printf("vmod_init_dtree: loading new dtree: %d:'%s'\n",p,dtree_loc);
+    printf("vmod_init_dtree: loading new dtree: %d:'%s'\n",(int)p,dtree_loc);
     
     ret=dclass_load_file(&dtc->heads[p],(char*)dtree_loc);
     
@@ -108,28 +119,28 @@ void vmod_init_dclass_p(struct sess *sp,struct vmod_priv *priv,const char *dtree
         openddr_load_resources(&dtc->heads[p],(char*)dtree_loc);
 }
 
-const char *vmod_classify(struct sess *sp, struct vmod_priv *priv, const char *str)
+VCL_STRING vmod_classify(vctx *sp, struct vmod_priv *priv, VCL_STRING str)
 {
     return vmod_classify_p(sp,priv,str,0);
 }
 
 //classifies a string
-const char *vmod_classify_p(struct sess *sp,struct vmod_priv *priv,const char *str,int p)
+VCL_STRING vmod_classify_p(vctx *sp,struct vmod_priv *priv,VCL_STRING str,VCL_INT p)
 {
     dclass_keyvalue *kvd;
-    vmod_dtree_container *dtc;
-    vmod_dclass_container *dcc;
+    vmod_dclass_container *dtc;
+    vmod_user_container *uc;
     
     if(p<0 || p>=VMOD_DTREE_SIZE)
         return NULL;
     
-    dtc=(vmod_dtree_container*)priv->priv;
+    dtc=(vmod_dclass_container*)priv->priv;
     
-    dcc=dcc_get(sp,dtc);
+    uc=uc_get(sp,dtc);
     
     kvd=(dclass_keyvalue*)dclass_classify(&dtc->heads[p],str);
     
-    dcc->kvd[p]=kvd;
+    uc->kvd[p]=kvd;
     
     if(!kvd)
         return NULL;
@@ -137,26 +148,25 @@ const char *vmod_classify_p(struct sess *sp,struct vmod_priv *priv,const char *s
         return kvd->id;
 }
 
-const char *vmod_get_field(struct sess *sp, struct vmod_priv *priv, const char *key)
+VCL_STRING vmod_get_field(vctx *sp, struct vmod_priv *priv, VCL_STRING key)
 {
     return vmod_get_field_p(sp,priv,key,0);
 }
 
-const char *vmod_get_field_p(struct sess *sp,struct vmod_priv *priv,const char *key,int p)
+VCL_STRING vmod_get_field_p(vctx *sp,struct vmod_priv *priv,VCL_STRING key,VCL_INT p)
 {
-    const char *ret=NULL;
-    vmod_dtree_container *dtc;
-    vmod_dclass_container *dcc;
+    VCL_STRING ret=NULL;
+    vmod_dclass_container *dtc;
+    vmod_user_container *uc;
     
     if(p<0 || p>=VMOD_DTREE_SIZE)
         return "";
     
-    dtc=(vmod_dtree_container*)priv->priv;
+    dtc=(vmod_dclass_container*)priv->priv;
+    uc=uc_get(sp,dtc);
     
-    dcc=dcc_get(sp,dtc);
-    
-    if(dcc->kvd[p])
-        ret=dclass_get_kvalue(dcc->kvd[p],key);
+    if(uc->kvd[p])
+        ret=dclass_get_kvalue(uc->kvd[p],key);
     
     if(ret)
         return ret;
@@ -164,27 +174,26 @@ const char *vmod_get_field_p(struct sess *sp,struct vmod_priv *priv,const char *
         return "";
 }
 
-int vmod_get_ifield(struct sess *sp, struct vmod_priv *priv, const char *key)
+VCL_INT vmod_get_ifield(vctx *sp, struct vmod_priv *priv, VCL_STRING key)
 {
     return vmod_get_ifield_p(sp,priv,key,0);
 }
 
-int vmod_get_ifield_p(struct sess *sp,struct vmod_priv *priv,const char *key,int p)
+VCL_INT vmod_get_ifield_p(vctx *sp,struct vmod_priv *priv,VCL_STRING key,VCL_INT p)
 {
-    const char *s;
-    vmod_dtree_container *dtc;
-    vmod_dclass_container *dcc;
+    VCL_STRING s;
+    vmod_dclass_container *dtc;
+    vmod_user_container *uc;
     
     if(p<0 || p>=VMOD_DTREE_SIZE)
         return 0;
     
-    dtc=(vmod_dtree_container*)priv->priv;
+    dtc=(vmod_dclass_container*)priv->priv;
+    uc=uc_get(sp,dtc);
     
-    dcc=dcc_get(sp,dtc);
-    
-    if(dcc->kvd[p])
+    if(uc->kvd[p])
     {
-        s=dclass_get_kvalue(dcc->kvd[p],key);
+        s=dclass_get_kvalue(uc->kvd[p],key);
 
         if(s)
             return atoi(s);
@@ -195,20 +204,20 @@ int vmod_get_ifield_p(struct sess *sp,struct vmod_priv *priv,const char *key,int
     return 0;
 }
 
-const char *vmod_get_comment(struct sess *sp, struct vmod_priv *priv)
+VCL_STRING vmod_get_comment(vctx *sp, struct vmod_priv *priv)
 {
     return vmod_get_comment_p(sp,priv,0);
 }
 
-const char *vmod_get_comment_p(struct sess *sp,struct vmod_priv *priv,int p)
+VCL_STRING vmod_get_comment_p(vctx *sp,struct vmod_priv *priv,VCL_INT p)
 {
-    const char *ret=NULL;
-    vmod_dtree_container *dtc;
+    VCL_STRING ret=NULL;
+    vmod_dclass_container *dtc;
     
     if(p<0 || p>=VMOD_DTREE_SIZE)
         return "";
     
-    dtc=(vmod_dtree_container*)priv->priv;
+    dtc=(vmod_dclass_container*)priv->priv;
     
     ret=dtc->heads[p].dti.comment;
     
@@ -219,59 +228,71 @@ const char *vmod_get_comment_p(struct sess *sp,struct vmod_priv *priv,int p)
 }
 
 //gets a dc from the dc_list
-static vmod_dclass_container *dcc_get(struct sess *sp,vmod_dtree_container *dtc)
+static vmod_user_container *uc_get(vctx *sp,vmod_dclass_container *dtc)
 {
     int ns,j;
-    vmod_dclass_container *dcc;
+    vmod_user_container *uc;
+    vid_t id;
+    vxid_t xid;
     
-    AZ(pthread_mutex_lock(&dtc->vmod_dc_list_mutex));
+    AZ(pthread_mutex_lock(&dtc->vmod_u_list_mutex));
 
-    while (dtc->vmod_dc_list_size<=sp->id)
+#if _DCLASS_VARNISH4
+    id=sp->req->sp->fd;
+    xid=sp->req->sp->vxid;
+#else
+    id=sp->id;
+    xid=sp->xid;
+#endif
+
+    while (dtc->vmod_u_list_size<=id)
     {
-            ns=dtc->vmod_dc_list_size*2;
+            ns=dtc->vmod_u_list_size*2;
 
-            dtc->vmod_dc_list=realloc(dtc->vmod_dc_list,ns*sizeof(vmod_dclass_container));
+            dtc->vmod_u_list=realloc(dtc->vmod_u_list,ns*sizeof(vmod_user_container));
             
-            AN(dtc->vmod_dc_list);
+            AN(dtc->vmod_u_list);
             
-            for (;dtc->vmod_dc_list_size<ns;dtc->vmod_dc_list_size++)
+            for (;dtc->vmod_u_list_size<ns;dtc->vmod_u_list_size++)
             {
                 for(j=0;j<VMOD_DTREE_SIZE;j++)
-                    dtc->vmod_dc_list[dtc->vmod_dc_list_size].kvd[j]=NULL;
+                    dtc->vmod_u_list[dtc->vmod_u_list_size].kvd[j]=NULL;
                 
-                dtc->vmod_dc_list[dtc->vmod_dc_list_size].xid=0;
+                dtc->vmod_u_list[dtc->vmod_u_list_size].xid=0;
             }
     }
     
-    dcc=&dtc->vmod_dc_list[sp->id];
+    uc=&dtc->vmod_u_list[id];
     
-    if (dcc->xid!=sp->xid)
+    if (uc->xid!=xid)
     {
-        dcc->kvd[0]=NULL;
-        dcc->xid=sp->xid;
+        for(j=0;j<VMOD_DTREE_SIZE;j++)
+            uc->kvd[j]=NULL;
+
+        uc->xid=xid;
     }
     
-    AZ(pthread_mutex_unlock(&dtc->vmod_dc_list_mutex));
+    AZ(pthread_mutex_unlock(&dtc->vmod_u_list_mutex));
     
-    return dcc;
+    return uc;
 }
 
 void vmod_free_dtc(void *data)
 {
     int i;
-    vmod_dtree_container *dtc;
-    
-    dtc=(vmod_dtree_container*)data;
+    vmod_dclass_container *dtc;
+
+    dtc=(vmod_dclass_container*)data;
+
+    free(dtc->vmod_u_list);
     
     for(i=0;i<VMOD_DTREE_SIZE;i++)
         dclass_free(&dtc->heads[i]);
     
-    free(dtc->vmod_dc_list);
-    
     free(data);
 }
 
-const char *vmod_get_version(struct sess *sp)
+VCL_STRING vmod_get_version(vctx *sp)
 {
     return dclass_get_version();
 }

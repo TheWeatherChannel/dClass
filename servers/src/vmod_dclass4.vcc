@@ -1,0 +1,56 @@
+$Module dclass 3 Device classification
+
+DESCRIPTION
+===========
+
+This vmod is used to classify a User-Agent field against a set of known
+device patterns (.dtree).
+
+$Init init_function
+
+init
+
+$Function VOID init_dclass(PRIV_VCL,STRING)
+
+init dclass
+
+$Function VOID init_dclass_p(PRIV_VCL,STRING,INT)
+
+init dclass pos
+
+$Function STRING classify(PRIV_VCL,STRING)
+
+classify
+
+$Function STRING classify_p(PRIV_VCL,STRING,INT)
+
+classify pos
+
+$Function STRING get_field(PRIV_VCL,STRING)
+
+get field
+
+$Function STRING get_field_p(PRIV_VCL,STRING,INT)
+
+get field pos
+
+$Function INT get_ifield(PRIV_VCL,STRING)
+
+get int field
+
+$Function INT get_ifield_p(PRIV_VCL,STRING,INT)
+
+get int field pos
+
+$Function STRING get_comment(PRIV_VCL)
+
+get comment
+
+$Function STRING get_comment_p(PRIV_VCL,INT)
+
+get comment pos
+
+$Function STRING get_version()
+
+get version
+
