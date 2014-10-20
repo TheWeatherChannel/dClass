@@ -57,9 +57,9 @@ Ivan Kozhuharov, Chris Hill, Chris McClellen, and The Weather Channel.
 https://github.com/TheWeatherChannel/dClass/wiki/dClass-vs-grep
 
 
- OPENDDR (DEVICE MAP)
+ DEVICE MAP (OPENDDR)
 
-This project will track OpenDDR updates with its own patches. All OpenDDR
+This project will track DeviceMap updates with its own patches. All DeviceMap
 updates will be backwards compatible with dClass 2.0 code.
 
 
@@ -78,10 +78,10 @@ To integrate with the dClass API:
   -define a dclass_index:
     dclass_index dci;
 
-  -populate the index using a dtree file or OpenDDR resource file:
+  -populate the index using a dtree file or DeviceMap resource file:
     dclass_load_file(&dci,"/path/to/file.dtree");
     -OR-
-    openddr_load_resources(&dci,"/path/to/openddr/resources");
+    openddr_load_resources(&dci,"/path/to/devicemap/devicedata");
 
   -classify a string against the index and get the resulting kv data:
     dclass_keyvalue *kv=dclass_classify(&dci,"this is a string");
@@ -104,10 +104,6 @@ Enhancements for 3.0
 
   -Realtime additions, modifications, and deletion
   -Expanded regex support
-
-Beyond
-
-  -Image and vision processing?
 
 
  JAVA

@@ -24,7 +24,7 @@
 #include "dtree_client.h"
 
 
-#define DCLASS_VERSION    "dClass 2.2.10"
+#define DCLASS_VERSION    "dClass 2.3.1pre"
 
 
 //key value struct, dtree payload
@@ -50,7 +50,7 @@ typedef struct
 dclass_index;
 
 
-#include "openddr_client.h"
+#include "devicemap_client.h"
 
 
 void dclass_init_index(dclass_index*);

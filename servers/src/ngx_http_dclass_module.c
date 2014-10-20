@@ -205,7 +205,7 @@ static char *ngx_http_dclass_merge_conf(ngx_conf_t *cf, void *parent, void *chil
             ret=dclass_load_file(conf->head[i],(char*)conf->dtree_loc[i].data);
 
             if(ret<=0)
-                ret=openddr_load_resources(conf->head[i],(char*)conf->dtree_loc[i].data);
+                ret=devicemap_load_resources(conf->head[i],(char*)conf->dtree_loc[i].data);
 
             if(ret<0)
                 return NGX_CONF_ERROR;

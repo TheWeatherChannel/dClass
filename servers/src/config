@@ -3,5 +3,5 @@ ngx_addon_name=ngx_http_dclass_module
 CORE_LIBS="$CORE_LIBS -lrt"
 CORE_INCS="$CORE_INCS $ngx_addon_dir/../../src"
 HTTP_MODULES="$HTTP_MODULES ngx_http_dclass_module"
-NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_dclass_module.c $ngx_addon_dir/../../src/dclass_client.c $ngx_addon_dir/../../src/dclass_file.c $ngx_addon_dir/../../src/openddr_client.c $ngx_addon_dir/../../src/dtree_core.c $ngx_addon_dir/../../src/dtree_mem.c $ngx_addon_dir/../../src/dtree_util.c"
-NGX_ADDON_DEPS="$NGX_ADDON_DEPS $ngx_addon_dir/../../src/dclass_client.h $ngx_addon_dir/../../src/openddr_client.h $ngx_addon_dir/../../src/dtree_client.h"
+NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_dclass_module.c $ngx_addon_dir/../../src/dclass_client.c $ngx_addon_dir/../../src/dclass_file.c $ngx_addon_dir/../../src/devicemap_client.c $ngx_addon_dir/../../src/dtree_core.c $ngx_addon_dir/../../src/dtree_mem.c $ngx_addon_dir/../../src/dtree_util.c"
+NGX_ADDON_DEPS="$NGX_ADDON_DEPS $ngx_addon_dir/../../src/dclass_client.h $ngx_addon_dir/../../src/devicemap_client.h $ngx_addon_dir/../../src/dtree_client.h"

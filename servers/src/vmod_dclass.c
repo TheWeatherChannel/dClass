@@ -116,7 +116,7 @@ void vmod_init_dclass_p(vctx *sp,struct vmod_priv *priv,VCL_STRING dtree_loc,VCL
     ret=dclass_load_file(&dtc->heads[p],(char*)dtree_loc);
     
     if(ret<=0)
-        openddr_load_resources(&dtc->heads[p],(char*)dtree_loc);
+        devicemap_load_resources(&dtc->heads[p],(char*)dtree_loc);
 }
 
 VCL_STRING vmod_classify(vctx *sp, struct vmod_priv *priv, VCL_STRING str)

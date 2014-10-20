@@ -8,7 +8,7 @@ Enable or disable the lookup:
     dclass off;
 
 Define one or more indexes (upto 4):
-    dclass_def /some/path/dClass/dtrees/openddr.dtree;
+    dclass_def /some/path/dClass/dtrees/devicemap.dtree;
     dclass_def1 /some/path/dClass/dtrees/browser.dtree;
 
 Define the header field (default: User-Agent):
@@ -16,7 +16,7 @@ Define the header field (default: User-Agent):
 
 The following variables are supported:
     $dclass_id
-  OpenDDR:
+  DeviceMap:
     $dclass_vendor
     $dclass_model
     $dclass_parentId

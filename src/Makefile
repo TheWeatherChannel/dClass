@@ -6,7 +6,7 @@ LIBFLAGS=$(NEED_LIBRT)
 RM=rm -rf
 
 #objects
-CLIENT_OBJS=dtree_core.o openddr_client.o dclass_file.o dtree_mem.o dtree_util.o dclass_client.o
+CLIENT_OBJS=dtree_core.o devicemap_client.o dclass_file.o dtree_mem.o dtree_util.o dclass_client.o
 
 #os config
 NEED_LIBRT=$(shell echo 'int main() {}' | $(CC) -x c - -lrt -o /dev/null > /dev/null 2>&1 && echo -lrt)
@@ -25,7 +25,7 @@ libdclass.so:		$(CLIENT_OBJS)
 libdclass.a:		$(CLIENT_OBJS)
 			ar cr $@ $(CLIENT_OBJS)
 
-%.o:			%.c dtree_client.h openddr_client.h dclass_client.h
+%.o:			%.c dtree_client.h devicemap_client.h dclass_client.h
 			$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

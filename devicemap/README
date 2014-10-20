@@ -1,6 +1,6 @@
-This script moves the dClass patch files into the OpenDDR resources and
+This script moves the dClass patch files into the DeviceMap resources and
 generates a .dtree file using the dClass test client.
 
-All OpenDDR builders are implemented as STRONG patterns with the exception of
+All DeviceMap builders are implemented as STRONG patterns with the exception of
 the SimpleDeviceBuilder which is implemented as WEAK patterns and the
 TwoStepDeviceBuilder which is implemented as a BASE and CHAIN patterns.

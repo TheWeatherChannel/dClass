@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or
+    more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information regarding
+    copyright ownership. The ASF licenses this file to you under the
+    Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain
+    a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+    applicable law or agreed to in writing, software distributed
+    under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions
+    and limitations under the License.
+-->
+<ODDR>
+    <version>
+        <ver>1.0.1</ver>
+        <last_updated>2014-07-29 23:00:00</last_updated>
+        <official_url>http://incubator.apache.org/devicemap</official_url>
+        <statement>Licensed under http://www.apache.org/licenses/LICENSE-2.0</statement>
+    </version>
+    <Builders>
+        <builder class="org.apache.devicemap.simpleddr.builder.device.AndroidDeviceBuilder">
+          <device id="pcdadr6350">
+            <list>
+              <value>pcdadr6350</value>
+            </list>
+          </device>
+        </builder>
+        <builder class="org.apache.devicemap.simpleddr.builder.device.WinPhoneDeviceBuilder">
+        </builder>
+        <builder class="org.apache.devicemap.simpleddr.builder.device.SymbianDeviceBuilder">
+        </builder>
+        <builder class="org.apache.devicemap.simpleddr.builder.device.TwoStepDeviceBuilder">
+        </builder>
+        <builder class="org.apache.devicemap.simpleddr.builder.device.SimpleDeviceBuilder">
+          <device id="genericPhone">
+            <list>
+              <value>LG....</value>
+              <value>Palm...</value>
+            </list>
+          </device>
+        </builder>
+    </Builders>
+</ODDR>

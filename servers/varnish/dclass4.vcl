@@ -9,9 +9,8 @@ backend default {
 }
 
 sub vcl_init {
-	# load openddr 
-	dclass.init_dclass("/some/path/dClass/dtrees/openddr.dtree");
-	#dclass.init_dclass_p("/some/path/OpenDDR/latest/resources",0);
+	# load devicemap
+	dclass.init_dclass("/some/path/dClass/dtrees/devicemap.dtree");
 
 	# load browser dtree
 	dclass.init_dclass_p("/some/path/dClass/dtrees/browser.dtree",1);
@@ -25,8 +24,8 @@ sub vcl_recv {
 	}
 
 	# do the lookup
-	set req.http.dclass_openddr = dclass.classify(req.http.user-agent);
-	#set req.http.dclass_openddr = dclass.classify_p(req.http.user-agent,0);
+	set req.http.dclass_devicemap = dclass.classify(req.http.user-agent);
+	#set req.http.dclass_devicemap = dclass.classify_p(req.http.user-agent,0);
 	set req.http.dclass_browser = dclass.classify_p(req.http.user-agent,1);
 
 	# set dclass_type
@@ -83,16 +82,16 @@ dClass version:   "} + dclass.get_version() + {"
 
 dClass type:      "} + req.http.dclass_type + {"
 
-OpenDDR comment:  "} + dclass.get_comment() + {"
-OpenDDR id:       "} + req.http.dclass_openddr + {"
-OpenDDR device:   "} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"
-OpenDDR display:  "} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_ifield("displayHeight") + {"
-OpenDDR input:    "} + dclass.get_field("inputDevices") + {"
-OpenDDR js:       "} + dclass.get_field("ajax_support_javascript") + {"
-OpenDDR wireless: "} + dclass.get_field("is_wireless_device") + {"
-OpenDDR tablet:   "} + dclass.get_field("is_tablet") + {"
-OpenDDR crawler:  "} + dclass.get_field("is_crawler") + {"
-OpenDDR desktop:  "} + dclass.get_field("is_desktop") + {"
+DeviceMap comment:  "} + dclass.get_comment() + {"
+DeviceMap id:       "} + req.http.dclass_devicemap + {"
+DeviceMap device:   "} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"
+DeviceMap display:  "} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_ifield("displayHeight") + {"
+DeviceMap input:    "} + dclass.get_field("inputDevices") + {"
+DeviceMap js:       "} + dclass.get_field("ajax_support_javascript") + {"
+DeviceMap wireless: "} + dclass.get_field("is_wireless_device") + {"
+DeviceMap tablet:   "} + dclass.get_field("is_tablet") + {"
+DeviceMap crawler:  "} + dclass.get_field("is_crawler") + {"
+DeviceMap desktop:  "} + dclass.get_field("is_desktop") + {"
 
 browser comment:  "} + dclass.get_comment_p(1) + {"
 browser id:       "} + req.http.dclass_browser + {"
@@ -120,17 +119,17 @@ browser os:       "} + dclass.get_field_p("os",1) + {"
 req.http.dclass_cb + {"{
 "user_agent":""} + req.http.User-Agent + {"",
 "dclass_version":""} + dclass.get_version() + {"",
-"openddr_id":""} + req.http.dclass_openddr + {"",
-"openddr_type":""} + req.http.dclass_type + {"",
-"openddr_comment":""} + dclass.get_comment() + {"",
-"openddr_device":""} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"",
-"openddr_display":""} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_ifield("displayHeight") + {"",
-"openddr_input":""} + dclass.get_field("inputDevices") + {"",
-"openddr_js":""} + dclass.get_field("ajax_support_javascript") + {"",
-"openddr_wireless":""} + dclass.get_field("is_wireless_device") + {"",
-"openddr_tablet":""} + dclass.get_field("is_tablet") + {"",
-"openddr_crawler":""} + dclass.get_field("is_crawler") + {"",
-"openddr_desktop":""} + dclass.get_field("is_desktop") + {"",
+"devicemap_id":""} + req.http.dclass_devicemap + {"",
+"devicemap_type":""} + req.http.dclass_type + {"",
+"devicemap_comment":""} + dclass.get_comment() + {"",
+"devicemap_device":""} + dclass.get_field("vendor") + {" "} + dclass.get_field("model") + {"",
+"devicemap_display":""} + dclass.get_ifield("displayWidth") + {"x"} + dclass.get_ifield("displayHeight") + {"",
+"devicemap_input":""} + dclass.get_field("inputDevices") + {"",
+"devicemap_js":""} + dclass.get_field("ajax_support_javascript") + {"",
+"devicemap_wireless":""} + dclass.get_field("is_wireless_device") + {"",
+"devicemap_tablet":""} + dclass.get_field("is_tablet") + {"",
+"devicemap_crawler":""} + dclass.get_field("is_crawler") + {"",
+"devicemap_desktop":""} + dclass.get_field("is_desktop") + {"",
 "browser_id":""} + req.http.dclass_browser + {"",
 "browser_comment":""} + dclass.get_comment_p(1) + {"",
 "browser_name":""} + dclass.get_field_p("browser",1) + {"",

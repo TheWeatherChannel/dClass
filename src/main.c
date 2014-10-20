@@ -27,10 +27,10 @@ extern int dtree_gettime(struct timespec*);
 int main(int argc,char **args)
 {
     int ret,i;
-    int openddr=0;
+    int devicemap=0;
     long count,ttime;
     char buf[1024];
-    char *loadFile="../dtrees/openddr.dtree";
+    char *loadFile="../dtrees/devicemap.dtree";
     char *outFile="";
     char *parameter=NULL;
     struct timespec startn,endn,diffn,total;
@@ -52,7 +52,7 @@ int main(int argc,char **args)
         //-m [open ddr resource dir]
         else if(!strcmp(args[i],"-d") && argc>(i+1))
         {
-            openddr=1;
+            devicemap=1;
             loadFile=args[++i];
         }
         else if(!strncmp(args[i],"-h",2) || !strncmp(args[i],"--h",3))
@@ -60,7 +60,7 @@ int main(int argc,char **args)
             printf("Usage: dclass_client [OPTIONS] [FILE|STRING]\n\n");
             printf("  -l <path>            load dtree from file\n");
             printf("  -o <path>            store dtree to file\n");
-            printf("  -d <folder path>     load OpenDDR resources xmls\n");
+            printf("  -d <folder path>     load DeviceMap resources xmls\n");
             printf("  FILE                 STRING text file\n");
             printf("  STRING               test string\n");
             
@@ -71,12 +71,12 @@ int main(int argc,char **args)
             parameter=args[i];
     }
 
-    printf("Loading %s: '%s'\n",openddr?"openddr":"dtree",loadFile);
+    printf("Loading %s: '%s'\n",devicemap?"devicemap":"dtree",loadFile);
     
     dtree_gettime(&startn);
     
-    if(openddr)
-        ret=openddr_load_resources(&di,loadFile);
+    if(devicemap)
+        ret=devicemap_load_resources(&di,loadFile);
     else
         ret=dclass_load_file(&di,loadFile);
     
@@ -190,7 +190,7 @@ int main(int argc,char **args)
             
             if(kvd && kvd->size)
             {
-                printf("OpenDDR attributes => ");
+                printf("DeviceMap attributes => ");
                 for(i=0;i<kvd->size;i++)
                         printf("%s: '%s' ",kvd->keys[i],kvd->values[i]);
                 printf("\n");

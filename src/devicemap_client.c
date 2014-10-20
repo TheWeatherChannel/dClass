@@ -20,19 +20,19 @@
 #include "dclass_client.h"
 
 
-//openddr property keys
-static const char *openddr_key_array[] = OPENDDR_KEYS;
+//devicemap property keys
+static const char *devicemap_key_array[] = DEVICEMAP_KEYS;
 
 
-static int openddr_read_device_raw(FILE*,dtree_dt_index*,dtree_dt_index*);
-static int openddr_read_pattern(FILE*,dtree_dt_index*,dtree_dt_index*,dtree_flag_f*);
-static int openddr_add_device_pattern(dtree_dt_index*,dtree_dt_index*,dclass_keyvalue*,dclass_keyvalue*,char*,dtree_flag_f);
-static const char *openddr_copy_string(dtree_dt_index*,const char*,const char*);
-static int openddr_alloc_kvd(dtree_dt_index*,dtree_dt_index*,char*);
-static char *openddr_get_attr(const char*,const char*,dtree_dt_index*,char**,char*);
-static char *openddr_get_value(const char*,const char*,dtree_dt_index*,char**,char*);
-static char *openddr_get_str(const char*,const char*,dtree_dt_index*,char**,char*,char*,char);
-static char *openddr_unregex(const char*,char*);
+static int devicemap_read_device_raw(FILE*,dtree_dt_index*,dtree_dt_index*);
+static int devicemap_read_pattern(FILE*,dtree_dt_index*,dtree_dt_index*,dtree_flag_f*);
+static int devicemap_add_device_pattern(dtree_dt_index*,dtree_dt_index*,dclass_keyvalue*,dclass_keyvalue*,char*,dtree_flag_f);
+static const char *devicemap_copy_string(dtree_dt_index*,const char*,const char*);
+static int devicemap_alloc_kvd(dtree_dt_index*,dtree_dt_index*,char*);
+static char *devicemap_get_attr(const char*,const char*,dtree_dt_index*,char**,char*);
+static char *devicemap_get_value(const char*,const char*,dtree_dt_index*,char**,char*);
+static char *devicemap_get_str(const char*,const char*,dtree_dt_index*,char**,char*,char*,char);
+static char *devicemap_unregex(const char*,char*);
 
 #if OPENDDR_BLKBRY_FIX
 static void openddr_convert_bb(char*);
@@ -41,8 +41,8 @@ static void openddr_convert_bb(char*);
 extern char **dclass_get_value_pos(dclass_keyvalue*,char*);
 
 
-//loads openddr resources
-int openddr_load_resources(dclass_index *di,const char *path)
+//loads devicemap resources
+int devicemap_load_resources(dclass_index *di,const char *path)
 {
     int i;
     int ret;
@@ -62,8 +62,8 @@ int openddr_load_resources(dclass_index *di,const char *path)
     //string and device cache
     di->error.id=dtree_alloc_string(h,"unknown",7);
     
-    if(!openddr_alloc_kvd(h,&dev,"genericPhone") || !openddr_alloc_kvd(h,&dev,"genericTouchPhone") ||
-            !openddr_alloc_kvd(h,&dev,"desktopDevice"))
+    if(!devicemap_alloc_kvd(h,&dev,"genericPhone") || !devicemap_alloc_kvd(h,&dev,"genericAndroid") ||
+            !devicemap_alloc_kvd(h,&dev,"desktopDevice"))
         goto dexit;
     
     dtree_alloc_string(h,"true",4);
@@ -73,20 +73,20 @@ int openddr_load_resources(dclass_index *di,const char *path)
     for(i=0;i<2;i++)
     {
         if(!i)
-            sprintf(fpath,"%s/%s",path,OPENDDR_RSRC_DD);
+            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_DD);
         else
-            sprintf(fpath,"%s/%s",path,OPENDDR_RSRC_DDP);
+            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_DDP);
 
-        dtree_printd(DTREE_PRINT_GENERIC,"OpenDDR device data: '%s'\n",fpath);
+        dtree_printd(DTREE_PRINT_GENERIC,"DeviceMap device data: '%s'\n",fpath);
 
         if(!(f=fopen(fpath,"r")))
         {
-            fprintf(stderr,"OpenDDR: cannot open '%s'\n",fpath);
+            fprintf(stderr,"DeviceMap: cannot open '%s'\n",fpath);
             if(!i)
                 goto dexit;
         }
 
-        while((ret=openddr_read_device_raw(f,h,&dev)))
+        while((ret=devicemap_read_device_raw(f,h,&dev)))
         {
             if(ret==-1)
                 goto dexit;
@@ -97,7 +97,7 @@ int openddr_load_resources(dclass_index *di,const char *path)
         fclose(f);
     }
     
-    dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR device data raw count: %d\n",dcount);
+    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap device data raw count: %d\n",dcount);
     
     dtree_printd(DTREE_PRINT_INITDTREE,"Open DDR raw dtree stats: nodes: %zu slabs: %zu mem: %zu bytes strings: %zu(%zu,%zu)\n",
            dev.node_count,dev.slab_count,dev.size,dev.dc_count,dev.dc_slab_count,dev.dc_slab_pos);
@@ -106,20 +106,20 @@ int openddr_load_resources(dclass_index *di,const char *path)
     for(i=0;i<2;i++)
     {
         if(!i)
-            sprintf(fpath,"%s/%s",path,OPENDDR_RSRC_BD);
+            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_BD);
         else
-            sprintf(fpath,"%s/%s",path,OPENDDR_RSRC_BDP);
+            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_BDP);
 
-        dtree_printd(DTREE_PRINT_GENERIC,"OpenDDR builder data: '%s'\n",fpath);
+        dtree_printd(DTREE_PRINT_GENERIC,"DeviceMap builder data: '%s'\n",fpath);
 
         if(!(f=fopen(fpath,"r")))
         {
-            fprintf(stderr,"OpenDDR: cannot open '%s'\n",fpath);
+            fprintf(stderr,"DeviceMap: cannot open '%s'\n",fpath);
             if(!i)
                 goto dexit;
         }
 
-        while((ret=openddr_read_pattern(f,h,&dev,&flags)))
+        while((ret=devicemap_read_pattern(f,h,&dev,&flags)))
         {
             if(ret==-1)
                 goto dexit;
@@ -130,7 +130,7 @@ int openddr_load_resources(dclass_index *di,const char *path)
         fclose(f);
     }
     
-    dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR pattern data raw count: %d\n",pcount);
+    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap pattern data raw count: %d\n",pcount);
     
     dtree_free(&dev);
     
@@ -149,7 +149,7 @@ dexit:
 }
 
 //read a device from file, return it
-static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev)
+static int devicemap_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev)
 {
     int i;
     int ret=0;
@@ -166,7 +166,7 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
         //overflow
         if(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2])
         {
-            dtree_printd(DTREE_PRINT_INITDTREE,"OPENDDR LOAD: overflow detected\n");
+            dtree_printd(DTREE_PRINT_INITDTREE,"DEVICEMAP LOAD: overflow detected\n");
             
             do
             {
@@ -182,29 +182,29 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
         
         if(strstr(buf,"<device "))
         {
-            openddr_get_attr(buf,"id",NULL,NULL,temp);
+            devicemap_get_attr(buf,"id",NULL,NULL,temp);
             
             kvd=(dclass_keyvalue*)dtree_get(dev,temp,0);
             
             if(kvd)
-                dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR device overwrite found: '%s'\n",temp);
+                dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap device overwrite found: '%s'\n",temp);
             else
                 kvd=(dclass_keyvalue*)dtree_alloc_mem(h,sizeof(dclass_keyvalue));
             
             if(!kvd)
                 return -1;
             
-            kvd->size=sizeof(openddr_key_array)/sizeof(*openddr_key_array);
-            kvd->keys=openddr_key_array;
+            kvd->size=sizeof(devicemap_key_array)/sizeof(*devicemap_key_array);
+            kvd->keys=devicemap_key_array;
             
-            kvd->values=(const char**)dtree_alloc_mem(h,sizeof(openddr_key_array));
+            kvd->values=(const char**)dtree_alloc_mem(h,sizeof(devicemap_key_array));
             
             if(!kvd->values)
                 return -1;
             
             kvd->id=dtree_alloc_string(h,temp,strlen(temp));
             
-            openddr_get_attr(buf,"parentId",h,dclass_get_value_pos(kvd,"parentId"),NULL);
+            devicemap_get_attr(buf,"parentId",h,dclass_get_value_pos(kvd,"parentId"),NULL);
             
             ret=1;
             
@@ -215,15 +215,15 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
             break;
         else if(kvd && strstr(buf,"<property "))
         {
-            openddr_get_attr(buf,"name",NULL,NULL,temp);
+            devicemap_get_attr(buf,"name",NULL,NULL,temp);
             
-            openddr_get_attr(buf,"value",h,dclass_get_value_pos(kvd,temp),NULL);
+            devicemap_get_attr(buf,"value",h,dclass_get_value_pos(kvd,temp),NULL);
         }
     }
     
     if(kvd)
     {
-        dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR id(%p): '%s'(%p)\nAttributes => ",kvd,kvd->id,kvd->id);
+        dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap id(%p): '%s'(%p)\nAttributes => ",kvd,kvd->id,kvd->id);
         for(i=0;i<kvd->size;i++)
                 dtree_printd(DTREE_PRINT_INITDTREE,"%s: '%s' ",kvd->keys[i],kvd->values[i]);
         dtree_printd(DTREE_PRINT_INITDTREE,"\n");
@@ -241,7 +241,7 @@ static int openddr_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev
 }
 
 //read a pattern from file, insert it
-static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dtree_flag_f *flags)
+static int devicemap_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dtree_flag_f *flags)
 {
     int ret=0;
     char buf[1048];
@@ -264,7 +264,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
         //overflow
         if(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2])
         {
-            dtree_printd(DTREE_PRINT_INITDTREE,"OPENDDR LOAD: overflow detected\n");
+            dtree_printd(DTREE_PRINT_INITDTREE,"DEVICEMAP LOAD: overflow detected\n");
             
             do
             {
@@ -278,17 +278,21 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
             continue;
         }
 
-        if(!h->comment && strstr(buf,"<ver>"))
+        if(strstr(buf,"<!--"))
         {
-            openddr_get_value(buf,"ver",NULL,NULL,pattern);
-            sprintf(buf,OPENDDR_COMMENT,pattern);
+            //TODO fix this
+        }
+        else if(!h->comment && strstr(buf,"<ver>"))
+        {
+            devicemap_get_value(buf,"ver",NULL,NULL,pattern);
+            sprintf(buf,DEVICEMAP_COMMENT,pattern);
             h->comment=dtree_alloc_mem(h,(strlen(buf)+1)*sizeof(char));
             if(h->comment)
                 strncpy(h->comment,buf,strlen(buf));
         }
         else if(strstr(buf,"<device "))
         {
-            openddr_get_attr(buf,"id",NULL,NULL,id);
+            devicemap_get_attr(buf,"id",NULL,NULL,id);
             
             ret=1;
             
@@ -308,23 +312,23 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
             break;
         else if(der && strstr(buf,"<value>"))
         {
-            openddr_get_value(buf,"value",NULL,NULL,pattern);
+            devicemap_get_value(buf,"value",NULL,NULL,pattern);
             
-            dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR pattern: '%s' id: '%s' flags: %d (%p)\n",
+            dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap pattern: '%s' id: '%s' flags: %d (%p)\n",
                     pattern,der->id,*flags,der);
             
             if(!chain && *flags & DTREE_DT_FLAG_CHAIN)
             {
-                dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR CHAIN PATTERN: '%s' id: '%s'\n",pattern,der->id);
+                dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap CHAIN PATTERN: '%s' id: '%s'\n",pattern,der->id);
 
                 chain=(dclass_keyvalue*)dtree_get(h,pattern,DTREE_DT_FLAG_BCHAIN);
 
                 //TODO need to iterate thru regex and add all possible chain values
                 if(!chain)
                 {
-                    dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR ALT CHAIN PATTERN: '%s' id: '%s'\n",openddr_unregex(pattern,id),der->id);
+                    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap ALT CHAIN PATTERN: '%s' id: '%s'\n",devicemap_unregex(pattern,id),der->id);
 
-                    base=dtree_get_node(h,openddr_unregex(pattern,id),0,0);
+                    base=dtree_get_node(h,devicemap_unregex(pattern,id),0,0);
 
                     if(base && (base=dtree_get_flag(h,base,DTREE_DT_FLAG_BCHAIN,0)))
                         chain=base->payload;
@@ -332,7 +336,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
 
                 if(chain)
                 {
-                    dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR FOUND DUP CHAIN PATTERN: '%s' id: '%s' (%s)\n",pattern,der->id,chain->id);
+                    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap FOUND DUP CHAIN PATTERN: '%s' id: '%s' (%s)\n",pattern,der->id,chain->id);
 
                     continue;
                 }
@@ -351,7 +355,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
             }
 #endif
             
-            if(openddr_add_device_pattern(h,dev,der,chain,pattern,*flags)<0)
+            if(devicemap_add_device_pattern(h,dev,der,chain,pattern,*flags)<0)
                 return -1;
             
 #if OPENDDR_BLKBRY_FIX
@@ -368,7 +372,7 @@ static int openddr_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dt
 }
 
 //adds a device pattern to the root tree
-static int openddr_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dclass_keyvalue *der,dclass_keyvalue *chain,char *pattern,dtree_flag_f flags)
+static int devicemap_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dclass_keyvalue *der,dclass_keyvalue *chain,char *pattern,dtree_flag_f flags)
 {
     int i;
     dtree_dt_add_entry entry;
@@ -379,14 +383,14 @@ static int openddr_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dcla
         if(!chain)
             flags |= DTREE_DT_FLAG_BCHAIN;
 
-        dtree_printd(DTREE_PRINT_INITDTREE,"OpenDDR CHAIN PATTERN: '%s' current: '%s' prev: '%s' flag: %u\n",
+        dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap CHAIN PATTERN: '%s' current: '%s' prev: '%s' flag: %u\n",
                 pattern,der->id,chain?chain->id:"HEAD",flags);
     }
     
     for(i=0;i<der->size;i++)
     {
         if(!der->values[i])
-            der->values[i]=openddr_copy_string(dev,dclass_get_kvalue(der,"parentId"),der->keys[i]);
+            der->values[i]=devicemap_copy_string(dev,dclass_get_kvalue(der,"parentId"),der->keys[i]);
     }
 
     memset(&entry,0,sizeof(dtree_dt_add_entry));
@@ -399,7 +403,7 @@ static int openddr_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dcla
 }
 
 //alloc a device kvd
-static int openddr_alloc_kvd(dtree_dt_index *h,dtree_dt_index *dev,char *id)
+static int devicemap_alloc_kvd(dtree_dt_index *h,dtree_dt_index *dev,char *id)
 {
     dclass_keyvalue *kvd;
     dtree_dt_add_entry entry;
@@ -421,7 +425,7 @@ static int openddr_alloc_kvd(dtree_dt_index *h,dtree_dt_index *dev,char *id)
 }
 
 //copy string from parent
-static const char *openddr_copy_string(dtree_dt_index *h,const char *parent,const char *key)
+static const char *devicemap_copy_string(dtree_dt_index *h,const char *parent,const char *key)
 {
     dclass_keyvalue *p;
     const char *ret;
@@ -434,21 +438,21 @@ static const char *openddr_copy_string(dtree_dt_index *h,const char *parent,cons
     ret=dclass_get_kvalue(p,key);
     
     if(!ret)
-        return openddr_copy_string(h,dclass_get_kvalue(p,"parentId"),key);
+        return devicemap_copy_string(h,dclass_get_kvalue(p,"parentId"),key);
     
     return ret;
 }
 
 //looks for attr in buf and copies it to dest
-static char *openddr_get_attr(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf)
+static char *devicemap_get_attr(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf)
 {
-    return openddr_get_str(buf,attr,h,vbuf,retbuf,"=",'\"');
+    return devicemap_get_str(buf,attr,h,vbuf,retbuf,"=",'\"');
 }
 
 //looks for value in buf and copies it to dest
-static char *openddr_get_value(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf)
+static char *devicemap_get_value(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf)
 {
-    return openddr_get_str(buf,attr,h,vbuf,retbuf,">",'<');
+    return devicemap_get_str(buf,attr,h,vbuf,retbuf,">",'<');
 }
 
 //strcasestr
@@ -481,7 +485,7 @@ static const char *_alt_strcasestr(const char *haystack,const char *needle)
 }
 
 //a generic str parser
-static char *openddr_get_str(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf,char *suffix,char term)
+static char *devicemap_get_str(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf,char *suffix,char term)
 {
     int i;
     const char *s;
@@ -538,7 +542,7 @@ static char *openddr_get_str(const char *buf,const char *attr,dtree_dt_index *h,
 }
 
 //removes regex
-static char *openddr_unregex(const char *s,char *dest)
+static char *devicemap_unregex(const char *s,char *dest)
 {
     int h=0;
     char *d=dest;

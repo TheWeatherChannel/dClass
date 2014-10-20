@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENDDR_RESOURCE=/some/path/OpenDDR/latest/resources
+DEVICEMAP_RESOURCE=/some/path/devicemap/latest/devicedata
 DCLASS_BIN=../src/dclass_client
 #DCLASS_BIN="../java/dclass.jar"
 
@@ -27,42 +27,42 @@ then
 	exit 1
 fi
 
-if [ -d "$OPENDDR_RESOURCE" ]
+if [ -d "$DEVICEMAP_RESOURCE" ]
 then
-	$DCLASS_BIN -d "$OPENDDR_RESOURCE" uas.txt | grep "^UA lookup " | sed "s/time.*$//" > uas.openddr.testd
+	$DCLASS_BIN -d "$DEVICEMAP_RESOURCE" uas.txt | grep "^UA lookup " | sed "s/time.*$//" > uas.devicemap.testd
 
-	TESTDDIFF=`diff uas.openddr uas.openddr.testd | grep "^<" | sed "s/^.* lookup //" | sed "s/: '.*$//" | xargs echo`
+	TESTDDIFF=`diff uas.devicemap uas.devicemap.testd | grep "^<" | sed "s/^.* lookup //" | sed "s/: '.*$//" | xargs echo`
 
 	if [ "$TESTDDIFF" != "" ]
 	then
-		echo "ERROR: Test OpenDDR failed"
-		echo "Lines in uas.openddr: $TESTDDIFF"
-		echo "Move uas.openddr.testd to uas.openddr if test is correct"
+		echo "ERROR: Test DeviceMap failed"
+		echo "Lines in uas.devicemap: $TESTDDIFF"
+		echo "Move uas.devicemap.testd to uas.devicemap if test is correct"
 		exit 1
 	else
-		echo "PASSED: Test OpenDDR"
+		echo "PASSED: Test DeviceMap"
 	fi
 else
-	echo "SKIPPED: Test OpenDDR"
+	echo "SKIPPED: Test DeviceMap"
 fi
 
-$DCLASS_BIN -l ../dtrees/openddr.dtree -o test2.dtree uas.txt | grep "^UA lookup " | sed "s/time.*$//" > uas.openddr.test1
+$DCLASS_BIN -l ../dtrees/devicemap.dtree -o test2.dtree uas.txt | grep "^UA lookup " | sed "s/time.*$//" > uas.devicemap.test1
 
-TEST1DIFF=`diff uas.openddr uas.openddr.test1 | grep "^<" | sed "s/^.* lookup //" | sed "s/: '.*$//" | xargs echo`
+TEST1DIFF=`diff uas.devicemap uas.devicemap.test1 | grep "^<" | sed "s/^.* lookup //" | sed "s/: '.*$//" | xargs echo`
 
 if [ "$TEST1DIFF" != "" ]
 then
 	echo "ERROR: Test 1 failed"
-	echo "Lines in uas.openddr: $TEST1DIFF"
-	echo "Move uas.openddr.test1 to uas.openddr if test is correct"
+	echo "Lines in uas.devicemap: $TEST1DIFF"
+	echo "Move uas.devicemap.test1 to uas.devicemap if test is correct"
 	exit 1
 else
 	echo "PASSED: Test 1"
 fi
 
-$DCLASS_BIN -l test2.dtree uas.txt | grep "^UA lookup " | sed "s/time.*$//" > uas.openddr.test2
+$DCLASS_BIN -l test2.dtree uas.txt | grep "^UA lookup " | sed "s/time.*$//" > uas.devicemap.test2
 
-TEST2DIFF=`diff uas.openddr uas.openddr.test2 | grep "^<" | sed "s/^.* lookup //" | sed "s/: '.*$//" | xargs echo`
+TEST2DIFF=`diff uas.devicemap uas.devicemap.test2 | grep "^<" | sed "s/^.* lookup //" | sed "s/: '.*$//" | xargs echo`
 
 if [ "$TEST2DIFF" != "" ]
 then
@@ -114,7 +114,7 @@ else
 	echo "PASSED: Test 5"
 fi
 
-rm uas.openddr.test* uas.browser.test* test2.dtree test.out.test* test5.dtree > /dev/null 2>&1
+rm uas.devicemap.test* uas.browser.test* test2.dtree test.out.test* test5.dtree > /dev/null 2>&1
 
 echo "All tests completed"
 

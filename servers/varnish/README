@@ -16,7 +16,7 @@ source (SRC) and installation (PREFIX) location.
 Available functions:
 
 Function VOID init_dclass(STRING)
-  -inits a dclass index, STRING is path to OpenDDR or dtree file
+  -inits a dclass index, STRING is path to a dtree file or DeviceMap data
 
 Function STRING classify(STRING)
   -classifies a string

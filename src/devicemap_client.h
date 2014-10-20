@@ -17,8 +17,8 @@
  */
 
 
-#ifndef _DCLASS_OPENDDR_CLIENT_H
-#define _DCLASS_OPENDDR_CLIENT_H
+#ifndef _DCLASS_DEVICEMAP_CLIENT_H
+#define _DCLASS_DEVICEMAP_CLIENT_H
 
 
 #include "dtree_client.h"
@@ -26,16 +26,16 @@
 
 
 //resource files
-#define OPENDDR_RSRC_DD       "DeviceDataSource.xml"
-#define OPENDDR_RSRC_DDP      "DeviceDataSourcePatch.xml"
-#define OPENDDR_RSRC_BD       "BuilderDataSource.xml"
-#define OPENDDR_RSRC_BDP      "BuilderDataSourcePatch.xml"
+#define DEVICEMAP_RSRC_DD     "DeviceDataSource.xml"
+#define DEVICEMAP_RSRC_DDP    "DeviceDataSourcePatch.xml"
+#define DEVICEMAP_RSRC_BD     "BuilderDataSource.xml"
+#define DEVICEMAP_RSRC_BDP    "BuilderDataSourcePatch.xml"
 
 
-#define OPENDDR_COMMENT       "OpenDDR %s http://www.openddr.org (device detection ddr)"
+#define DEVICEMAP_COMMENT     "DeviceMap %s http://incubator.apache.org/devicemap/ (device detection ddr)"
 
 
-#define OPENDDR_KEYS          {                            \
+#define DEVICEMAP_KEYS        {                            \
                                 "vendor",                  \
                                 "model",                   \
                                 "parentId",                \
@@ -51,12 +51,12 @@
                               }
 
 
-int openddr_load_resources(dclass_index*,const char*);
+int devicemap_load_resources(dclass_index*,const char*);
 
 
 //openddr blackberry fix
 #define OPENDDR_BLKBRY_FIX    1
 
 
-#endif	/* _DCLASS_OPENDDR_CLIENT_H */
+#endif	/* _DCLASS_DEVICEMAP_CLIENT_H */
 
