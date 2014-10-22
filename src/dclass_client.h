@@ -24,7 +24,7 @@
 #include "dtree_client.h"
 
 
-#define DCLASS_VERSION    "dClass 2.3.1pre"
+#define DCLASS_VERSION    "dClass 2.3.1"
 
 
 //key value struct, dtree payload

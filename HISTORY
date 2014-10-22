@@ -1,6 +1,5 @@
+2.3.1
   -Updated DeviceMap (1.0.1)
-  -TODO test servers
-  -TODO convert java to devicemap
 
 2.2.10
   -cleanups, varnish4, pattern patches, tested with nginx 1.6.0

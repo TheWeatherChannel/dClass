@@ -75,11 +75,11 @@ sub vcl_error {
 <body>
 <h1>UADIAG</h1>
 <pre>
-User-Agent:       "} + req.http.User-Agent + {"
+User-Agent:         "} + req.http.User-Agent + {"
 
-dClass version:   "} + dclass.get_version() + {"
+dClass version:     "} + dclass.get_version() + {"
 
-dClass type:      "} + req.http.dclass_type + {"
+dClass type:        "} + req.http.dclass_type + {"
 
 DeviceMap comment:  "} + dclass.get_comment() + {"
 DeviceMap id:       "} + req.http.dclass_devicemap + {"
@@ -92,11 +92,11 @@ DeviceMap tablet:   "} + dclass.get_field("is_tablet") + {"
 DeviceMap crawler:  "} + dclass.get_field("is_crawler") + {"
 DeviceMap desktop:  "} + dclass.get_field("is_desktop") + {"
 
-browser comment:  "} + dclass.get_comment_p(1) + {"
-browser id:       "} + req.http.dclass_browser + {"
-browser name:     "} + dclass.get_field_p("browser",1) + {"
-browser ver:      "} + dclass.get_ifield_p("version",1) + {"
-browser os:       "} + dclass.get_field_p("os",1) + {"
+browser comment:    "} + dclass.get_comment_p(1) + {"
+browser id:         "} + req.http.dclass_browser + {"
+browser name:       "} + dclass.get_field_p("browser",1) + {"
+browser ver:        "} + dclass.get_ifield_p("version",1) + {"
+browser os:         "} + dclass.get_field_p("os",1) + {"
 </pre>
 </body>
 </html>"};

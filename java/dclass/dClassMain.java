@@ -13,10 +13,10 @@ public class dClassMain
     {
         int ret,i;
         int argc=args.length;
-        int openddr=0;
+        int devicemap=0;
         long count,total;
         long startn,diffn;
-        String loadFile="../dtrees/openddr.dtree";
+        String loadFile="../dtrees/devicemap.dtree";
         String outFile=null;
         String parameter=null;
         dClass di;
@@ -35,7 +35,7 @@ public class dClassMain
             //-m [open ddr resource dir]
             else if(args[i].equals("-d") && argc>(++i))
             {
-                openddr=1;
+                devicemap=1;
                 loadFile=args[i];
             }
             else if(args[i].startsWith("-h") || args[i].startsWith("--h"))
@@ -43,7 +43,7 @@ public class dClassMain
                 System.out.println("Usage: dclass_client [OPTIONS] [FILE|STRING]\n");
                 System.out.println("  -l <path>            load dtree from file");
                 System.out.println("  -o <path>            store dtree to file");
-                System.out.println("  -d <folder path>     load OpenDDR resources xmls");
+                System.out.println("  -d <folder path>     load DeviceMap resources xmls");
                 System.out.println("  FILE                 STRING text file");
                 System.out.println("  STRING               test string");
                 
@@ -54,7 +54,7 @@ public class dClassMain
                 parameter=args[i];
         }
 
-        System.out.println("Loading "+(openddr>0?"openddr":"dtree")+": '"+loadFile+"'");
+        System.out.println("Loading "+(devicemap>0?"devicemap":"dtree")+": '"+loadFile+"'");
 
         startn=System.nanoTime();
 
@@ -153,7 +153,7 @@ public class dClassMain
 
             System.out.println("Param UA lookup: '"+kv.get("id")+"' time: "+getTime(diffn));
 
-            System.out.print("OpenDDR attributes => ");
+            System.out.print("DeviceMap attributes => ");
 
             for(String key:kv.keySet())
             {

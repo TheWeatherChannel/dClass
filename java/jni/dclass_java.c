@@ -43,7 +43,7 @@ JNIEXPORT jint JNICALL Java_dclass_dClass_init(JNIEnv *env,jobject obj,jstring j
     ret=dclass_load_file(dci,path);
 
     if(ret<=0)
-        ret=openddr_load_resources(dci,path);
+        ret=devicemap_load_resources(dci,path);
 
     (*env)->ReleaseStringUTFChars(env,jpath,path);
 
