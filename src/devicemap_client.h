@@ -32,7 +32,7 @@
 #define DEVICEMAP_RSRC_BDP    "BuilderDataSourcePatch.xml"
 
 
-#define DEVICEMAP_COMMENT     "DeviceMap %s http://incubator.apache.org/devicemap/ (device detection ddr)"
+#define DEVICEMAP_COMMENT     "DeviceMap %s http://devicemap.apache.org/ (device detection ddr)"
 
 
 #define DEVICEMAP_KEYS        {                            \
