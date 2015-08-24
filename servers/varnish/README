@@ -10,7 +10,7 @@ copy libvmod_dclass.so to the varnish installation vmod directory:
 
 Varnish 4.0
 
-Edit Makefile in services/src and set VARNISH4=1 and update the
+Edit Makefile in servers/src and set VARNISH4=1 and update the
 source (SRC) and installation (PREFIX) location.
 
 Available functions:
