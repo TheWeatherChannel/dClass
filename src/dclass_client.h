@@ -13,60 +13,48 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
-
 
 #ifndef _DCLASS_H_INCLUDED_
 #define _DCLASS_H_INCLUDED_
 
-
 #include "dtree_client.h"
 
+#define DCLASS_VERSION "dClass 2.3.1"
 
-#define DCLASS_VERSION    "dClass 2.3.1"
+// key value struct, dtree payload
+typedef struct {
+  const char *id;
 
+  const char **keys;
+  const char **values;
 
-//key value struct, dtree payload
-typedef struct
-{
-    const char            *id;
-    
-    const char            **keys;
-    const char            **values;
-    
-    unsigned short int    size;
-}
-dclass_keyvalue;
+  unsigned short int size;
+} dclass_keyvalue;
 
+// dclass index
+typedef struct {
+  dtree_dt_index dti;
 
-//dclass index
-typedef struct
-{
-    dtree_dt_index        dti;
-    
-    dclass_keyvalue       error;
-}
-dclass_index;
-
+  dclass_keyvalue error;
+} dclass_index;
 
 #include "devicemap_client.h"
 
+void dclass_init_index(dclass_index *);
 
-void dclass_init_index(dclass_index*);
+int dclass_load_file(dclass_index *, const char *);
+int dclass_write_file(const dclass_index *, const char *);
 
-int dclass_load_file(dclass_index*,const char*);
-int dclass_write_file(const dclass_index*,const char*);
+const dclass_keyvalue *dclass_classify(const dclass_index *, const char *);
+const dclass_keyvalue *dclass_get(const dclass_index *, const char *);
+const char *dclass_get_kvalue(const dclass_keyvalue *, const char *);
 
-const dclass_keyvalue *dclass_classify(const dclass_index*,const char*);
-const dclass_keyvalue *dclass_get(const dclass_index*,const char*);
-const char *dclass_get_kvalue(const dclass_keyvalue*,const char*);
+void dclass_free(dclass_index *);
 
-void dclass_free(dclass_index*);
-
-const char *dclass_get_id(void*);
+const char *dclass_get_id(void *);
 
 const char *dclass_get_version();
 
-
-#endif	/* _DCLASS_H_INCLUDED_ */
+#endif /* _DCLASS_H_INCLUDED_ */

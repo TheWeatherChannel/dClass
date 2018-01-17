@@ -13,599 +13,581 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
-
 
 #include "dclass_client.h"
 
-
-//devicemap property keys
+// devicemap property keys
 static const char *devicemap_key_array[] = DEVICEMAP_KEYS;
 
-
-static int devicemap_read_device_raw(FILE*,dtree_dt_index*,dtree_dt_index*);
-static int devicemap_read_pattern(FILE*,dtree_dt_index*,dtree_dt_index*,dtree_flag_f*);
-static int devicemap_add_device_pattern(dtree_dt_index*,dtree_dt_index*,dclass_keyvalue*,dclass_keyvalue*,char*,dtree_flag_f);
-static const char *devicemap_copy_string(dtree_dt_index*,const char*,const char*);
-static int devicemap_alloc_kvd(dtree_dt_index*,dtree_dt_index*,char*);
-static char *devicemap_get_attr(const char*,const char*,dtree_dt_index*,char**,char*);
-static char *devicemap_get_value(const char*,const char*,dtree_dt_index*,char**,char*);
-static char *devicemap_get_str(const char*,const char*,dtree_dt_index*,char**,char*,char*,char);
-static char *devicemap_unregex(const char*,char*);
+static int devicemap_read_device_raw(FILE *, dtree_dt_index *,
+                                     dtree_dt_index *);
+static int devicemap_read_pattern(FILE *, dtree_dt_index *, dtree_dt_index *,
+                                  dtree_flag_f *);
+static int devicemap_add_device_pattern(dtree_dt_index *, dtree_dt_index *,
+                                        dclass_keyvalue *, dclass_keyvalue *,
+                                        char *, dtree_flag_f);
+static const char *devicemap_copy_string(dtree_dt_index *, const char *,
+                                         const char *);
+static int devicemap_alloc_kvd(dtree_dt_index *, dtree_dt_index *, char *);
+static char *devicemap_get_attr(const char *, const char *, dtree_dt_index *,
+                                char **, char *);
+static char *devicemap_get_value(const char *, const char *, dtree_dt_index *,
+                                 char **, char *);
+static char *devicemap_get_str(const char *, const char *, dtree_dt_index *,
+                               char **, char *, char *, char);
+static char *devicemap_unregex(const char *, char *);
 
 #if OPENDDR_BLKBRY_FIX
-static void openddr_convert_bb(char*);
+static void openddr_convert_bb(char *);
 #endif
 
-extern char **dclass_get_value_pos(dclass_keyvalue*,char*);
+extern char **dclass_get_value_pos(dclass_keyvalue *, char *);
 
+// loads devicemap resources
+int devicemap_load_resources(dclass_index *di, const char *path) {
+  int i;
+  int ret;
+  int dcount = 0;
+  int pcount = 0;
+  char fpath[1024];
+  FILE *f = NULL;
+  dtree_flag_f flags = 0;
+  dtree_dt_index dev;
+  dtree_dt_index *h = &di->dti;
 
-//loads devicemap resources
-int devicemap_load_resources(dclass_index *di,const char *path)
-{
-    int i;
-    int ret;
-    int dcount=0;
-    int pcount=0;
-    char fpath[1024];
-    FILE *f=NULL;
-    dtree_flag_f flags=0;
-    dtree_dt_index dev;
-    dtree_dt_index *h=&di->dti;
+  dclass_init_index(di);
+  dtree_init_index(&dev);
 
-    dclass_init_index(di);
-    dtree_init_index(&dev);
-    
-    h->sflags=DTREE_S_FLAG_REGEX|DTREE_S_FLAG_DUPS;
-    
-    //string and device cache
-    di->error.id=dtree_alloc_string(h,"unknown",7);
-    
-    if(!devicemap_alloc_kvd(h,&dev,"genericPhone") || !devicemap_alloc_kvd(h,&dev,"genericAndroid") ||
-            !devicemap_alloc_kvd(h,&dev,"desktopDevice"))
+  h->sflags = DTREE_S_FLAG_REGEX | DTREE_S_FLAG_DUPS;
+
+  // string and device cache
+  di->error.id = dtree_alloc_string(h, "unknown", 7);
+
+  if (!devicemap_alloc_kvd(h, &dev, "genericPhone") ||
+      !devicemap_alloc_kvd(h, &dev, "genericAndroid") ||
+      !devicemap_alloc_kvd(h, &dev, "desktopDevice"))
+    goto dexit;
+
+  dtree_alloc_string(h, "true", 4);
+  dtree_alloc_string(h, "false", 5);
+
+  // build a device tree
+  for (i = 0; i < 2; i++) {
+    if (!i)
+      sprintf(fpath, "%s/%s", path, DEVICEMAP_RSRC_DD);
+    else
+      sprintf(fpath, "%s/%s", path, DEVICEMAP_RSRC_DDP);
+
+    dtree_printd(DTREE_PRINT_GENERIC, "DeviceMap device data: '%s'\n", fpath);
+
+    if (!(f = fopen(fpath, "r"))) {
+      fprintf(stderr, "DeviceMap: cannot open '%s'\n", fpath);
+      if (!i)
         goto dexit;
-    
-    dtree_alloc_string(h,"true",4);
-    dtree_alloc_string(h,"false",5);
-    
-    //build a device tree
-    for(i=0;i<2;i++)
-    {
-        if(!i)
-            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_DD);
-        else
-            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_DDP);
-
-        dtree_printd(DTREE_PRINT_GENERIC,"DeviceMap device data: '%s'\n",fpath);
-
-        if(!(f=fopen(fpath,"r")))
-        {
-            fprintf(stderr,"DeviceMap: cannot open '%s'\n",fpath);
-            if(!i)
-                goto dexit;
-        }
-
-        while((ret=devicemap_read_device_raw(f,h,&dev)))
-        {
-            if(ret==-1)
-                goto dexit;
-            
-            dcount++;
-        }
-
-        fclose(f);
     }
-    
-    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap device data raw count: %d\n",dcount);
-    
-    dtree_printd(DTREE_PRINT_INITDTREE,"Open DDR raw dtree stats: nodes: %zu slabs: %zu mem: %zu bytes strings: %zu(%zu,%zu)\n",
-           dev.node_count,dev.slab_count,dev.size,dev.dc_count,dev.dc_slab_count,dev.dc_slab_pos);
-    
-    //build main pattern tree
-    for(i=0;i<2;i++)
-    {
-        if(!i)
-            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_BD);
-        else
-            sprintf(fpath,"%s/%s",path,DEVICEMAP_RSRC_BDP);
 
-        dtree_printd(DTREE_PRINT_GENERIC,"DeviceMap builder data: '%s'\n",fpath);
+    while ((ret = devicemap_read_device_raw(f, h, &dev))) {
+      if (ret == -1)
+        goto dexit;
 
-        if(!(f=fopen(fpath,"r")))
-        {
-            fprintf(stderr,"DeviceMap: cannot open '%s'\n",fpath);
-            if(!i)
-                goto dexit;
-        }
-
-        while((ret=devicemap_read_pattern(f,h,&dev,&flags)))
-        {
-            if(ret==-1)
-                goto dexit;
-            
-            pcount++;
-        }
-
-        fclose(f);
+      dcount++;
     }
-    
-    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap pattern data raw count: %d\n",pcount);
-    
-    dtree_free(&dev);
-    
-    return pcount;
-    
+
+    fclose(f);
+  }
+
+  dtree_printd(DTREE_PRINT_INITDTREE, "DeviceMap device data raw count: %d\n",
+               dcount);
+
+  dtree_printd(DTREE_PRINT_INITDTREE,
+               "Open DDR raw dtree stats: nodes: %zu slabs: %zu mem: %zu bytes "
+               "strings: %zu(%zu,%zu)\n",
+               dev.node_count, dev.slab_count, dev.size, dev.dc_count,
+               dev.dc_slab_count, dev.dc_slab_pos);
+
+  // build main pattern tree
+  for (i = 0; i < 2; i++) {
+    if (!i)
+      sprintf(fpath, "%s/%s", path, DEVICEMAP_RSRC_BD);
+    else
+      sprintf(fpath, "%s/%s", path, DEVICEMAP_RSRC_BDP);
+
+    dtree_printd(DTREE_PRINT_GENERIC, "DeviceMap builder data: '%s'\n", fpath);
+
+    if (!(f = fopen(fpath, "r"))) {
+      fprintf(stderr, "DeviceMap: cannot open '%s'\n", fpath);
+      if (!i)
+        goto dexit;
+    }
+
+    while ((ret = devicemap_read_pattern(f, h, &dev, &flags))) {
+      if (ret == -1)
+        goto dexit;
+
+      pcount++;
+    }
+
+    fclose(f);
+  }
+
+  dtree_printd(DTREE_PRINT_INITDTREE, "DeviceMap pattern data raw count: %d\n",
+               pcount);
+
+  dtree_free(&dev);
+
+  return pcount;
+
 dexit:
 
-    if(f)
-        fclose(f);
+  if (f)
+    fclose(f);
 
-    dtree_free(&dev);
-    dtree_free(h);
-    dclass_init_index(di);
-    
-    return -1;
+  dtree_free(&dev);
+  dtree_free(h);
+  dclass_init_index(di);
+
+  return -1;
 }
 
-//read a device from file, return it
-static int devicemap_read_device_raw(FILE *f,dtree_dt_index *h,dtree_dt_index *dev)
-{
-    int i;
-    int ret=0;
-    char buf[1048];
-    char temp[DTREE_DATA_BUFLEN];
-    dclass_keyvalue *kvd=NULL;
-    dtree_dt_add_entry entry;
-    
-    if(!f)
-        return 0;
-    
-    while((buf[sizeof(buf)-2]='\n') && fgets(buf,sizeof(buf),f))
-    {
-        //overflow
-        if(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2])
-        {
-            dtree_printd(DTREE_PRINT_INITDTREE,"DEVICEMAP LOAD: overflow detected\n");
-            
-            do
-            {
-                buf[sizeof(buf)-2]='\n';
-                
-                if(!fgets(buf,sizeof(buf),f))
-                    break;
-            }
-            while(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2]);
-            
-            continue;
-        }
-        
-        if(strstr(buf,"<device "))
-        {
-            devicemap_get_attr(buf,"id",NULL,NULL,temp);
-            
-            kvd=(dclass_keyvalue*)dtree_get(dev,temp,0);
-            
-            if(kvd)
-                dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap device overwrite found: '%s'\n",temp);
-            else
-                kvd=(dclass_keyvalue*)dtree_alloc_mem(h,sizeof(dclass_keyvalue));
-            
-            if(!kvd)
-                return -1;
-            
-            kvd->size=sizeof(devicemap_key_array)/sizeof(*devicemap_key_array);
-            kvd->keys=devicemap_key_array;
-            
-            kvd->values=(const char**)dtree_alloc_mem(h,sizeof(devicemap_key_array));
-            
-            if(!kvd->values)
-                return -1;
-            
-            kvd->id=dtree_alloc_string(h,temp,strlen(temp));
-            
-            devicemap_get_attr(buf,"parentId",h,dclass_get_value_pos(kvd,"parentId"),NULL);
-            
-            ret=1;
-            
-            if(strstr(buf,"/>"))
-                break;
-        }
-        else if(strstr(buf,"</device>"))
-            break;
-        else if(kvd && strstr(buf,"<property "))
-        {
-            devicemap_get_attr(buf,"name",NULL,NULL,temp);
-            
-            devicemap_get_attr(buf,"value",h,dclass_get_value_pos(kvd,temp),NULL);
-        }
-    }
-    
-    if(kvd)
-    {
-        dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap id(%p): '%s'(%p)\nAttributes => ",kvd,kvd->id,kvd->id);
-        for(i=0;i<kvd->size;i++)
-                dtree_printd(DTREE_PRINT_INITDTREE,"%s: '%s' ",kvd->keys[i],kvd->values[i]);
-        dtree_printd(DTREE_PRINT_INITDTREE,"\n");
+// read a device from file, return it
+static int devicemap_read_device_raw(FILE *f, dtree_dt_index *h,
+                                     dtree_dt_index *dev) {
+  int i;
+  int ret = 0;
+  char buf[1048];
+  char temp[DTREE_DATA_BUFLEN];
+  dclass_keyvalue *kvd = NULL;
+  dtree_dt_add_entry entry;
 
-        memset(&entry,0,sizeof(dtree_dt_add_entry));
-
-        entry.data=kvd;
-
-        //add to device tree
-        if(dtree_add_entry(dev,kvd->id,&entry)<0)
-            return -1;
-    }
-    
-    return ret;
-}
-
-//read a pattern from file, insert it
-static int devicemap_read_pattern(FILE *f,dtree_dt_index *h,dtree_dt_index *dev,dtree_flag_f *flags)
-{
-    int ret=0;
-    char buf[1048];
-    char pattern[DTREE_DATA_BUFLEN];
-    char id[DTREE_DATA_BUFLEN];
-    dclass_keyvalue *der=NULL;
-    dclass_keyvalue *chain=NULL;
-    const dtree_dt_node *base;
-    
-#if OPENDDR_BLKBRY_FIX
-    dtree_flag_f bb_flag;
-    dclass_keyvalue *bb_chain;
-#endif
-    
-    if(!f)
-        return 0;
-    
-    while((buf[sizeof(buf)-2]='\n') && fgets(buf,sizeof(buf),f))
-    {
-        //overflow
-        if(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2])
-        {
-            dtree_printd(DTREE_PRINT_INITDTREE,"DEVICEMAP LOAD: overflow detected\n");
-            
-            do
-            {
-                buf[sizeof(buf)-2]='\n';
-                
-                if(!fgets(buf,sizeof(buf),f))
-                    break;
-            }
-            while(buf[sizeof(buf)-2]!='\n' && buf[sizeof(buf)-2]);
-            
-            continue;
-        }
-
-        if(strstr(buf,"<!--"))
-        {
-            //TODO fix this
-        }
-        else if(!h->comment && strstr(buf,"<ver>"))
-        {
-            devicemap_get_value(buf,"ver",NULL,NULL,pattern);
-            sprintf(buf,DEVICEMAP_COMMENT,pattern);
-            h->comment=dtree_alloc_mem(h,(strlen(buf)+1)*sizeof(char));
-            if(h->comment)
-                strncpy(h->comment,buf,strlen(buf));
-        }
-        else if(strstr(buf,"<device "))
-        {
-            devicemap_get_attr(buf,"id",NULL,NULL,id);
-            
-            ret=1;
-            
-            //get device from device tree
-            der=(dclass_keyvalue*)dtree_get(dev,id,0);
-        }
-        else if(strstr(buf,"<builder "))
-        {
-            if(strstr(buf,"TwoStepDeviceBuilder"))
-                *flags=DTREE_DT_FLAG_CHAIN;
-            else if(strstr(buf,"SimpleDeviceBuilder"))
-                *flags=DTREE_DT_FLAG_WEAK;
-        }
-        else if(strstr(buf,"</builder>") && *flags)
-            *flags=0;
-        else if(strstr(buf,"</device>"))
-            break;
-        else if(der && strstr(buf,"<value>"))
-        {
-            devicemap_get_value(buf,"value",NULL,NULL,pattern);
-            
-            dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap pattern: '%s' id: '%s' flags: %d (%p)\n",
-                    pattern,der->id,*flags,der);
-            
-            if(!chain && *flags & DTREE_DT_FLAG_CHAIN)
-            {
-                dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap CHAIN PATTERN: '%s' id: '%s'\n",pattern,der->id);
-
-                chain=(dclass_keyvalue*)dtree_get(h,pattern,DTREE_DT_FLAG_BCHAIN);
-
-                //TODO need to iterate thru regex and add all possible chain values
-                if(!chain)
-                {
-                    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap ALT CHAIN PATTERN: '%s' id: '%s'\n",devicemap_unregex(pattern,id),der->id);
-
-                    base=dtree_get_node(h,devicemap_unregex(pattern,id),0,0);
-
-                    if(base && (base=dtree_get_flag(h,base,DTREE_DT_FLAG_BCHAIN,0)))
-                        chain=base->payload;
-                }
-
-                if(chain)
-                {
-                    dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap FOUND DUP CHAIN PATTERN: '%s' id: '%s' (%s)\n",pattern,der->id,chain->id);
-
-                    continue;
-                }
-            }
-            
-#if OPENDDR_BLKBRY_FIX
-            bb_flag=*flags;
-            bb_chain=chain;
-            
-            if(!strncasecmp(der->id,"blackberry",10) && chain && (*flags & DTREE_DT_FLAG_CHAIN))
-            {
-                *flags=0;
-                chain=NULL;
-
-                openddr_convert_bb(pattern);
-            }
-#endif
-            
-            if(devicemap_add_device_pattern(h,dev,der,chain,pattern,*flags)<0)
-                return -1;
-            
-#if OPENDDR_BLKBRY_FIX
-            *flags=bb_flag;
-            chain=bb_chain;
-#endif
-
-            if(*flags & DTREE_DT_FLAG_CHAIN)
-                chain=der;
-        }
-    }
-    
-    return ret;
-}
-
-//adds a device pattern to the root tree
-static int devicemap_add_device_pattern(dtree_dt_index *h,dtree_dt_index *dev,dclass_keyvalue *der,dclass_keyvalue *chain,char *pattern,dtree_flag_f flags)
-{
-    int i;
-    dtree_dt_add_entry entry;
-    
-    //chain pattern
-    if((flags & DTREE_DT_FLAG_CHAIN))
-    {
-        if(!chain)
-            flags |= DTREE_DT_FLAG_BCHAIN;
-
-        dtree_printd(DTREE_PRINT_INITDTREE,"DeviceMap CHAIN PATTERN: '%s' current: '%s' prev: '%s' flag: %u\n",
-                pattern,der->id,chain?chain->id:"HEAD",flags);
-    }
-    
-    for(i=0;i<der->size;i++)
-    {
-        if(!der->values[i])
-            der->values[i]=devicemap_copy_string(dev,dclass_get_kvalue(der,"parentId"),der->keys[i]);
-    }
-
-    memset(&entry,0,sizeof(dtree_dt_add_entry));
-
-    entry.data=der;
-    entry.flags=flags;
-    entry.param=chain;
-    
-    return dtree_add_entry(h,pattern,&entry);
-}
-
-//alloc a device kvd
-static int devicemap_alloc_kvd(dtree_dt_index *h,dtree_dt_index *dev,char *id)
-{
-    dclass_keyvalue *kvd;
-    dtree_dt_add_entry entry;
-    
-    kvd=(dclass_keyvalue*)dtree_alloc_mem(h,sizeof(dclass_keyvalue));
-    
-    if(!kvd)
-        return 0;
-    
-    kvd->id=dtree_alloc_string(h,id,strlen(id));
-
-    memset(&entry,0,sizeof(dtree_dt_add_entry));
-
-    entry.data=kvd;
-    
-    dtree_add_entry(dev,kvd->id,&entry);
-    
-    return 1;
-}
-
-//copy string from parent
-static const char *devicemap_copy_string(dtree_dt_index *h,const char *parent,const char *key)
-{
-    dclass_keyvalue *p;
-    const char *ret;
-    
-    p=(dclass_keyvalue*)dtree_get(h,parent,0);
-    
-    if(!p)
-        return NULL;
-
-    ret=dclass_get_kvalue(p,key);
-    
-    if(!ret)
-        return devicemap_copy_string(h,dclass_get_kvalue(p,"parentId"),key);
-    
-    return ret;
-}
-
-//looks for attr in buf and copies it to dest
-static char *devicemap_get_attr(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf)
-{
-    return devicemap_get_str(buf,attr,h,vbuf,retbuf,"=",'\"');
-}
-
-//looks for value in buf and copies it to dest
-static char *devicemap_get_value(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf)
-{
-    return devicemap_get_str(buf,attr,h,vbuf,retbuf,">",'<');
-}
-
-//strcasestr
-static const char *_alt_strcasestr(const char *haystack,const char *needle)
-{
-    const char *p;
-    const char *startn=0;
-    const char *np=0;
-
-    for (p=haystack;*p;p++)
-    {
-        if(np)
-        {
-            if(toupper((unsigned char)*p)==toupper((unsigned char)*np))
-            {
-                if(!*++np)
-                    return startn;
-            }
-            else
-                np = 0;
-        }
-        else if(toupper((unsigned char)*p)==toupper((unsigned char)*needle))
-        {
-            np = needle + 1;
-            startn = p;
-        }
-    }
-
+  if (!f)
     return 0;
+
+  while ((buf[sizeof(buf) - 2] = '\n') && fgets(buf, sizeof(buf), f)) {
+    // overflow
+    if (buf[sizeof(buf) - 2] != '\n' && buf[sizeof(buf) - 2]) {
+      dtree_printd(DTREE_PRINT_INITDTREE,
+                   "DEVICEMAP LOAD: overflow detected\n");
+
+      do {
+        buf[sizeof(buf) - 2] = '\n';
+
+        if (!fgets(buf, sizeof(buf), f))
+          break;
+      } while (buf[sizeof(buf) - 2] != '\n' && buf[sizeof(buf) - 2]);
+
+      continue;
+    }
+
+    if (strstr(buf, "<device ")) {
+      devicemap_get_attr(buf, "id", NULL, NULL, temp);
+
+      kvd = (dclass_keyvalue *)dtree_get(dev, temp, 0);
+
+      if (kvd)
+        dtree_printd(DTREE_PRINT_INITDTREE,
+                     "DeviceMap device overwrite found: '%s'\n", temp);
+      else
+        kvd = (dclass_keyvalue *)dtree_alloc_mem(h, sizeof(dclass_keyvalue));
+
+      if (!kvd)
+        return -1;
+
+      kvd->size = sizeof(devicemap_key_array) / sizeof(*devicemap_key_array);
+      kvd->keys = devicemap_key_array;
+
+      kvd->values =
+          (const char **)dtree_alloc_mem(h, sizeof(devicemap_key_array));
+
+      if (!kvd->values)
+        return -1;
+
+      kvd->id = dtree_alloc_string(h, temp, strlen(temp));
+
+      devicemap_get_attr(buf, "parentId", h,
+                         dclass_get_value_pos(kvd, "parentId"), NULL);
+
+      ret = 1;
+
+      if (strstr(buf, "/>"))
+        break;
+    } else if (strstr(buf, "</device>"))
+      break;
+    else if (kvd && strstr(buf, "<property ")) {
+      devicemap_get_attr(buf, "name", NULL, NULL, temp);
+
+      devicemap_get_attr(buf, "value", h, dclass_get_value_pos(kvd, temp),
+                         NULL);
+    }
+  }
+
+  if (kvd) {
+    dtree_printd(DTREE_PRINT_INITDTREE,
+                 "DeviceMap id(%p): '%s'(%p)\nAttributes => ", kvd, kvd->id,
+                 kvd->id);
+    for (i = 0; i < kvd->size; i++)
+      dtree_printd(DTREE_PRINT_INITDTREE, "%s: '%s' ", kvd->keys[i],
+                   kvd->values[i]);
+    dtree_printd(DTREE_PRINT_INITDTREE, "\n");
+
+    memset(&entry, 0, sizeof(dtree_dt_add_entry));
+
+    entry.data = kvd;
+
+    // add to device tree
+    if (dtree_add_entry(dev, kvd->id, &entry) < 0)
+      return -1;
+  }
+
+  return ret;
 }
 
-//a generic str parser
-static char *devicemap_get_str(const char *buf,const char *attr,dtree_dt_index *h,char **vbuf,char *retbuf,char *suffix,char term)
-{
-    int i;
-    const char *s;
-    const char *e;
-    char *ret=NULL;
-    char temp[DTREE_DATA_BUFLEN];
-    
-    if(h && !vbuf)
-        return NULL;
-    
-    i=sizeof(temp)-2-strlen(suffix);
-    strncpy(temp,attr,i);
-    temp[i+1]='\0';
-    strcat(temp,suffix);
-    
-    s=_alt_strcasestr(buf,temp);
-    
-    if(s)
-    {
-        s+=strlen(temp);
-        
-        if(*s==term)
-            s++;
-        
-        e=s;
-        
-        while(*e!=term)
-        {
-            //non quoted attribute
-            if(*suffix=='=' && *e<=' ' && *(s-1)!='\"')
-                break;
-            e++;
-        }
-        
-        i=e-s;
-        
-        if(i>=DTREE_DATA_BUFLEN)
-            i=DTREE_DATA_BUFLEN-1;
-        
-        if(h)
-        {
-            ret=dtree_alloc_string(h,s,i);
-            *vbuf=ret;
-        }
-        
-        if(retbuf)
-        {   
-            ret=strncpy(retbuf,s,i);
-            retbuf[i]='\0';
-        }
+// read a pattern from file, insert it
+static int devicemap_read_pattern(FILE *f, dtree_dt_index *h,
+                                  dtree_dt_index *dev, dtree_flag_f *flags) {
+  int ret = 0;
+  char buf[1048];
+  char pattern[DTREE_DATA_BUFLEN];
+  char id[DTREE_DATA_BUFLEN];
+  dclass_keyvalue *der = NULL;
+  dclass_keyvalue *chain = NULL;
+  const dtree_dt_node *base;
+
+#if OPENDDR_BLKBRY_FIX
+  dtree_flag_f bb_flag;
+  dclass_keyvalue *bb_chain;
+#endif
+
+  if (!f)
+    return 0;
+
+  while ((buf[sizeof(buf) - 2] = '\n') && fgets(buf, sizeof(buf), f)) {
+    // overflow
+    if (buf[sizeof(buf) - 2] != '\n' && buf[sizeof(buf) - 2]) {
+      dtree_printd(DTREE_PRINT_INITDTREE,
+                   "DEVICEMAP LOAD: overflow detected\n");
+
+      do {
+        buf[sizeof(buf) - 2] = '\n';
+
+        if (!fgets(buf, sizeof(buf), f))
+          break;
+      } while (buf[sizeof(buf) - 2] != '\n' && buf[sizeof(buf) - 2]);
+
+      continue;
     }
-    
-    return ret;
+
+    if (strstr(buf, "<!--")) {
+      // TODO fix this
+    } else if (!h->comment && strstr(buf, "<ver>")) {
+      devicemap_get_value(buf, "ver", NULL, NULL, pattern);
+      sprintf(buf, DEVICEMAP_COMMENT, pattern);
+      h->comment = dtree_alloc_mem(h, (strlen(buf) + 1) * sizeof(char));
+      if (h->comment)
+        strncpy(h->comment, buf, strlen(buf));
+    } else if (strstr(buf, "<device ")) {
+      devicemap_get_attr(buf, "id", NULL, NULL, id);
+
+      ret = 1;
+
+      // get device from device tree
+      der = (dclass_keyvalue *)dtree_get(dev, id, 0);
+    } else if (strstr(buf, "<builder ")) {
+      if (strstr(buf, "TwoStepDeviceBuilder"))
+        *flags = DTREE_DT_FLAG_CHAIN;
+      else if (strstr(buf, "SimpleDeviceBuilder"))
+        *flags = DTREE_DT_FLAG_WEAK;
+    } else if (strstr(buf, "</builder>") && *flags)
+      *flags = 0;
+    else if (strstr(buf, "</device>"))
+      break;
+    else if (der && strstr(buf, "<value>")) {
+      devicemap_get_value(buf, "value", NULL, NULL, pattern);
+
+      dtree_printd(DTREE_PRINT_INITDTREE,
+                   "DeviceMap pattern: '%s' id: '%s' flags: %d (%p)\n", pattern,
+                   der->id, *flags, der);
+
+      if (!chain && *flags & DTREE_DT_FLAG_CHAIN) {
+        dtree_printd(DTREE_PRINT_INITDTREE,
+                     "DeviceMap CHAIN PATTERN: '%s' id: '%s'\n", pattern,
+                     der->id);
+
+        chain = (dclass_keyvalue *)dtree_get(h, pattern, DTREE_DT_FLAG_BCHAIN);
+
+        // TODO need to iterate thru regex and add all possible chain values
+        if (!chain) {
+          dtree_printd(DTREE_PRINT_INITDTREE,
+                       "DeviceMap ALT CHAIN PATTERN: '%s' id: '%s'\n",
+                       devicemap_unregex(pattern, id), der->id);
+
+          base = dtree_get_node(h, devicemap_unregex(pattern, id), 0, 0);
+
+          if (base && (base = dtree_get_flag(h, base, DTREE_DT_FLAG_BCHAIN, 0)))
+            chain = base->payload;
+        }
+
+        if (chain) {
+          dtree_printd(
+              DTREE_PRINT_INITDTREE,
+              "DeviceMap FOUND DUP CHAIN PATTERN: '%s' id: '%s' (%s)\n",
+              pattern, der->id, chain->id);
+
+          continue;
+        }
+      }
+
+#if OPENDDR_BLKBRY_FIX
+      bb_flag = *flags;
+      bb_chain = chain;
+
+      if (!strncasecmp(der->id, "blackberry", 10) && chain &&
+          (*flags & DTREE_DT_FLAG_CHAIN)) {
+        *flags = 0;
+        chain = NULL;
+
+        openddr_convert_bb(pattern);
+      }
+#endif
+
+      if (devicemap_add_device_pattern(h, dev, der, chain, pattern, *flags) < 0)
+        return -1;
+
+#if OPENDDR_BLKBRY_FIX
+      *flags = bb_flag;
+      chain = bb_chain;
+#endif
+
+      if (*flags & DTREE_DT_FLAG_CHAIN)
+        chain = der;
+    }
+  }
+
+  return ret;
 }
 
-//removes regex
-static char *devicemap_unregex(const char *s,char *dest)
-{
-    int h=0;
-    char *d=dest;
-    
-    while(*s)
-    {
-        if(*s==DTREE_PATTERN_SET_S)
-        {
-            *d++=*++s;
-            h=1;
-            continue;
-        }
-        else if(*s==DTREE_PATTERN_SET_E)
-        {
-            s++;
-            h=0;
-            continue;
-        }
-        else if(*s==DTREE_PATTERN_OPTIONAL || *s==DTREE_PATTERN_BEGIN || *s==DTREE_PATTERN_END ||
-            *s==DTREE_PATTERN_GROUP_S || *s==DTREE_PATTERN_GROUP_E || *s==DTREE_PATTERN_ESCAPE)
-        {
-            s++;
-            continue;
-        }
-        if(!h)
-            *d++=*s++;
-        else
-            s++;
+// adds a device pattern to the root tree
+static int devicemap_add_device_pattern(dtree_dt_index *h, dtree_dt_index *dev,
+                                        dclass_keyvalue *der,
+                                        dclass_keyvalue *chain, char *pattern,
+                                        dtree_flag_f flags) {
+  int i;
+  dtree_dt_add_entry entry;
+
+  // chain pattern
+  if ((flags & DTREE_DT_FLAG_CHAIN)) {
+    if (!chain)
+      flags |= DTREE_DT_FLAG_BCHAIN;
+
+    dtree_printd(
+        DTREE_PRINT_INITDTREE,
+        "DeviceMap CHAIN PATTERN: '%s' current: '%s' prev: '%s' flag: %u\n",
+        pattern, der->id, chain ? chain->id : "HEAD", flags);
+  }
+
+  for (i = 0; i < der->size; i++) {
+    if (!der->values[i])
+      der->values[i] = devicemap_copy_string(
+          dev, dclass_get_kvalue(der, "parentId"), der->keys[i]);
+  }
+
+  memset(&entry, 0, sizeof(dtree_dt_add_entry));
+
+  entry.data = der;
+  entry.flags = flags;
+  entry.param = chain;
+
+  return dtree_add_entry(h, pattern, &entry);
+}
+
+// alloc a device kvd
+static int devicemap_alloc_kvd(dtree_dt_index *h, dtree_dt_index *dev,
+                               char *id) {
+  dclass_keyvalue *kvd;
+  dtree_dt_add_entry entry;
+
+  kvd = (dclass_keyvalue *)dtree_alloc_mem(h, sizeof(dclass_keyvalue));
+
+  if (!kvd)
+    return 0;
+
+  kvd->id = dtree_alloc_string(h, id, strlen(id));
+
+  memset(&entry, 0, sizeof(dtree_dt_add_entry));
+
+  entry.data = kvd;
+
+  dtree_add_entry(dev, kvd->id, &entry);
+
+  return 1;
+}
+
+// copy string from parent
+static const char *devicemap_copy_string(dtree_dt_index *h, const char *parent,
+                                         const char *key) {
+  dclass_keyvalue *p;
+  const char *ret;
+
+  p = (dclass_keyvalue *)dtree_get(h, parent, 0);
+
+  if (!p)
+    return NULL;
+
+  ret = dclass_get_kvalue(p, key);
+
+  if (!ret)
+    return devicemap_copy_string(h, dclass_get_kvalue(p, "parentId"), key);
+
+  return ret;
+}
+
+// looks for attr in buf and copies it to dest
+static char *devicemap_get_attr(const char *buf, const char *attr,
+                                dtree_dt_index *h, char **vbuf, char *retbuf) {
+  return devicemap_get_str(buf, attr, h, vbuf, retbuf, "=", '\"');
+}
+
+// looks for value in buf and copies it to dest
+static char *devicemap_get_value(const char *buf, const char *attr,
+                                 dtree_dt_index *h, char **vbuf, char *retbuf) {
+  return devicemap_get_str(buf, attr, h, vbuf, retbuf, ">", '<');
+}
+
+// strcasestr
+static const char *_alt_strcasestr(const char *haystack, const char *needle) {
+  const char *p;
+  const char *startn = 0;
+  const char *np = 0;
+
+  for (p = haystack; *p; p++) {
+    if (np) {
+      if (toupper((unsigned char)*p) == toupper((unsigned char)*np)) {
+        if (!*++np)
+          return startn;
+      } else
+        np = 0;
+    } else if (toupper((unsigned char)*p) == toupper((unsigned char)*needle)) {
+      np = needle + 1;
+      startn = p;
     }
-    
-    *d='\0';
-    
-    return dest;
+  }
+
+  return 0;
+}
+
+// a generic str parser
+static char *devicemap_get_str(const char *buf, const char *attr,
+                               dtree_dt_index *h, char **vbuf, char *retbuf,
+                               char *suffix, char term) {
+  int i;
+  const char *s;
+  const char *e;
+  char *ret = NULL;
+  char temp[DTREE_DATA_BUFLEN];
+
+  if (h && !vbuf)
+    return NULL;
+
+  i = sizeof(temp) - 2 - strlen(suffix);
+  strncpy(temp, attr, i);
+  temp[i + 1] = '\0';
+  strcat(temp, suffix);
+
+  s = _alt_strcasestr(buf, temp);
+
+  if (s) {
+    s += strlen(temp);
+
+    if (*s == term)
+      s++;
+
+    e = s;
+
+    while (*e != term) {
+      // non quoted attribute
+      if (*suffix == '=' && *e <= ' ' && *(s - 1) != '\"')
+        break;
+      e++;
+    }
+
+    i = e - s;
+
+    if (i >= DTREE_DATA_BUFLEN)
+      i = DTREE_DATA_BUFLEN - 1;
+
+    if (h) {
+      ret = dtree_alloc_string(h, s, i);
+      *vbuf = ret;
+    }
+
+    if (retbuf) {
+      ret = strncpy(retbuf, s, i);
+      retbuf[i] = '\0';
+    }
+  }
+
+  return ret;
+}
+
+// removes regex
+static char *devicemap_unregex(const char *s, char *dest) {
+  int h = 0;
+  char *d = dest;
+
+  while (*s) {
+    if (*s == DTREE_PATTERN_SET_S) {
+      *d++ = *++s;
+      h = 1;
+      continue;
+    } else if (*s == DTREE_PATTERN_SET_E) {
+      s++;
+      h = 0;
+      continue;
+    } else if (*s == DTREE_PATTERN_OPTIONAL || *s == DTREE_PATTERN_BEGIN ||
+               *s == DTREE_PATTERN_END || *s == DTREE_PATTERN_GROUP_S ||
+               *s == DTREE_PATTERN_GROUP_E || *s == DTREE_PATTERN_ESCAPE) {
+      s++;
+      continue;
+    }
+    if (!h)
+      *d++ = *s++;
+    else
+      s++;
+  }
+
+  *d = '\0';
+
+  return dest;
 }
 
 #if OPENDDR_BLKBRY_FIX
-//blackberry pattern fix
-static void openddr_convert_bb(char *pattern)
-{
-    char *orig=pattern;
-    char new[DTREE_DATA_BUFLEN];
-    
-    *new='\0';
-    
-    if(strncasecmp(orig,"blackberry",10))
-        return;
-    
-    strcat(new,"blackberry.?");
-    
-    orig+=10;
-    
-    if(*orig==' ')
-        orig++;
-    
-    if(strlen(orig)>8)
-        return;
-    
-    strcat(new,orig);
-    
-    strcat(new,".?");
-    
-    strncpy(pattern,new,DTREE_DATA_BUFLEN-1);
-    
-    pattern[DTREE_DATA_BUFLEN-1]='\0';
+// blackberry pattern fix
+static void openddr_convert_bb(char *pattern) {
+  char *orig = pattern;
+  char new[DTREE_DATA_BUFLEN];
+
+  *new = '\0';
+
+  if (strncasecmp(orig, "blackberry", 10))
+    return;
+
+  strcat(new, "blackberry.?");
+
+  orig += 10;
+
+  if (*orig == ' ')
+    orig++;
+
+  if (strlen(orig) > 8)
+    return;
+
+  strcat(new, orig);
+
+  strcat(new, ".?");
+
+  strncpy(pattern, new, DTREE_DATA_BUFLEN - 1);
+
+  pattern[DTREE_DATA_BUFLEN - 1] = '\0';
 }
 #endif

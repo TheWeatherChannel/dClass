@@ -13,50 +13,34 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
-
 
 #ifndef _DCLASS_DEVICEMAP_CLIENT_H
 #define _DCLASS_DEVICEMAP_CLIENT_H
 
-
-#include "dtree_client.h"
 #include "dclass_client.h"
+#include "dtree_client.h"
 
+// resource files
+#define DEVICEMAP_RSRC_DD "DeviceDataSource.xml"
+#define DEVICEMAP_RSRC_DDP "DeviceDataSourcePatch.xml"
+#define DEVICEMAP_RSRC_BD "BuilderDataSource.xml"
+#define DEVICEMAP_RSRC_BDP "BuilderDataSourcePatch.xml"
 
-//resource files
-#define DEVICEMAP_RSRC_DD     "DeviceDataSource.xml"
-#define DEVICEMAP_RSRC_DDP    "DeviceDataSourcePatch.xml"
-#define DEVICEMAP_RSRC_BD     "BuilderDataSource.xml"
-#define DEVICEMAP_RSRC_BDP    "BuilderDataSourcePatch.xml"
+#define DEVICEMAP_COMMENT                                                      \
+  "DeviceMap %s http://devicemap.apache.org/ (device detection ddr)"
 
+#define DEVICEMAP_KEYS                                                         \
+  {                                                                            \
+    "vendor", "model", "parentId", "inputDevices", "displayHeight",            \
+        "displayWidth", "device_os", "ajax_support_javascript", "is_tablet",   \
+        "is_wireless_device", "is_crawler", "is_desktop"                       \
+  }
 
-#define DEVICEMAP_COMMENT     "DeviceMap %s http://devicemap.apache.org/ (device detection ddr)"
+int devicemap_load_resources(dclass_index *, const char *);
 
+// openddr blackberry fix
+#define OPENDDR_BLKBRY_FIX 1
 
-#define DEVICEMAP_KEYS        {                            \
-                                "vendor",                  \
-                                "model",                   \
-                                "parentId",                \
-                                "inputDevices",            \
-                                "displayHeight",           \
-                                "displayWidth",            \
-                                "device_os",               \
-                                "ajax_support_javascript", \
-                                "is_tablet",               \
-                                "is_wireless_device",      \
-                                "is_crawler",              \
-                                "is_desktop"               \
-                              }
-
-
-int devicemap_load_resources(dclass_index*,const char*);
-
-
-//openddr blackberry fix
-#define OPENDDR_BLKBRY_FIX    1
-
-
-#endif	/* _DCLASS_DEVICEMAP_CLIENT_H */
-
+#endif /* _DCLASS_DEVICEMAP_CLIENT_H */
